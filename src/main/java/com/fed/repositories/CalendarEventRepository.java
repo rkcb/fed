@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.Timestamp;
 import java.util.List;
 
-//@RepositoryRestResource(collectionResourceRel = "people", path = "people")
+@RepositoryRestResource(collectionResourceRel = "calendarevents", path = "calendarevents")
 public interface CalendarEventRepository extends JpaRepository<CalendarEvent, Long> {
 
     List<CalendarEvent> findCalendarEventByBeginBetween(Timestamp begin, Timestamp end);

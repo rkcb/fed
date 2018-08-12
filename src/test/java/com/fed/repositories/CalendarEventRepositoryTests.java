@@ -46,14 +46,14 @@ public class CalendarEventRepositoryTests {
 //                jsonPath("$._links.people").exists());
 //    }
 //
-//    @Test
-//    public void shouldCreateEntity() throws Exception {
-//
-//        mockMvc.perform(post("/people").content(
-//                "{\"firstName\": \"Frodo\", \"lastName\":\"Baggins\"}")).andExpect(
-//                status().isCreated()).andExpect(
-//                header().string("Location", containsString("people/")));
-//    }
+    @Test
+    public void shouldCreateEntity() throws Exception {
+
+        mockMvc.perform(post("/calendarevents").content(
+                "{\"firstName\": \"Frodo\", \"lastName\":\"Baggins\"}")).andExpect(
+                status().isCreated()).andExpect(
+                header().string("Location", containsString("people/")));
+    }
 
 
 }

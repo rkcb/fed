@@ -35,21 +35,6 @@ public class CalendarEventTests {
 
     @Test
     public void calendarEventTest(){
-
-        Calendar calendar = Calendar.getInstance();
-
-        Date now = calendar.getTime();
-        Timestamp begin = new Timestamp(now.getTime());
-
-        CalendarEvent event = CalendarEvent.create(begin, begin, "My Event",
-                "My Description", "My Location");
-
-        calendarEventRepository.save(event);
-
-        List<CalendarEvent> events = calendarEventRepository.findCalendarEventBySubject("My Event");
-
-        Assert.assertTrue(events.size() == 1);
-
     }
 
 

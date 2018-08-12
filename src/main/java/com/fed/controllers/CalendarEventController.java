@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class CalendarEventController {
 
     @CrossOrigin(origins = "http://localhost:8080")
-    @GetMapping("/calendarevent")
+    @GetMapping("/calendarevents")
     public CalendarEvent event(@RequestParam(required=false, defaultValue="World") String name) {
         System.out.println("==== in calendar event ====");
         return new CalendarEvent();
