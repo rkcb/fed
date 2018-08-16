@@ -14,7 +14,7 @@ import java.util.List;
 @RepositoryRestResource(collectionResourceRel = "calendarevents", path = "calendarevents")
 public interface CalendarEventRepository extends JpaRepository<CalendarEvent, Long> {
 
-    List<CalendarEvent> findCalendarEventByBeginBetween(Timestamp begin, Timestamp end);
-    List<CalendarEvent> findCalendarEventBySubject(String subject);
+    List<CalendarEvent> findCalendarEventByBeginBetween(Timestamp start, Timestamp end);
+    List<CalendarEvent> findCalendarEventBySubject(String title);
 
 }
