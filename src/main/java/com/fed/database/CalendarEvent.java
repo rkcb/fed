@@ -18,8 +18,7 @@ public class CalendarEvent {
     @Id
     private int id;
 
-    @NotNull
-    private String subject;
+    private String title;
 
     private String description;
 
@@ -28,36 +27,36 @@ public class CalendarEvent {
     @Setter(AccessLevel.NONE)
     @NotNull
     @Basic
-    private LocalDateTime begin;
+    private LocalDateTime start;
 
     @Setter(AccessLevel.NONE)
     @Basic
     private LocalDateTime end;
 
     /**
-     * @param begin e.g. 2018-11-15T08:22:12
+     * @param start e.g. 2018-11-15T08:22:12
      * @param end
-     * @param subject
+     * @param title
      * @param description
      * @param location
      * @return
      */
-    public static CalendarEvent create(String begin, String end, String subject, String
+    public static CalendarEvent create(String start, String end, String title, String
             description, String location){
 
         CalendarEvent calendarEvent = new CalendarEvent();
 
-        calendarEvent.begin = LocalDateTime.parse(begin);
+        calendarEvent.start = LocalDateTime.parse(start);
         calendarEvent.end = LocalDateTime.parse(end);
-        calendarEvent.subject = subject;
+        calendarEvent.title = title;
         calendarEvent.description = description;
         calendarEvent.location = location;
 
         return calendarEvent;
     }
 
-    public void setBegin(String begin) {
-        this.begin = LocalDateTime.parse(begin);
+    public void setBegin(String start) {
+        this.start = LocalDateTime.parse(start);
     }
 
     public void setEnd(String end) {
