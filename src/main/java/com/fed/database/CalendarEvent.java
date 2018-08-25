@@ -4,9 +4,7 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
 
-import javax.persistence.Basic;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -16,7 +14,8 @@ import java.time.LocalDateTime;
 public class CalendarEvent {
 
     @Id
-    private int id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
     private String title;
 
@@ -55,7 +54,7 @@ public class CalendarEvent {
         return calendarEvent;
     }
 
-    public void setBegin(String start) {
+    public void setStart(String start) {
         this.start = LocalDateTime.parse(start);
     }
 

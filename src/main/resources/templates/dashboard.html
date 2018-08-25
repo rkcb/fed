@@ -4,7 +4,7 @@
     <meta charset='utf-8' />
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
-    <link rel="stylesheet" href="/static/css/dashboard.css">
+    <link rel="stylesheet" href="static/css/dashboard.css">
     <!-- fullcalendar -->
     <link rel="stylesheet" href="js/fullcalendar-3.9.0/fullcalendar.min.css">
     <link href='js/fullcalendar-3.9.0/fullcalendar.print.min.css' rel='stylesheet' media='print' />
@@ -12,6 +12,7 @@
     <!--<script src='js/fullcalendar-3.9.0/lib/jquery.min.js'></script>-->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src='js/fullcalendar-3.9.0/fullcalendar.min.js'></script>
+    <script src='js/calendar/tools.js'></script>
     <script>
 
         $(document).ready(function() {
@@ -30,8 +31,8 @@
                     listWeek: { buttonText: 'list week' }
                 },
 
-                defaultView: 'listWeek',
-                defaultDate: '2018-03-12',
+                defaultView: 'month',
+                defaultDate: getNowAsIsoDate(),
                 navLinks: true, // can click day/week names to navigate views
                 editable: true,
                 eventLimit: true, // allow "more" link when too many events

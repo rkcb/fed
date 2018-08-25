@@ -9,12 +9,13 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RepositoryRestResource(collectionResourceRel = "calendarevents", path = "calendarevents")
-public interface CalendarEventRepository extends JpaRepository<CalendarEvent, Long> {
+public interface CalendarEventRepository extends JpaRepository<CalendarEvent, Integer> {
 
-    List<CalendarEvent> findCalendarEventByBeginBetween(Timestamp start, Timestamp end);
-    List<CalendarEvent> findCalendarEventBySubject(String title);
+    List<CalendarEvent> findCalendarEventByStartBetween(LocalDateTime start, LocalDateTime end);
+    List<CalendarEvent> findCalendarEventByTitle(String title);
 
 }
