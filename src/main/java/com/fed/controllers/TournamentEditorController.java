@@ -4,10 +4,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class TournamentCreationController {
+public class TournamentEditorController {
 
-    @GetMapping("/tournamentcreation")
-    public String tournamentcreation(){
-        return "tournamentcreation";
+    @GetMapping("/tournamenteditor")
+    public String tournamenteditor(){
+        return "tournamenteditor";
     }
 }

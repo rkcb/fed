@@ -1,0 +1,32 @@
+/* style calendar header */
+.fc-toolbar.fc-header-toolbar {
+    margin-bottom: 2em;
+    background-color: #e9ecef;
+    border-radius: 5px;
+}
+
+/* calendar background color */
+div.fc-view-container {
+    background-color: white;
+}
+
+a.fc-day-number {
+    font-size: large;
+}
+
+/*
+<td class="fc-day-top fc-thu fc-past" data-date="2018-09-06"><a class="fc-day-number" data-goto="{&quot;date&quot;:&quot;2018-09-06&quot;,&quot;type&quot;:&quot;day&quot;}">6</a></td>
+*/
+/* <td class="fc-day fc-widget-content fc-thu fc-past" data-date="2018-09-06"></td> */
+td.fc-day, td.fc-widget-content {
+    cursor: pointer;
+}
+
+body {
+    padding: 0;
+    font-family: "Lucida Grande", Helvetica, Arial, Verdana, sans-serif;
+    font-size: 16px;
+}
+
+
+
