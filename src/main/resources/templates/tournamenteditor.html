@@ -52,53 +52,54 @@
             <h2>Tournament Editor</h2>
         </div>
 
-        <form>
+        <form id="tournamentdata">
 
             <div class="form-group">
                 <label for="organizer">Organizer</label>
-                <input type="text" class="form-control" id="organizer"
+                <input type="text" name="organizer" class="form-control" id="organizer"
                        placeholder="">
             </div>
 
             <div class="form-group">
                 <label for="title">Title</label>
-                <input type="text" class="form-control" id="title"
+                <input type="text" name="title" class="form-control" id="title"
                        placeholder="">
             </div>
 
             <div class="form-group">
                 <label for="description">Description</label>
-                <!--<input type="text" class="form-control" id="description" placeholder="Description">-->
-                <textarea class="form-control" placeholder="" name="" id="description" cols="40" rows="3"></textarea>
+                <textarea class="form-control" placeholder="" name="description" id="description" cols="40"
+                          rows="3"></textarea>
             </div>
 
             <div class="form-group">
-                <label for="begin">Begin</label>
-                <input class="form-control flatpickr flatpickr-input" type="text" placeholder="" id="begin"
+                <label for="start">Start</label>
+                <input class="form-control flatpickr flatpickr-input" name="start" type="text" placeholder="" id="start"
                        data-id="datetime" readonly="readonly">
             </div>
 
             <div class="form-group">
                 <label for="location">Location</label>
                 <!--<input type="text" class="form-control" id="description" placeholder="Description">-->
-                <input type="text" class="form-control" id="location">
+                <input type="text" name="location" class="form-control" id="location">
             </div>
 
             <div class="form-group">
                 <label for="price">Price</label>
                 <!--<input type="text" class="form-control" id="description" placeholder="Description">-->
-                <input type="text" class="form-control" id="price">
+                <input type="text" name="price" class="form-control" id="price">
             </div>
 
             <div class="form-group form-check">
                 <input type="checkbox" class="form-check-input" id="masterPointCheck">
-                <label class="form-check-label" for="masterPointCheck">Master point tournament</label>
+                <label class="form-check-label" name="masterpoints" for="masterPointCheck">Master point
+                    tournament</label>
             </div>
 
 
-            <input id="createbutton" type="button" class="btn btn-primary" value="Create">
-            <input id="updatebutton" type="button" class="btn btn-primary" value="Update">
-            <input id="deletebutton" type="button" class="btn btn-primary" value="Delete">
+            <input id="createbutton" type="submit" class="btn btn-primary" value="Create">
+            <input id="updatebutton" type="submit" class="btn btn-primary" value="Update">
+            <input id="deletebutton" type="submit" class="btn btn-primary" value="Delete">
             <input id="closebutton" type="button" class="btn btn-primary" value="Close">
         </form>
     </div>
@@ -141,6 +142,7 @@
     </div>
 </nav>
 
+
 <!-- calendar -->
 <div class="w-75 p-5 m-auto">
     <div class="d-flex justify-content-center p-5">
@@ -151,6 +153,36 @@
         </div>
     </div>
 </div>
+<!--
+<form>
+    <div><input type="text" name="a" value="1" id="a"></div>
+    <div><input type="text" name="b" value="2" id="b"></div>
+    <div><input type="hidden" name="c" value="3" id="c"></div>
+    <div>
+        <textarea name="d" rows="8" cols="40">4</textarea>
+    </div>
+    <div><select name="e">
+        <option value="5" selected="selected">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+    </select></div>
+    <div>
+        <input type="checkbox" name="f" value="8" id="f">
+    </div>
+    <div>
+        <input type="submit" name="g" value="Submit" id="g">
+    </div>
+</form>
+-->
+<!--<script>-->
+<!---->
+    <!--$( "form" ).submit(function( event ) {-->
+        <!--console.log( $( this ).serializeArray() );-->
+        <!--event.preventDefault();-->
+    <!--});-->
+<!---->
+<!--// </script>-->
+
 
 </body>
 </html>

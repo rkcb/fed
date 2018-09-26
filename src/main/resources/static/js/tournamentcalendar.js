@@ -2,8 +2,7 @@
 $(document).ready(function() {
     ////////////////////// tournament editor settings ///////////////////////////////
     // create datepicker for tournament begin
-
-    var beginDatepicker = $("#begin").flatpickr({
+    var beginDatepicker = $("#start").flatpickr({
         weekNumbers: true,
         clickOpens: true,
         time_24hr: true,
@@ -11,7 +10,7 @@ $(document).ready(function() {
         altInput: true,
         altFormat: "d.m.Y, H:i",
         enableTime: true,
-        // locale: "fi",
+        locale: "fi",
     });
 
     $('#closebutton').click(function () {
@@ -40,7 +39,11 @@ $(document).ready(function() {
     }, true);
     /////////////////////////////////////////////////////
 
-
+    $("form").submit(function (event) {
+        let els = $("form#tournamentdata").serialize();
+        console.log(els);
+        event.preventDefault();
+    });
 
     $('#calendar').fullCalendar({
         header: {

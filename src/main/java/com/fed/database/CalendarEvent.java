@@ -23,6 +23,8 @@ public class CalendarEvent {
 
     private String location;
 
+    private boolean masterpoints;
+
     @Setter(AccessLevel.NONE)
     @NotNull
     @Basic
