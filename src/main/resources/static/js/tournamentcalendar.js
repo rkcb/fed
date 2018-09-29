@@ -39,10 +39,23 @@ $(document).ready(function() {
     }, true);
     /////////////////////////////////////////////////////
 
+    // send tournament data as json
     $("form").submit(function (event) {
-        let els = $("form#tournamentdata").serialize();
-        console.log(els);
+        // collects only named fields and checkbox only if checked
         event.preventDefault();
+        let formData = $("form#tournamentdata").serializeArray();
+        let data = new Object();
+
+        for (let i = 0; i < formData.length; i++ ){
+            data[formData[i]['name']] = formData[i]['value'];
+        }
+        $.ajax({
+            type: "POST",
+            url: "/calendarevents",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(data)
+        });
     });
 
     $('#calendar').fullCalendar({
