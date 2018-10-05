@@ -1,17 +1,17 @@
 package com.fed.database;
 
-import lombok.AccessLevel;
 import lombok.Data;
-import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 
 @Data
 @Entity
-public class CalendarEvent {
+public class CalendarEvent  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,42 +25,10 @@ public class CalendarEvent {
 
     private boolean masterpoints;
 
-    @Setter(AccessLevel.NONE)
     @NotNull
-    @Basic
-    private LocalDateTime start;
+    private Timestamp start;
 
-    @Setter(AccessLevel.NONE)
-    @Basic
-    private LocalDateTime end;
+    public CalendarEvent(){}
 
-    /**
-     * @param start e.g. 2018-11-15T08:22:12
-     * @param end
-     * @param title
-     * @param description
-     * @param location
-     * @return
-     */
-    public static CalendarEvent create(String start, String end, String title, String
-            description, String location){
 
-        CalendarEvent calendarEvent = new CalendarEvent();
-
-        calendarEvent.start = LocalDateTime.parse(start);
-        calendarEvent.end = LocalDateTime.parse(end);
-        calendarEvent.title = title;
-        calendarEvent.description = description;
-        calendarEvent.location = location;
-
-        return calendarEvent;
-    }
-
-    public void setStart(String start) {
-        this.start = LocalDateTime.parse(start);
-    }
-
-    public void setEnd(String end) {
-        this.end = LocalDateTime.parse(end);
-    }
 }
