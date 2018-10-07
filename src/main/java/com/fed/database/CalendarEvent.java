@@ -11,7 +11,7 @@ import java.sql.Timestamp;
 
 @Data
 @Entity
-public class CalendarEvent  {
+public class CalendarEvent {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,7 +28,7 @@ public class CalendarEvent  {
     @NotNull
     private Timestamp start;
 
-    public CalendarEvent(){}
+    protected CalendarEvent(){}
 
 
 }
