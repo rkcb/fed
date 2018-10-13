@@ -8,7 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Data
-@Entity(name = "masterpoints")
+@Entity
 public class MasterpointRecord {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)

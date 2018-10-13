@@ -22,6 +22,9 @@ public class CalendarEvent {
 
     private boolean masterpoints;
 
+    @OneToOne(mappedBy = "calendarEvent")
+    private Tournament tournament;
+
     @NotNull
     private Timestamp start;
 

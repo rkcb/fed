@@ -15,7 +15,7 @@ import java.util.Calendar;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 //@AutoConfigureMockMvc
-public class CalendarEventTests {
+public class CalendarEventTest {
 
 //    @Autowired
 //    private MockMvc mockMvc;
