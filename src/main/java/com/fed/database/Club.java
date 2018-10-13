@@ -2,8 +2,10 @@ package com.fed.database;
 
 import lombok.Data;
 
-import javax.persistence.*;
-import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 @Data
 @Entity
@@ -20,7 +22,7 @@ public class Club {
     private String city;
     private String country;
 
-    @OneToMany(mappedBy = "code")
-    private List<Player> members;
+//    @OneToMany(mappedBy = "code")
+//    private List<Player> members;
 
 }

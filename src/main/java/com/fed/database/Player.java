@@ -6,11 +6,11 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@Table(
-        name="players",
-        uniqueConstraints=
-        @UniqueConstraint(columnNames={"code"})
-)
+//@Table(
+//        name="players",
+//        uniqueConstraints=
+//        @UniqueConstraint(columnNames={"code"})
+//)
 public class Player {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,8 +40,8 @@ public class Player {
 
     // TODO: add a role for player
 
-    @ManyToOne
-    private Club club;
+//    @ManyToOne
+//    private Club club;
 
     protected Player(){}
 

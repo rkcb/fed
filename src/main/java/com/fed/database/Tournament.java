@@ -3,7 +3,9 @@ package com.fed.database;
 import lombok.Data;
 
 import javax.persistence.Entity;
-import java.util.List;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 /**
  * Tournament keeps record of players who registered in a tournament and
@@ -14,9 +16,13 @@ import java.util.List;
 @Entity(name="tournaments")
 public class Tournament  {
 
-    protected List<Player> registered;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
-    protected List<Player> played;
+//    protected List<Player> registered;
+//
+//    protected List<Player> played;
 
 
 
