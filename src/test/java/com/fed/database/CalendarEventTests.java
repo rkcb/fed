@@ -37,7 +37,18 @@ public class CalendarEventTests {
 
         CalendarEvent event = CalendarEvent.create("title", timestamp);
 
-        Assert.assertTrue("calendar event", event instanceof CalendarEvent);
+        calendarEventRepository.save(event);
+
+        Assert.assertTrue(calendarEventRepository.count() == 1);
+
+        calendarEventRepository.deleteAll();
+
+        event.setTitle("");
+
+        calendarEventRepository.save(event);
+
+        Assert.assertFalse(calendarEventRepository.count() == 0);
+
 
     }
 
