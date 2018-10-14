@@ -3,20 +3,25 @@ package com.fed.database;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 
 @Data
 @Entity
-@Table(
-        uniqueConstraints=
-        @UniqueConstraint(columnNames={"code"})
-)
+//@Table(
+//        uniqueConstraints=
+//                {@UniqueConstraint(columnNames={"code"}), @UniqueConstraint(columnNames={
+//                        "username"})}
+//)
 public class Player {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     Integer id;
 
+    @NotEmpty
     private String code;
+    @NotEmpty
     private String username;
     private String password;
 
@@ -29,6 +34,7 @@ public class Player {
     private String country;
 
     private String phone;
+    @Email
     private String email;
     private Boolean alive;
     private Boolean leagueMember;
@@ -43,5 +49,6 @@ public class Player {
 //    private Club club;
 
     protected Player(){}
+
 
 }

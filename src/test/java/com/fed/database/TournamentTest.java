@@ -12,6 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.sql.Timestamp;
 import java.util.Calendar;
+import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -40,6 +41,13 @@ public class TournamentTest {
         tournamentRepository.save(tournament);
 
         Assert.assertTrue(tournamentRepository.count() == 1);
+
+        List<Tournament> tournaments = tournamentRepository.findAll();
+
+        Tournament savedTournament = tournaments.get(0);
+
+        Assert.assertTrue(savedTournament.getCalendarEvent().getId() > 0);
+
 
     }
 
