@@ -8,11 +8,11 @@ import javax.validation.constraints.NotEmpty;
 
 @Data
 @Entity
-//@Table(
-//        uniqueConstraints=
-//                {@UniqueConstraint(columnNames={"code"}), @UniqueConstraint(columnNames={
-//                        "username"})}
-//)
+@Table(
+        uniqueConstraints=
+                {@UniqueConstraint(columnNames={"code"}), @UniqueConstraint(columnNames={
+                        "username"})}
+)
 public class Player {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,7 +34,9 @@ public class Player {
     private String country;
 
     private String phone;
+
     @Email
+    @NotEmpty
     private String email;
     private Boolean alive;
     private Boolean leagueMember;
@@ -49,6 +51,20 @@ public class Player {
 //    private Club club;
 
     protected Player(){}
+
+    public static Player create(String username, String code, String email, String password){
+
+        Player player = new Player();
+
+        player.username = username;
+        player.code = code;
+        player.email = email;
+        player.password = password;
+
+        return player;
+
+    }
+
 
 
 }
