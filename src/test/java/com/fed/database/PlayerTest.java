@@ -56,6 +56,18 @@ public class PlayerTest {
         }
         Assert.assertTrue(!saveFailed3);
 
+        boolean saveFailed4 = false;
+
+        // missing email address
+        Player player4 = Player.create("testjack4","1", "", "password4");
+
+        try {
+            playerRepository.save(player4);
+        } catch (ValidationException exception){
+            saveFailed4 = true;
+        }
+
+
     }
 
 }
