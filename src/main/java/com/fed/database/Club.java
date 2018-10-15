@@ -3,6 +3,7 @@ package com.fed.database;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 @Data
@@ -16,6 +17,7 @@ public class Club {
     @Id
     Integer id;
 
+    @NotEmpty
     private String name;
 
     private String street;
@@ -26,4 +28,20 @@ public class Club {
     @OneToMany(mappedBy = "club")
     private List<Player> members;
 
+    protected Club() { }
+
+    public static Club create(String name, String street, String postalCode, String city,
+                         String country){
+
+       Club club = new Club();
+
+       club.name = name;
+       club.street = street;
+       club.postalCode = postalCode;
+       club.city = city;
+       club.country = country;
+
+       return club;
+
+    }
 }
