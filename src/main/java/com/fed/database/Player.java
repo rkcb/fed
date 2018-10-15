@@ -47,7 +47,7 @@ public class Player {
 
     // TODO: add a role for player
 
-    @ManyToOne()
+    @ManyToOne
     private Club club;
 
     protected Player(){}

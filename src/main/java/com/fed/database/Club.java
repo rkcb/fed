@@ -23,7 +23,7 @@ public class Club {
     private String city;
     private String country;
 
-    @OneToMany(mappedBy = "code")
+    @OneToMany(mappedBy = "club")
     private List<Player> members;
 
 }
