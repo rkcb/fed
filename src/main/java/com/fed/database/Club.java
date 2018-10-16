@@ -25,7 +25,7 @@ public class Club {
     private String city;
     private String country;
 
-    @OneToMany(mappedBy = "club")
+    @OneToMany(mappedBy = "club", cascade = CascadeType.ALL)
     private List<Player> members;
 
     protected Club() { }

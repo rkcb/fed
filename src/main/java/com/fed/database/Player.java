@@ -47,7 +47,7 @@ public class Player {
 
     // TODO: add a role for player
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private Club club;
 
     protected Player(){}
