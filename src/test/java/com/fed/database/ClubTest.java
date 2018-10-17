@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
+import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -57,19 +58,25 @@ public class ClubTest {
 
         Assert.assertTrue(savedClub.getMembers().size() == 2);
 
+        // remove a club membership
+
+        List<Player> oldMembers = savedClub.getMembers();
+
         player.setClub(null);
 
-        playerRepository.save(player);
+        player = playerRepository.save(player);
 
-        playerRepository.deleteById(player.getId());
+        final Integer playerId = player.getId();
 
-        Assert.assertTrue(playerRepository.count() == 1);
+        oldMembers.removeIf(p -> p.getId() == playerId );
 
-//        savedClub = clubRepository.getOne(savedClub.getId());
+        savedClub.setMembers(oldMembers);
 
-//        Assert.assertTrue(savedClub.getMembers().size() == 1);
+        savedClub = clubRepository.save(savedClub);
 
+        Assert.assertTrue(savedClub.getMembers().size() == 1);
 
+        Assert.assertTrue(player.getClub() == null);
 
 
     }
