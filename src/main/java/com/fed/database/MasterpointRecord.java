@@ -2,10 +2,10 @@ package com.fed.database;
 
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import java.sql.Timestamp;
 
 @Data
 @Entity
@@ -15,10 +15,23 @@ public class MasterpointRecord {
     @Id
     private Integer id;
 
-//    @ForeignKey(foreignKeyDefinition = "FOREIGN KEY (player_code) REFERENCES player (code)")
-    private String code;
+    @NotEmpty
+    private Float masterpoints;
+
+    @NotEmpty
+    private String explanation;
+
+    @NotNull
+    private Timestamp earned;
+
+    @NotNull
+    //TODO: add foreign key constraint
+    private Player  adderCode;
+
+    @NotNull
+    //TODO: add foreign key constraint
+    private String recipientCode;
 
     protected MasterpointRecord(){}
 
-    public MasterpointRecord(String code) {this.code = code;}
 }
