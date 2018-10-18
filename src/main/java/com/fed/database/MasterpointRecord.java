@@ -2,20 +2,27 @@ package com.fed.database;
 
 import lombok.Data;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
+import java.util.Calendar;
 
 @Data
 @Entity
 public class MasterpointRecord {
 
+
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Integer id;
 
-    @NotEmpty
+    @NotNull
+    @Min(0)
     private Float masterpoints;
 
     @NotEmpty
@@ -25,13 +32,32 @@ public class MasterpointRecord {
     private Timestamp earned;
 
     @NotNull
-    //TODO: add foreign key constraint
-    private Player  adderCode;
+    private Timestamp added;
 
     @NotNull
-    //TODO: add foreign key constraint
+    //TODO: add a foreign key constraint
+    private String adderCode;
+
+    @NotNull
+    //TODO: add a foreign key constraint
     private String recipientCode;
 
     protected MasterpointRecord(){}
+
+    public static MasterpointRecord create(Float masterpoints, String explanation,
+                                           String adderCode, String recipientCode, Timestamp earned){
+        MasterpointRecord masterpointRecord = new MasterpointRecord();
+
+        masterpointRecord.masterpoints = masterpoints;
+        masterpointRecord.explanation = explanation;
+        masterpointRecord.adderCode = adderCode;
+        masterpointRecord.recipientCode = recipientCode;
+        masterpointRecord.earned = earned;
+
+        Calendar calendar = Calendar.getInstance();
+        masterpointRecord.added = new Timestamp(calendar.getTimeInMillis());
+
+        return masterpointRecord;
+    }
 
 }

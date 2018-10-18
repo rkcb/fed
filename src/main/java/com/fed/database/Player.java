@@ -5,7 +5,6 @@ import lombok.Data;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
-import java.util.List;
 
 @Data
 @Entity
@@ -50,9 +49,6 @@ public class Player {
 
     @ManyToOne(cascade = CascadeType.ALL)
     private Club club;
-
-    @OneToMany(mappedBy = "code")
-    private List<MasterpointRecord> masterpointRecordList;
 
     protected Player(){}
 
