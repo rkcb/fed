@@ -2,10 +2,7 @@ package com.fed.database;
 
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -33,6 +30,7 @@ public class MasterpointRecord {
 
     @NotNull
     private Timestamp added;
+
 
     @NotNull
     //TODO: add a foreign key constraint

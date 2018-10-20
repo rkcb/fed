@@ -1,0 +1,49 @@
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    display: -ms-flexbox;
+    display: -webkit-box;
+    display: flex;
+    -ms-flex-align: center;
+    -ms-flex-pack: center;
+    -webkit-box-align: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    align-items: center;
+
+}
+
+body.signinbody{
+    background-color: #ededed;
+
+}
+
+
+div.signinform {
+
+    width: 50%;
+    min-width: 280px;
+    max-width: 430px;
+    margin: 100px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+
+    padding: 50px;
+    border-radius: 5px;
+    border: solid lightgray 2px;
+    background-color: white;
+}
+
+div.signinform {
+    border-width: 2px;
+
+}
+
+div.signinform input.form-control {
+    border-color: #B8B8B8;
+}
