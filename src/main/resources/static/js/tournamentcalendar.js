@@ -1,5 +1,23 @@
 
+
+
 $(document).ready(function() {
+
+
+    /**
+     * get date in YYYY-MM-DD
+     * @returns {string}
+     */
+    function currentDateAsString() {
+
+        let date = new Date();
+        let y = date.getFullYear();
+        let m = date.getMonth() + 1;
+        let d = date.getDate();
+
+        return String(y) + "-" + String(m) + "-" + String(d);
+
+    }
     ////////////////////// tournament editor settings ///////////////////////////////
     // create datepicker for tournament begin
     var beginDatepicker = $("#start").flatpickr({
@@ -98,7 +116,7 @@ $(document).ready(function() {
         },
 
         defaultView: 'month',
-        defaultDate: '2018-09-06',
+        defaultDate: currentDateAsString(),
         navLinks: true, // can click day/week names to navigate views
         select: function(start, end) {
             var title = prompt('Event Title:');
