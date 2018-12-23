@@ -6,3 +6,7 @@ curl -i -X POST -H "Content-Type:application/json" -d '{"title": "My Title", "de
 # Query CalendarEvent by ISO DateTime
 
 curl localhost:8080/calendarevents/search/
+
+# Query calendar events
+
+curl localhost:8080/calendarevents/findAllByStartBetween?

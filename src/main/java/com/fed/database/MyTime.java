@@ -1,15 +1,22 @@
 package com.fed.database;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import lombok.Data;
 
+import javax.persistence.*;
+import java.sql.Timestamp;
+
+@Data
 @Entity
 public class MyTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column
     private Integer id;
 
+    @Column
+    private Timestamp start;
+
 }
+
+

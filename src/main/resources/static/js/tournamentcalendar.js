@@ -3,7 +3,7 @@
 
 $(document).ready(function() {
 
-
+    /////////////////// tools ////////////////////////////////////////////////////
     /**
      * get date in YYYY-MM-DD
      * @returns {string}
@@ -18,6 +18,7 @@ $(document).ready(function() {
         return String(y) + "-" + String(m) + "-" + String(d);
 
     }
+
     ////////////////////// tournament editor settings ///////////////////////////////
     // create datepicker for tournament begin
     var beginDatepicker = $("#start").flatpickr({
@@ -132,15 +133,52 @@ $(document).ready(function() {
         },
         editable: false,
         eventLimit: true, // allow "more" link when too many events
-        events: [
-            {
-                id:123,
-                title: 'My Header',
-                start: '2018-09-07T10:00:00',
-                allDay: false,
-                end: '2018-09-07T11:00:00',
-            },
-        ]
+        events:
+             function(start, end, timezone, callback) {
+                 $.ajax({
+                     url: '/calendarevents/search/findByStartBetween',
+                     dataType: 'json',
+                     data: { // parameters for url
+                         start: '2018-12-01 00:00:00',
+                         end: '2018-12-31 00:00:00'
+                     },
+                     success: function(doc) {
+                         console.log("success");
+                         var events = [];
+                         $(doc).find('calendarevents').each(function() {
+                             events.push({
+                                 title: $(this).attr('title'),
+                                 start: $(this).attr('start') // will be parsed
+                             });
+                         });
+                         callback(events);
+                     },
+                     error: function (jqXHR, textStatus, errorThrown) {
+                         console.log("error message >>> : " + textStatus + " #################### " + errorThrown);
+                     }
+
+                 });
+             }
+
+            // let start0 = start;//"2018-12-01 00:00:00.000000"//start.format("YYYY-MM-DD 00:00:00.000000");
+            // let start1 = end; //"2018-12-31 00:00:00.000000"//end.format("YYYY-MM-DD 00:00:00.000000");
+
+        // }
+        /*
+
+*/
+
+
+            // [
+            // {
+            // id:123,
+            // title: 'My Header',
+            // start: '2018-09-07T10:00:00',
+            // allDay: false,
+            // end: '2018-09-07T11:00:00',
+            // },
+            // ]
+
     });
 
 });

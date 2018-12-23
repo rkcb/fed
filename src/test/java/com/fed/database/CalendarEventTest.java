@@ -41,6 +41,11 @@ public class CalendarEventTest {
 
         Assert.assertTrue(calendarEventRepository.count() == 1);
 
+        // between test
+        Assert.assertTrue(!calendarEventRepository.findAllByStartBetween(timestamp, timestamp).isEmpty());
+
+//        calendarEventRepository.findAllByStartBetween()
+
         calendarEventRepository.deleteAll();
 
         event.setTitle("");

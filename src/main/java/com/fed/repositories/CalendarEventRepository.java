@@ -15,5 +15,8 @@ public interface CalendarEventRepository extends JpaRepository<CalendarEvent, In
 
     List<CalendarEvent> findCalendarEventsByStartAfter(@Param("start") Timestamp start);
 
+    List<CalendarEvent> findAllByStartBetween(@Param("start") Timestamp start,
+                                              @Param("end") Timestamp end);
+
 
 }
