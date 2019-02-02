@@ -26,6 +26,7 @@ curl -i -X POST -H "Content-Type:application/json" -d '#' http://localhost:8080/
 - https://www.baeldung.com/spring-data-rest-relationships 
 
 - curl-i -X PUT -d "http://localhost:8080/clubs/1" -H "Content-Type:text/uri-list" http://localhost:8080/players/1/club 
-
+- see the ALPS description for the JPA REST repository profile 
+  (curl http://localhost:8080/profile/<repository URL>)
 
 
