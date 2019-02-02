@@ -18,7 +18,14 @@ curl -i -X POST -H "Content-Type:application/json" -d '{"username": "escobar", "
 
 # Create a club
 
-curl -i -X POST -H "Content-Type:application/json" -d '{"name": "rauman kurko"}' http://localhost:8080/clubs
+curl -i -X POST -H "Content-Type:application/json" -d '#' http://localhost:8080/clubs
 
-# Add a player to a club?
+# Add a player to a club (only the owning side of a relation can set the value)
+
+- https://docs.spring.io/spring-data/rest/docs/current/reference/html/#repository-resources.association-resource
+- https://www.baeldung.com/spring-data-rest-relationships 
+
+- curl-i -X PUT -d "http://localhost:8080/clubs/1" -H "Content-Type:text/uri-list" http://localhost:8080/players/1/club 
+
+
 
