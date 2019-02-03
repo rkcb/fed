@@ -9,12 +9,12 @@ import javax.persistence.Id;
 
 @Data
 @Entity
-public class LogMessage {
+public class PbnFile {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String message;
-    private String playerCode; // user who caused the message
+    private String pbn;
+    private String json;
 
 }
