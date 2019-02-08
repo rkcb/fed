@@ -31,7 +31,6 @@ public class MasterpointRecord {
     @NotNull
     private Timestamp added;
 
-
     @NotNull
     //TODO: add a foreign key constraint
     private String adderCode;

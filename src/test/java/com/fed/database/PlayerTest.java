@@ -25,6 +25,8 @@ public class PlayerTest {
     @Test
     public void testPlayer(){
 
+        Assert.assertTrue(true);
+
         Player player = Player.create("testjack","1", "testjack@testjack.com", "password");
 
         playerRepository.save(player);
@@ -32,39 +34,25 @@ public class PlayerTest {
         Assert.assertTrue(playerRepository.count() == 1);
 
 //        Player player2 = Player.create("testjack","2", "testjack2@testjack.com", "password2");
-//
-//        boolean saveFailed2 = false;
-//
-//        // validate that duplicate username does not save to the database
-//        try {
-//            playerRepository.save(player2);
-//        } catch (ValidationException exception){
-//            saveFailed2 = true;
-//        }
-//        Assert.assertTrue(!saveFailed2);
-//
-//        boolean saveFailed3 = false;
-//
-//        // validate that duplicate username does not save to the database
-//        Player player3 = Player.create("testjack3","1", "testjack3@testjack.com", "password3");
-//
-//        try {
-//            playerRepository.save(player3);
-//        } catch (ValidationException exception){
-//            saveFailed3 = true;
-//        }
-//        Assert.assertTrue(!saveFailed3);
-//
-//        boolean saveFailed4 = false;
-//
-//        // missing email address
-//        Player player4 = Player.create("testjack4","1", "", "password4");
-//
-//        try {
-//            playerRepository.save(player4);
-//        } catch (ValidationException exception){
-//            saveFailed4 = true;
-//        }
+        Player player2 = Player.create("testjack","2", "touko@testjack.com", "touko");
+
+        // invalid save throws an exception since the username already exists
+        try {
+            playerRepository.save(player2);
+        } catch(Exception e){
+        }
+
+        Assert.assertTrue(playerRepository.count() == 1);
+
+
+        // validate that duplicate username does not save to the database
+        Player player3 = Player.create("testjack3","1", "testjack3@testjack.com", "password3");
+
+        try {
+            playerRepository.save(player3);
+        } catch (Exception exception){
+        }
+        Assert.assertTrue(playerRepository.count() == 1);
 
 
     }
