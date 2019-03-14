@@ -1,185 +1,258 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- JQuery -->
-    <script src="../js/jquery/jquery-3.3.1.min.js"></script>
-    <!-- Bootstrap local -->
-    <script src="../bootstrap/needed/popper.min.js"></script>
-    <link rel="stylesheet" href="../bootstrap/css/bootstrap.css">
-    <script src="../bootstrap/js/bootstrap.bundle.js"></script>
-    <!--<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css"-->
-    <!--integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">-->
-    <link rel="stylesheet" href="../css/editor.css">
-    <!-- custom css -->
-    <link rel="stylesheet" href="../css/tournamentcalendar.css">
-
-    <script src="https://unpkg.com/feather-icons"></script>
-
-    <!-- full calendar begins  -->
-    <link href="../fullcalendar/fullcalendar.min.css" rel='stylesheet'/>
-    <link href='../fullcalendar/fullcalendar.print.min.css' rel='stylesheet' media='print'/>
-    <script src='../fullcalendar/lib/moment.min.js'></script>
-    <script src='../fullcalendar/lib/jquery.min.js'></script>
-    <script src='../fullcalendar/fullcalendar.min.js'></script>
-    <script src='../js/tournamentcalendar.js'></script>
-    <script src='../js/editor.js'></script>
-    <!-- full calendar ends -->
+    <!-- Bootstrap CSS -->
+    <!--<link rel="stylesheet" href="css/bootstrap.min.css">-->
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="css/calendar.css">
 
     <!-- Datetime picker -- flatpickr -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <!--<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">-->
+    <!--<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>-->
     <!-- Datetime localization -->
-    <script src="https://npmcdn.com/flatpickr/dist/flatpickr.min.js"></script>
-    <script src="https://npmcdn.com/flatpickr/dist/l10n/fi.js"></script>
+    <!--<script src="https://npmcdn.com/flatpickr/dist/flatpickr.min.js"></script>-->
+    <!--<script src="https://npmcdn.com/flatpickr/dist/l10n/fi.js"></script>-->
 
-    <meta charset="UTF-8">
-    <title>Title</title>
-
+    <title>Calendar</title>
 </head>
 <body>
 
-<div id="tournamenteditor" class="tournamenteditor">
+<!-- Button trigger modal -->
+<button type="button" style="display: none;" class="btn btn-primary" data-toggle="modal"
+        data-target="#exampleModalCenter">
+    Launch demo modal
+</button>
 
-    <div class="w-auto p-5 m-auto" style="max-width: 700px; min-width: 500px">
-        <div class="d-flex justify-content-center">
-            <h2>Tournament Editor</h2>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <!-- modal content -->
+        <div class="modal-content">
+            <!-- modal header -->
+            <div class="modal-header">
+                <h5 class="modal-title">Tournament Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <form id="tournamentdata" class="p-5">
+
+                    <div class="form-group">
+                        <!--<label for="organizer">Organizer</label>-->
+                        <input type="text" name="organizer" class="form-control" id="organizer"
+                               placeholder="Organizer" value="">
+                    </div>
+
+                    <div class="form-group">
+                        <!--<label for="title">Title</label>-->
+                        <input type="text" name="title" class="form-control" id="title"
+                               placeholder="Title" value="">
+                    </div>
+
+                    <div class="form-group">
+                        <!--<label for="description">Description</label>-->
+                        <textarea class="form-control" placeholder="Description" name="description" id="description" cols="40"
+                                  rows="3" value=""></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <!--<label for="location">Location</label>-->
+                        <!--<input type="text" class="form-control" id="description" placeholder="Description">-->
+                        <input type="text" name="date" id="date" placeholder="Date" class="form-control" value="">
+                    </div>
+
+                    <div class="form-row align-items-center form-group">
+                        <div class="col-4">
+                            <input class="form-control" placeholder="Hours" id="hours" type="number" min="1" max="24">
+                        </div>:
+                        <div class="col-4">
+                            <!--<label for="minutes">Minutes</label>-->
+                            <input class="form-control" placeholder="Minutes" name="minutes" id="minutes" type="number" min="0" max="59">
+                        </div><!-- minutes field -->
+                    </div><!-- ends time fields -->
+
+                    <!--<div class="form-row align-items-center form-group">-->
+
+                    <!--<div class="col">-->
+                    <!--<label for="date">Date</label>-->
+                    <!--<input type="time" id="start" name="start"-->
+                    <!--min="0:00" max="24:00" required>-->
+                    <!--<input class="form-control" placeholder="Date" id="date" type="number" min="1" max="31">-->
+                    <!--</div>-->
+
+                    <!--TODO fix month id in the calendar -->
+                    <!--<div class="col">-->
+                    <!--<label for="months">Month</label>-->
+                    <!--<input class="form-control" placeholder="Month" id="months" type="number" min="1" max="12">-->
+                    <!--</div>-->
+
+                    <!--<div class="col">-->
+                    <!--<label for="years">Year</label>-->
+                    <!--<input class="form-control" placeholder="Year" id="years" type="number" min="2019">-->
+                    <!--</div>-->
+
+                    <!--</div>&lt;!&ndash; ends time fields &ndash;&gt;-->
+
+                    <div class="form-group">
+                        <!--<label for="location">Location</label>-->
+                        <!--<input type="text" class="form-control" id="description" placeholder="Description">-->
+                        <input type="text" name="location" placeholder="Location" class="form-control" id="location" value="">
+                    </div>
+
+                    <div class="form-group">
+                        <!--<label for="price">Price</label>-->
+                        <!--<input type="text" class="form-control" id="description" placeholder="Description">-->
+                        <input type="text" name="price" placeholder="Price" class="form-control" id="price" value="">
+                    </div>
+
+                    <!--<div class="form-group form-check">-->
+                    <!--<input type="checkbox" class="form-check-input" id="masterPointCheck" value="7">-->
+                    <!--<label class="form-check-label" name="masterpoints" for="masterPointCheck">Master point-->
+                    <!--tournament</label>-->
+                    <!--</div>-->
+                    <div class="custom-control custom-checkbox mr-sm-2 form-group">
+                        <input type="checkbox" class="custom-control-input" id="masterPointCheck">
+                        <label class="custom-control-label" for="masterPointCheck">Masterpoint Tournament</label>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
+                        </div>
+                        <div class="custom-file">
+                            <input type="file" multiple class="custom-file-input" id="upload" aria-describedby="inputGroupFileAddon01">
+                            <label id="filenames" class="custom-file-label" for="upload">Choose file</label>
+                        </div>
+                    </div>
+
+                </form>
+
+
+
+
+            </div>
+            <div class="modal-footer">
+                <input id="createbutton" type="submit" class="btn btn-primary" value="Create">
+                <input id="updatebutton" type="submit" class="btn btn-primary" value="Update">
+                <input id="deletebutton" type="submit" class="btn btn-primary" value="Delete">
+                <!--<input id="closebutton" type="button" class="btn btn-primary" value="Close">-->
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <!--<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>-->
+                <!--<button type="button" class="btn btn-primary">Save changes</button>-->
+            </div>
         </div>
-
-        <form id="tournamentdata">
-
-            <div class="form-group">
-                <label for="organizer">Organizer</label>
-                <input type="text" name="organizer" class="form-control" id="organizer"
-                       placeholder="" value="1">
-            </div>
-
-            <div class="form-group">
-                <label for="title">Title</label>
-                <input type="text" name="title" class="form-control" id="title"
-                       placeholder="" value="2">
-            </div>
-
-            <div class="form-group">
-                <label for="description">Description</label>
-                <textarea class="form-control" placeholder="" name="description" id="description" cols="40"
-                          rows="3" value="3"></textarea>
-            </div>
-
-            <div class="form-group">
-                <label for="start">Start</label>
-                <input class="form-control flatpickr flatpickr-input" name="start" type="text" placeholder="" id="start"
-                       data-id="datetime" readonly="readonly" value="">
-            </div>
-
-            <div class="form-group">
-                <label for="location">Location</label>
-                <!--<input type="text" class="form-control" id="description" placeholder="Description">-->
-                <input type="text" name="location" class="form-control" id="location" value="5">
-            </div>
-
-            <div class="form-group">
-                <label for="price">Price</label>
-                <!--<input type="text" class="form-control" id="description" placeholder="Description">-->
-                <input type="text" name="price" class="form-control" id="price" value="6">
-            </div>
-
-            <div class="form-group form-check">
-                <input type="checkbox" class="form-check-input" id="masterPointCheck" value="7">
-                <label class="form-check-label" name="masterpoints" for="masterPointCheck">Master point
-                    tournament</label>
-            </div>
-
-            <input id="createbutton" type="submit" class="btn btn-primary" value="Create">
-            <input id="updatebutton" type="submit" class="btn btn-primary" value="Update">
-            <input id="deletebutton" type="submit" class="btn btn-primary" value="Delete">
-            <input id="closebutton" type="button" class="btn btn-primary" value="Close">
-        </form>
     </div>
 </div>
 
+<div class="divtest">
 
-<!-- main menu -->
-
-<nav class="navbar navbar-expand-md navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">Bridge Federation</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample04"
-            aria-controls="navbarsExample04" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navbarsExample04">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="/tournamenteditor/">Dashboard<span class="sr-only"></span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/tournamentcreation">Tournaments</a>
-            </li>
-            <li class="nav-item">
-                <a href="#" class="nav-link">Players</a>
-            </li>
-            <li class="nav-item">
-                <a href="#" class="nav-link">News</a>
-            </li>
-            <li class="nav-item">
-                <a href="#" class="nav-link">Master points</a>
-            </li>
-            <li class="nav-item">
-                <a href="#" class="nav-link">Deals</a>
-            </li>
-        </ul>
-        <form class="form-inline my-2 my-md-0">
-            <input class="form-control" type="text" placeholder="Search">
-        </form>
-    </div>
-</nav>
-
-
-<!-- calendar -->
-<div class="w-75 p-5 m-auto">
-    <div class="d-flex justify-content-center p-5">
-        <h1>Tournaments</h1>
-    </div>
-    <div class="d-flex justify-content-center">
-        <div style="max-width: 1000px; min-width: 600px;" id='calendar'>
-        </div>
-    </div>
 </div>
-<!--
-<form>
-    <div><input type="text" name="a" value="1" id="a"></div>
-    <div><input type="text" name="b" value="2" id="b"></div>
-    <div><input type="hidden" name="c" value="3" id="c"></div>
-    <div>
-        <textarea name="d" rows="8" cols="40">4</textarea>
-    </div>
-    <div><select name="e">
-        <option value="5" selected="selected">5</option>
-        <option value="6">6</option>
-        <option value="7">7</option>
-    </select></div>
-    <div>
-        <input type="checkbox" name="f" value="8" id="f">
-    </div>
-    <div>
-        <input type="submit" name="g" value="Submit" id="g">
-    </div>
-</form>
--->
-<!--<script>-->
-<!---->
-    <!--$( "form" ).submit(function( event ) {-->
-        <!--console.log( $( this ).serializeArray() );-->
-        <!--event.preventDefault();-->
-    <!--});-->
-<!---->
-<!--// </script>-->
 
 
+<div class="container m-auto p-5">
+
+    <table class="table table-striped table-bordered">
+        <thead>
+        <tr>
+            <th style="text-align:  center" colspan="8">Calendar</th>
+        </tr>
+        <tr>
+            <th style="text-align:  center; background-color: rgba(71,158,255,0.16);" colspan="8">
+                <div class="d-flex justify-content-around align-content-center">
+                    <div id="month-prev"> &#10094;</div>
+                    <div id="calendar-month" class="flex-column align-items-center"><p id="month">March</p>
+                        <p id="year">2019</p></div>
+                    <div id="month-next"> &#10095;</div>
+                </div>
+            </th>
+        </tr>
+        <tr>
+            <th scope="col">Mon</th>
+            <th scope="col">Tue</th>
+            <th scope="col">Wed</th>
+            <th scope="col">Thu</th>
+            <th scope="col">Fri</th>
+            <th scope="col">Sat</th>
+            <th scope="col">Sun</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td class="day">1</td>
+            <td class="day">2</td>
+            <td class="day">3</td>
+            <td class="day">4</td>
+            <td class="day">5</td>
+            <td class="day">6</td>
+            <td class="day">7</td>
+        </tr>
+        <tr>
+            <td class="day">1</td>
+            <td class="day">2</td>
+            <td class="day">3</td>
+            <td class="day">4</td>
+            <td class="day">5</td>
+            <td class="day">6</td>
+            <td class="day">7</td>
+        </tr>
+        <tr>
+            <td class="day">1</td>
+            <td class="day">2</td>
+            <td class="day">3</td>
+            <td class="day">4</td>
+            <td class="day">5</td>
+            <td class="day">6</td>
+            <td class="day">7</td>
+        </tr>
+        <tr>
+            <td class="day">1</td>
+            <td class="day">2</td>
+            <td class="day">3</td>
+            <td class="day">4</td>
+            <td class="day">5</td>
+            <td class="day">6</td>
+            <td class="day">7</td>
+        </tr>
+        <tr>
+            <td class="day">1</td>
+            <td class="day">2</td>
+            <td class="day">3</td>
+            <td class="day">4</td>
+            <td class="day">5</td>
+            <td class="day">6</td>
+            <td class="day">7</td>
+        </tr>
+        <tr>
+            <td class="day">1</td>
+            <td class="day">2</td>
+            <td class="day">3</td>
+            <td class="day">4</td>
+            <td class="day">5</td>
+            <td class="day">6</td>
+            <td class="day">7</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+<script src="js/calendar.js"></script>
 </body>
 </html>

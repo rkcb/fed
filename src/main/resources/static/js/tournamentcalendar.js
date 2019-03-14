@@ -136,14 +136,13 @@ $(document).ready(function() {
         events:
              function(start, end, timezone, callback) {
                  $.ajax({
-                     url: '/calendarevents/search/findByStartBetween',
+                     url: '/calendarevents/search/findAllByStartBetween',
                      dataType: 'json',
                      data: { // parameters for url
-                         start: '2018-12-01 00:00:00',
-                         end: '2018-12-31 00:00:00'
+                         start: '2019-01-01 00:00:00',
+                         end: '2019-12-31 00:00:00'
                      },
                      success: function(doc) {
-                         console.log("success");
                          var events = [];
                          $(doc).find('calendarevents').each(function() {
                              events.push({
