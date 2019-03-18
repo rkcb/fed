@@ -32,7 +32,6 @@ public class CalendarEvent {
 
     public static CalendarEvent create(String title, Timestamp start){
 
-
         CalendarEvent calendarEvent = new CalendarEvent();
 
         calendarEvent.title = title;
