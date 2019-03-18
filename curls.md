@@ -1,7 +1,8 @@
 
 # Add a Calendar event from command line
 
-curl -i -X POST -H "Content-Type:application/json" -d '{"title": "My Title", "description": "My Description", "start": "2018-09-24T08:22:12"}' http://localhost:8080/calendarevents
+curl -i -X POST -H "Content-Type:application/json" -d '{"title": "My Title", "description": "My Description", 
+"start": "121212121212"}' http://localhost:8080/calendarevents
 
 # Query CalendarEvent by ISO DateTime
 
@@ -25,8 +26,16 @@ curl -i -X POST -H "Content-Type:application/json" -d '#' http://localhost:8080/
 - https://docs.spring.io/spring-data/rest/docs/current/reference/html/#repository-resources.association-resource
 - https://www.baeldung.com/spring-data-rest-relationships 
 
-- curl-i -X PUT -d "http://localhost:8080/clubs/1" -H "Content-Type:text/uri-list" http://localhost:8080/players/1/club 
+- curl -i -X PUT -d "http://localhost:8080/clubs/1" -H "Content-Type:text/uri-list" 
+http://localhost:8080/players/1/club 
 - see the ALPS description for the JPA REST repository profile 
   (curl http://localhost:8080/profile/<repository URL>)
+  
+  
+  
+# Add a calendar event and a tournament and set them to 1-1 relationship
 
+1. Create a calendar event and a tournament. The order does not matter.
+2. Set these to the 1-1 relationship by the following (update the ids as needed)
 
+curl -i -X PUT -H "Content-Type:text/uri-list" -d "http://localhost:8080/tournaments/1" http://localhost:8080/calendarevents/8/tournament
