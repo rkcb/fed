@@ -11,3 +11,11 @@ public class TournamentEditorController {
         return "tournamenteditor";
     }
 }
+
+/*
+*  TODO: Add a timestamp or equivalent handling to the UI
+*  TODO: Add a file storage in Tournament (Array)
+*  TODO: Add logic to controller to store files
+*  TODO: Add GSON
+*  TODO: Add masterpoint handling
+* */

@@ -3,7 +3,9 @@
     "use strict"
 
     /**
-     * creates a calendar logic and initializes the start date
+     * creates a calendar logic and initializes the start date and modal
+     * dialog datetime input
+     *
      * @param Date date, by default current local date
      * @constructor
      */
@@ -13,9 +15,35 @@
         Object.freeze(today);
         let currentDate = copy(today); // this date will change with navigation
         const showDayDialog = function(event){
+            let dateElem = document.getElementById("date");
+            let date = copy(currentDate);
+            date.setDate(event.srcElement.dateindex);
+            let dateValue = "" + date.getDate() + "." + (date.getMonth()+1) + "." + date.getFullYear();
+            dateElem.value = dateValue;
             $("#exampleModalCenter").modal("show");
+
+            // update the datetime input value
+            let dateTimeElem = document.getElementById("datetime");
+            dateTimeElem.value = date.getTime(); // mill seconds
         };
-        Object.freeze(showDayDialog);
+
+        /**
+         * called after an hours or minutes change
+         */
+        function updateDatetimeValue(event) {
+
+            let elem = document.getElementById("datetime");
+            let date = new Date();
+            date.setTime(elem.value);
+
+            let hours = document.getElementById("hours").value;
+            let minutes = document.getElementById("minutes").value;
+
+            date.setHours(hours);
+            date.setMinutes(minutes);
+
+            elem.value = date.getTime();
+        }
 
         /**
          * return a Date which points to the day 1--
@@ -137,6 +165,41 @@
         }
 
         /**
+         * update day click listeners
+         */
+        function addClickListeners(){
+
+            // remove old click listeners
+            let allDays = document.getElementsByClassName("day");
+            for (let i = 0; i < allDays.length; i++) {
+                allDays[i].removeEventListener("click", showDayDialog, true);
+                allDays[i].style.cursor = "";
+                allDays[i].dateindex = undefined;
+            }
+            // add current click listeners
+            let monthDays = getMonthDateElements(currentDate);
+            for (let i = 0; i < monthDays.length; i++) {
+                monthDays[i].addEventListener("click", showDayDialog, true);
+                monthDays[i].style.cursor = "pointer";
+                // this value is used to set the date correctly in the modal dialog
+                monthDays[i].dateindex = i + 1;
+            }
+
+            // update datetime input value when hours or minutes change
+            function addChangeListeners(){
+                let hoursElem = document.getElementById("hours");
+                let minutesElem = document.getElementById("minutes");
+
+                hoursElem.addEventListener("change", updateDatetimeValue, true);
+                minutesElem.addEventListener("change", updateDatetimeValue, true);
+            }
+
+            addChangeListeners();
+
+
+        }
+
+        /**
          * updates the month
          * @param int offset
          */
@@ -177,28 +240,24 @@
                 updateMonth(1));
         }
 
-        /**
-         * update day click listeners
-         */
-        function addClickListeners(){
+        function createDialogButtonListeners(){
 
-            // remove old click listeners
-            let allDays = document.getElementsByClassName("day");
-            for (let i = 0; i < allDays.length; i++) {
-                allDays[i].removeEventListener("click", showDayDialog, true);
-                allDays[i].style.cursor = "";
-            }
-            // add current click listeners
-            let monthDays = getMonthDateElements(currentDate);
-            for (let i = 0; i < monthDays.length; i++) {
-                monthDays[i].addEventListener("click", showDayDialog, true);
-                monthDays[i].style.cursor = "pointer";
-            }
 
-        }
 
-        function keyListeners(){
-            document.getElementById("month-prev").addEventListener("")
+            $("#createbutton").on("click", function (event) {
+                event.preventDefault();
+
+            });
+
+            $("#updatebutton").on("click", function (event) {
+                event.preventDefault();
+            });
+
+            $("#deletebutton").on("click", function (event) {
+                event.preventDefault();
+            });
+
+
         }
 
         document.getElementById("month-prev").addEventListener("click", function () {
@@ -209,25 +268,23 @@
         });
 
         updateMonth();
+        createDialogButtonListeners();
+    }
 
+    function formDataToJSON(){
+        let inputs = $("#tournamentdata input").not( (index, el) => {
+            return el.name.length === 0;
+        });
+        inputs.each(function (index) {
+            // console.log("index : " + index + " name = " + this.attr("name"));
+            console.log($(this).attr("name"));
+        });
     }
 
     let calendar = new Calendar();
     Object.freeze(calendar);
 
+    document.getElementById("minutes").step = 5;
+
+
 })();
-
-/*
-var datepicker = document.getElementById("date").flatpickr({
-    weekNumbers: false,
-    clickOpens: true,
-    // wrap: true,
-    // enableTime: true, // does not work with BS 4
-
-    // time_24hr: true,
-    dateFormat: "Y-m-dTH:i",
-    altInput: true,
-    altFormat: "d.m.Y",
-    locale: "fi",
-});
-*/
