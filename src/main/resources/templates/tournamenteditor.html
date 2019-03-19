@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="css/bootstrap.css">
     <link rel="stylesheet" href="css/calendar.css">
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
 
@@ -53,12 +52,10 @@
                     </div>
 
                     <div>
-                        <input type="hidden" id="datetime" name="datetime" value="0">
+                        <input type="hidden" id="datetime" name="start" value="">
                     </div>
 
                     <div class="form-group">
-                        <!--<label for="location">Location</label>-->
-                        <!--<input type="text" class="form-control" id="description" placeholder="Description">-->
                         <input type="text" id="date" placeholder="Date" class="form-control" value="" readonly>
                     </div>
 
@@ -67,50 +64,19 @@
                             <input class="form-control" placeholder="Hours" id="hours" type="number" min="1" max="24">
                         </div>:
                         <div class="col-4">
-                            <!--<label for="minutes">Minutes</label>-->
                             <input class="form-control" placeholder="Minutes" id="minutes" type="number" min="0" max="59">
-                        </div><!-- minutes field -->
-                    </div><!-- ends time fields -->
+                        </div>
+                    </div>
 
-                    <!--<div class="form-row align-items-center form-group">-->
-
-                    <!--<div class="col">-->
-                    <!--<label for="date">Date</label>-->
-                    <!--<input type="time" id="start" name="start"-->
-                    <!--min="0:00" max="24:00" required>-->
-                    <!--<input class="form-control" placeholder="Date" id="date" type="number" min="1" max="31">-->
-                    <!--</div>-->
-
-                    <!--TODO fix month id in the calendar -->
-                    <!--<div class="col">-->
-                    <!--<label for="months">Month</label>-->
-                    <!--<input class="form-control" placeholder="Month" id="months" type="number" min="1" max="12">-->
-                    <!--</div>-->
-
-                    <!--<div class="col">-->
-                    <!--<label for="years">Year</label>-->
-                    <!--<input class="form-control" placeholder="Year" id="years" type="number" min="2019">-->
-                    <!--</div>-->
-
-                    <!--</div>&lt;!&ndash; ends time fields &ndash;&gt;-->
 
                     <div class="form-group">
-                        <!--<label for="location">Location</label>-->
-                        <!--<input type="text" class="form-control" id="description" placeholder="Description">-->
                         <input type="text" name="location" placeholder="Location" class="form-control" id="location" value="">
                     </div>
 
                     <div class="form-group">
-                        <!--<label for="price">Price</label>-->
-                        <!--<input type="text" class="form-control" id="description" placeholder="Description">-->
                         <input type="text" name="price" placeholder="Price" class="form-control" id="price" value="">
                     </div>
 
-                    <!--<div class="form-group form-check">-->
-                    <!--<input type="checkbox" class="form-check-input" id="masterPointCheck" value="7">-->
-                    <!--<label class="form-check-label" name="masterpoints" for="masterPointCheck">Master point-->
-                    <!--tournament</label>-->
-                    <!--</div>-->
                     <div class="custom-control custom-checkbox mr-sm-2 form-group">
                         <input type="checkbox" class="custom-control-input" id="masterPointCheck">
                         <label class="custom-control-label" for="masterPointCheck">Masterpoint Tournament</label>
@@ -128,18 +94,12 @@
 
                 </form>
 
-
-
-
             </div>
             <div class="modal-footer">
                 <input id="createbutton" type="submit" class="btn btn-primary" value="Create">
                 <input id="updatebutton" type="submit" class="btn btn-primary" value="Update">
                 <input id="deletebutton" type="submit" class="btn btn-primary" value="Delete">
-                <!--<input id="closebutton" type="button" class="btn btn-primary" value="Close">-->
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <!--<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>-->
-                <!--<button type="button" class="btn btn-primary">Save changes</button>-->
             </div>
         </div>
     </div>

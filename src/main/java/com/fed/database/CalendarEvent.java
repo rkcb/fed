@@ -20,7 +20,11 @@ public class CalendarEvent {
 
     private String location;
 
+    private String organizer;
+
     private boolean masterpoints;
+
+    private String price;
 
     @OneToOne(mappedBy = "calendarEvent")
     private Tournament tournament;

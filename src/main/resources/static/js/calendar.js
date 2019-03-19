@@ -242,10 +242,9 @@
 
         function createDialogButtonListeners(){
 
-
-
             $("#createbutton").on("click", function (event) {
                 event.preventDefault();
+                // build JSON data for calendar event
 
             });
 

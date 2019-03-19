@@ -1,4 +1,10 @@
 
+# Remarks
+
+When submitting a URI with query parameters adding quotes (") are necessary.
+For examples curl http://getAllByStartBetween?start .. & end ... does not 
+work otherwise.
+
 # Add a Calendar event from command line
 
 curl -i -X POST -H "Content-Type:application/json" -d '{"title": "My Title", "description": "My Description", 
