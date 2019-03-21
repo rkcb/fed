@@ -245,6 +245,9 @@
             addClickListeners();
             fetchMonthEvents(currentDate);
 
+            /**
+             * create a collection name for uploaded file(s)
+             */
             function addUploadFileNames(){
                 let uploadElem = document.getElementById("upload");
                 uploadElem.addEventListener("change", function (event) {
@@ -255,7 +258,7 @@
                     }
                     let name = names.reduce( (acc, curr) => acc + ", " + curr);
 
-                    let nameElem = document.getElementById("filenames").innerHTML = name;
+                    document.getElementById("filenames").innerHTML = name;
 
                 });
             }

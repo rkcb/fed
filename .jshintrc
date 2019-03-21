@@ -1,3 +1,4 @@
+
 {
   "esversion"       : 6,
 
@@ -21,12 +22,7 @@
   "undef"         : true,
   "unused"        : true,     
   "strict"        : true,
-  "maxparams"     : false,    
-  "maxdepth"      : false,    
-  "maxstatements" : false,    
-  "maxcomplexity" : false,    
-  "maxlen"        : false,    
-  "varstmt"       : false,    
+  "varstmt"       : false,
   "asi"           : false,
   "boss"          : false,     
   "debug"         : false,     
@@ -59,8 +55,8 @@
   "devel"         : true,     
   "dojo"          : false,    
   "jasmine"       : false,    
-  "jquery"        : false,    
-  "mocha"         : true,     
+  "jquery"        : true,
+  "mocha"         : true,
   "mootools"      : false,    
   "node"          : false,    
   "nonstandard"   : false,    
@@ -74,7 +70,5 @@
   "wsh"           : false,    
   "yui"           : false,    
 
-  "jquery"        : true,
-  
   "globals"       : {}        
 }
