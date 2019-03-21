@@ -1,6 +1,55 @@
-
 (function () {
     "use strict"
+
+
+    //////////////////////////////// --- EventContainer begins --- /////////////////////////////////
+
+    /**
+     * Container for calendar events
+     * @constructor
+     */
+    function EventContainer() {
+
+        /**
+         * @param Date date
+         */
+        function getIsoDateString(date) {
+            return getFirstDayOfMonth(date).toISOString().split("T")[0];
+        }
+
+        const allEvents = new Map();
+
+        /**
+         * Date date first month data, e.g. 2019-03-01
+         * Array events contains all events in the month ( currently without filtering )
+         */
+        this.addEvents = function (date, events) {
+            let iso = getIsoDateString(date);
+            if (!allEvents.has(iso)) {
+                allEvents.set(iso, events);
+            }
+        }
+
+        /**
+         * Contains the date as key
+         * @param date
+         * @returns {boolean}
+         */
+        this.contains = function (date) {
+            return allEvents.has(getIsoDateString(date));
+        }
+
+        /**
+         * number of keys
+         * @returns {number}
+         */
+        this.size = function () {
+            return allEvents.size;
+        };
+
+    }
+
+    ////////////////////////////  --- EventContainer ends ---  /////////////////////////////////////
 
     function copy(date) {
         return new Date(date.getTime());
@@ -21,9 +70,11 @@
     }
 
     /**
-     * @param Date currentDate
+     * Fetch all month calendar events
+     * @param Date date
+     * @param EventContainer allEvents
      */
-    function fetchMonthEvents(date) {
+    function fetchMonthEvents(date, allEvents) {
 
         let start = getFirstDayOfMonth(date).toISOString();
         let end = getLastDayOfMonth(date).toISOString();
@@ -34,13 +85,20 @@
         start = pre + " 00:00:00";
         end = pre2 + " 23:59:59";
 
+        // this loads all specified events without paging
+        // NOTE: paging is easy to add
         $.getJSON({
             url: "/calendarevents/search/findAllByStartBetweenOrderByStartAsc",
             data: { start: start, end: end },
-            success: function (data, textStatus, jqXHR) {
+            success: function (data) {
+
             }
         });
+
+
+
     }
+
     /**
      * creates a calendar logic and initializes the start date and modal
      * dialog datetime input
@@ -48,16 +106,18 @@
      * @param Date date, by default current local date
      * @constructor
      */
-    function Calendar(date = false){
+    function Calendar(date = false) {
 
         const today = date === false ? new Date() : date;
+        const fetchedEvents = new EventContainer();
         Object.freeze(today);
         let currentDate = copy(today); // this date will change with navigation
-        const showDayDialog = function(event){
+
+        const showDayDialog = function (event) {
             let dateElem = document.getElementById("date");
             let date = copy(currentDate);
             date.setDate(event.srcElement.dateindex);
-            let dateValue = "" + date.getDate() + "." + (date.getMonth()+1) + "." + date.getFullYear();
+            let dateValue = "" + date.getDate() + "." + (date.getMonth() + 1) + "." + date.getFullYear();
             dateElem.value = dateValue;
             $("#exampleModalCenter").modal("show");
 
@@ -194,7 +254,7 @@
         /**
          * update day click listeners
          */
-        function addClickListeners(){
+        function addClickListeners() {
 
             // remove old click listeners
             let allDays = document.getElementsByClassName("day");
@@ -213,7 +273,7 @@
             }
 
             // update datetime input value when hours or minutes change
-            function addChangeListeners(){
+            function addChangeListeners() {
                 let hoursElem = document.getElementById("hours");
                 let minutesElem = document.getElementById("minutes");
 
@@ -246,7 +306,7 @@
             /**
              * create a collection name for uploaded file(s)
              */
-            function addUploadFileNames(){
+            function addUploadFileNames() {
                 let uploadElem = document.getElementById("upload");
                 uploadElem.addEventListener("change", function (event) {
                     let elem = event.srcElement;
@@ -254,16 +314,17 @@
                     for (let i = 0; i < elem.files.length; i++) {
                         names.push(elem.files[i].name);
                     }
-                    let name = names.reduce( (acc, curr) => acc + ", " + curr);
+                    let name = names.reduce((acc, curr) => acc + ", " + curr);
 
                     document.getElementById("filenames").innerHTML = name;
 
                 });
             }
+
             addUploadFileNames();
         }
 
-        function createDialogButtonListeners(){
+        function createDialogButtonListeners() {
 
             $("#createbutton").on("click", function (event) {
 
@@ -273,7 +334,7 @@
 
                 let inputs = $("#tournamentdata *[name]");
 
-                $(inputs).each(function(index, element){
+                $(inputs).each(function (index, element) {
                     let name = $(element).prop("name");
                     data[name] = $(element).val();
                 });
@@ -282,7 +343,7 @@
                     type: "POST",
                     url: "/calendarevents",
                     data: JSON.stringify(data),
-                    success: function(data, textStatus){
+                    success: function (data, textStatus) {
                         console.log("success: " + textStatus);
                     },
                     dataType: "json",
