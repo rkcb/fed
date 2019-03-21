@@ -2,6 +2,47 @@
 (function () {
     "use strict"
 
+
+    function copy(date) {
+        return new Date(date.getTime());
+    }
+
+    /**
+     * @param Date date
+     */
+    function getFirstDayOfMonth(date) {
+        return new Date(date.getFullYear(), date.getMonth(), 1);
+    }
+
+    function getLastDayOfMonth(date) {
+        let end = copy(date);
+        end.setMonth(date.getMonth() + 1);
+        end.setDate(0);
+        return end;
+    }
+
+    /**
+     * @param Date currentDate
+     */
+    function fetchMonthEvents(date) {
+
+        let start = getFirstDayOfMonth(date).toISOString();
+        let end = getLastDayOfMonth(date).toISOString();
+
+        let [pre, suff] = start.split("T");
+        let [pre2, suff2] = end.split("T");
+
+        start = pre + " 00:00:00";
+        end = pre2 + " 23:59:59";
+
+        $.getJSON({
+            url: "/calendarevents/search/findAllByStartBetweenOrderByStartAsc",
+            data: { start: start, end: end },
+            success: function (data, textStatus, jqXHR) {
+                alert("success with getJson");
+            }
+        });
+    }
     /**
      * creates a calendar logic and initializes the start date and modal
      * dialog datetime input
@@ -57,9 +98,6 @@
             return date2;
         }
 
-        function copy(date) {
-            return new Date(date.getTime());
-        }
 
         /**
          * adds the date numbers to table cells
@@ -200,10 +238,11 @@
         }
 
         /**
-         * updates the month
+         * update the calendar logic to reflect the selected month
          * @param int offset
          */
         function updateMonth(offset = 0) {
+            fetchMonthEvents(currentDate);
             let newMonth = currentDate.getMonth() + offset;
             currentDate.setMonth(newMonth);
             setMonthDates(currentDate);
@@ -213,8 +252,6 @@
             document.getElementById("month").innerText = monthName(currentDate);
             document.getElementById("year").innerText = currentDate.getFullYear();
             addClickListeners();
-
-
 
             function addUploadFileNames(){
                 let uploadElem = document.getElementById("upload");
@@ -231,6 +268,9 @@
                 });
             };
             addUploadFileNames();
+
+            fetchMonthEvents(currentDate);
+
         }
 
         function addCalendarEventListeners() {
@@ -243,8 +283,29 @@
         function createDialogButtonListeners(){
 
             $("#createbutton").on("click", function (event) {
+
                 event.preventDefault();
-                // build JSON data for calendar event
+
+                let data = {};
+
+                let inputs = $("#tournamentdata *[name]");
+
+                $(inputs).each(function(index, element){
+                    let name = $(element).prop("name");
+                    data[name] = $(element).val();
+                });
+
+                $.ajax({
+                    type: "POST",
+                    url: "/calendarevents",
+                    data: JSON.stringify(data),
+                    success: function(data, textStatus, jqXHR){
+                        console.log("success: " + textStatus);
+                    },
+                    dataType: "json",
+                    contentType: "application/json",
+                });
+
 
             });
 
