@@ -61,9 +61,8 @@
             dateElem.value = dateValue;
             $("#exampleModalCenter").modal("show");
 
-            // update the datetime input value
             let dateTimeElem = document.getElementById("datetime");
-            dateTimeElem.value = date.getTime(); // mill seconds
+            dateTimeElem.value = date.toISOString();
         };
 
         /**
@@ -72,8 +71,7 @@
         function updateDatetimeValue() {
 
             let elem = document.getElementById("datetime");
-            let date = new Date();
-            date.setTime(elem.value);
+            let date = new Date(elem.value);
 
             let hours = document.getElementById("hours").value;
             let minutes = document.getElementById("minutes").value;
@@ -81,11 +79,11 @@
             date.setHours(hours);
             date.setMinutes(minutes);
 
-            elem.value = date.getTime();
+            elem.value = date.toISOString();
         }
 
         /**
-         * return a Date which points to the day 1--
+         * return a Date which points to the day 1
          * @param Date date
          * @returns Date
          */
@@ -284,7 +282,7 @@
                     type: "POST",
                     url: "/calendarevents",
                     data: JSON.stringify(data),
-                    success: function(data, textStatus, jqXHR){
+                    success: function(data, textStatus){
                         console.log("success: " + textStatus);
                     },
                     dataType: "json",
