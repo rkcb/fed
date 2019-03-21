@@ -2,7 +2,6 @@
 (function () {
     "use strict"
 
-
     function copy(date) {
         return new Date(date.getTime());
     }
@@ -29,8 +28,8 @@
         let start = getFirstDayOfMonth(date).toISOString();
         let end = getLastDayOfMonth(date).toISOString();
 
-        let [pre, suff] = start.split("T");
-        let [pre2, suff2] = end.split("T");
+        let pre = start.split("T")[0];
+        let pre2 = end.split("T")[0];
 
         start = pre + " 00:00:00";
         end = pre2 + " 23:59:59";
@@ -39,7 +38,6 @@
             url: "/calendarevents/search/findAllByStartBetweenOrderByStartAsc",
             data: { start: start, end: end },
             success: function (data, textStatus, jqXHR) {
-                alert("success with getJson");
             }
         });
     }
@@ -71,7 +69,7 @@
         /**
          * called after an hours or minutes change
          */
-        function updateDatetimeValue(event) {
+        function updateDatetimeValue() {
 
             let elem = document.getElementById("datetime");
             let date = new Date();
@@ -149,16 +147,9 @@
             return date2.getDate();
         }
 
-        function properCalendarElements(date) {
-            let prefix = daysBeforeFirst(date);
-            let days = document.getElementsByClassName("day");
-            let daysInMonth = getNumberOfDaysInMonth(date);
-            return days.splice(prefix, prefix + daysInMonth);
-        }
-
         /**
          * get the month days only
-         * @param date
+         * @param Date date
          * @returns {Element[]}
          */
         function getMonthDateElements(date) {
@@ -170,7 +161,7 @@
 
         /**
          * add an event decoration
-         * @param date
+         * @param Date date
          */
         function addEvent(date) {
             let days = getMonthDateElements(date);
@@ -242,7 +233,7 @@
          * @param int offset
          */
         function updateMonth(offset = 0) {
-            fetchMonthEvents(currentDate);
+
             let newMonth = currentDate.getMonth() + offset;
             currentDate.setMonth(newMonth);
             setMonthDates(currentDate);
@@ -252,6 +243,7 @@
             document.getElementById("month").innerText = monthName(currentDate);
             document.getElementById("year").innerText = currentDate.getFullYear();
             addClickListeners();
+            fetchMonthEvents(currentDate);
 
             function addUploadFileNames(){
                 let uploadElem = document.getElementById("upload");
@@ -266,18 +258,8 @@
                     let nameElem = document.getElementById("filenames").innerHTML = name;
 
                 });
-            };
+            }
             addUploadFileNames();
-
-            fetchMonthEvents(currentDate);
-
-        }
-
-        function addCalendarEventListeners() {
-            document.getElementById("month-prev").addEventListener("click",
-                updateMonth(-1));
-            document.getElementById("month-next").addEventListener("click",
-                updateMonth(1));
         }
 
         function createDialogButtonListeners(){
@@ -329,16 +311,6 @@
 
         updateMonth();
         createDialogButtonListeners();
-    }
-
-    function formDataToJSON(){
-        let inputs = $("#tournamentdata input").not( (index, el) => {
-            return el.name.length === 0;
-        });
-        inputs.each(function (index) {
-            // console.log("index : " + index + " name = " + this.attr("name"));
-            console.log($(this).attr("name"));
-        });
     }
 
     let calendar = new Calendar();
