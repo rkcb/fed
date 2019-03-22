@@ -1,6 +1,7 @@
+
+
 (function () {
     "use strict"
-
 
     //////////////////////////////// --- EventContainer begins --- /////////////////////////////////
 
@@ -13,21 +14,35 @@
         /**
          * @param Date date
          */
-        function getIsoDateString(date) {
+        function getDayOneIsoDateString(date) {
             return getFirstDayOfMonth(date).toISOString().split("T")[0];
+        }
+
+        /**
+         * @param Date date
+         */
+        function getDateString(date) {
+            return date.toISOString().split("T")[0];
         }
 
         const allEvents = new Map();
 
+        function getEventId(event){
+
+        }
         /**
          * Date date first month data, e.g. 2019-03-01
-         * Array events contains all events in the month ( currently without filtering )
+         * Object event as return by the server // see the REST
          */
-        this.addEvents = function (date, events) {
-            let iso = getIsoDateString(date);
-            if (!allEvents.has(iso)) {
-                allEvents.set(iso, events);
-            }
+        this.add = function (event) {
+        }
+
+        /**
+         * delete event by the id
+         * @param event
+         */
+        this.delete = function(event){
+            // let eventId =
         }
 
         /**
@@ -36,7 +51,7 @@
          * @returns {boolean}
          */
         this.contains = function (date) {
-            return allEvents.has(getIsoDateString(date));
+            return allEvents.has(getDayOneIsoDateString(date));
         }
 
         /**
@@ -47,7 +62,7 @@
             return allEvents.size;
         };
 
-    }
+    };
 
     ////////////////////////////  --- EventContainer ends ---  /////////////////////////////////////
 
@@ -70,11 +85,11 @@
     }
 
     /**
-     * Fetch all month calendar events
+     * Fetch all calendar events of the date
      * @param Date date
-     * @param EventContainer allEvents
+     * @param EventContainer eventContainer
      */
-    function fetchMonthEvents(date, allEvents) {
+    function fetchMonthEvents(date, eventContainer) {
 
         let start = getFirstDayOfMonth(date).toISOString();
         let end = getLastDayOfMonth(date).toISOString();
@@ -85,12 +100,14 @@
         start = pre + " 00:00:00";
         end = pre2 + " 23:59:59";
 
+
         // this loads all specified events without paging
-        // NOTE: paging is easy to add
         $.getJSON({
             url: "/calendarevents/search/findAllByStartBetweenOrderByStartAsc",
             data: { start: start, end: end },
             success: function (data) {
+                let events = data._embedded.calendarevents;
+                // eventContainer.ad
 
             }
         });
@@ -109,7 +126,8 @@
     function Calendar(date = false) {
 
         const today = date === false ? new Date() : date;
-        const fetchedEvents = new EventContainer();
+        const eventContainer = new EventContainer();
+
         Object.freeze(today);
         let currentDate = copy(today); // this date will change with navigation
 
@@ -221,11 +239,11 @@
          * add an event decoration
          * @param Date date
          */
-        function addEvent(date) {
-            let days = getMonthDateElements(date);
-            let day = days[days.length - 1];
-            day.closest("td").style.borderBottom = "solid 3px red";
-        }
+        // function addEventMark(date) {
+        //     let days = getMonthDateElements(date);
+        //     let day = days[days.length - 1];
+        //     day.closest("td").style.borderBottom = "solid 3px red";
+        // }
 
         /**
          * @param Date currentDate chosen date by the user
@@ -263,6 +281,7 @@
                 allDays[i].style.cursor = "";
                 allDays[i].dateindex = undefined;
             }
+
             // add current click listeners
             let monthDays = getMonthDateElements(currentDate);
             for (let i = 0; i < monthDays.length; i++) {
@@ -301,7 +320,7 @@
             document.getElementById("month").innerText = monthName(currentDate);
             document.getElementById("year").innerText = currentDate.getFullYear();
             addClickListeners();
-            fetchMonthEvents(currentDate);
+            fetchMonthEvents(currentDate, eventContainer);
 
             /**
              * create a collection name for uploaded file(s)
