@@ -106,7 +106,7 @@
             url: "/calendarevents/search/findAllByStartBetweenOrderByStartAsc",
             data: { start: start, end: end },
             success: function (data) {
-                let events = data._embedded.calendarevents;
+                // let events = data._embedded.calendarevents;
                 // eventContainer.ad
 
             }
@@ -127,6 +127,7 @@
 
         const today = date === false ? new Date() : date;
         const eventContainer = new EventContainer();
+        let selectedDay = undefined;
 
         Object.freeze(today);
         let currentDate = copy(today); // this date will change with navigation
@@ -143,6 +144,19 @@
             dateTimeElem.value = date.toISOString();
         };
 
+        const setSelectedDay = function (event) {
+            if (selectedDay){
+                selectedDay.style.backgroundColor = "";
+            }
+            selectedDay = event.srcElement;
+            selectedDay.style.backgroundColor = "lightgray";
+        }
+
+        function unsetSelectedDay() {
+            if (selectedDay){
+                selectedDay.style.backgroundColor = "";
+            }
+        }
 
         /**
          * called after an hours or minutes change
@@ -278,7 +292,7 @@
             // remove old click listeners
             let allDays = document.getElementsByClassName("day");
             for (let i = 0; i < allDays.length; i++) {
-                allDays[i].removeEventListener("click", showDayDialog, true);
+                allDays[i].removeEventListener("click", setSelectedDay, true);
                 allDays[i].style.cursor = "";
                 allDays[i].dateindex = undefined;
             }
@@ -286,7 +300,7 @@
             // add current click listeners
             let monthDays = getMonthDateElements(currentDate);
             for (let i = 0; i < monthDays.length; i++) {
-                monthDays[i].addEventListener("click", showDayDialog, true);
+                monthDays[i].addEventListener("click", setSelectedDay, true);
                 monthDays[i].style.cursor = "pointer";
                 // this value is used to set the date correctly in the modal dialog
                 monthDays[i].dateindex = i + 1;
@@ -311,7 +325,7 @@
          * @param int offset
          */
         function updateMonth(offset = 0) {
-
+            unsetSelectedDay();
             let newMonth = currentDate.getMonth() + offset;
             currentDate.setMonth(newMonth);
             setMonthDates(currentDate);
