@@ -47,7 +47,8 @@
 
                     <div class="form-group">
                         <!--<label for="description">Description</label>-->
-                        <textarea class="form-control" placeholder="Description" name="description" id="description" cols="40"
+                        <textarea class="form-control" placeholder="Description" name="description" id="description"
+                                  cols="40"
                                   rows="3" value=""></textarea>
                     </div>
 
@@ -62,15 +63,18 @@
                     <div class="form-row align-items-center form-group">
                         <div class="col-4">
                             <input class="form-control" placeholder="Hours" id="hours" type="number" min="1" max="24">
-                        </div>:
+                        </div>
+                        :
                         <div class="col-4">
-                            <input class="form-control" placeholder="Minutes" id="minutes" type="number" min="0" max="59">
+                            <input class="form-control" placeholder="Minutes" id="minutes" type="number" min="0"
+                                   max="59">
                         </div>
                     </div>
 
 
                     <div class="form-group">
-                        <input type="text" name="location" placeholder="Location" class="form-control" id="location" value="">
+                        <input type="text" name="location" placeholder="Location" class="form-control" id="location"
+                               value="">
                     </div>
 
                     <div class="form-group">
@@ -87,7 +91,8 @@
                             <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
                         </div>
                         <div class="custom-file">
-                            <input type="file" multiple class="custom-file-input" id="upload" aria-describedby="inputGroupFileAddon01">
+                            <input type="file" multiple class="custom-file-input" id="upload"
+                                   aria-describedby="inputGroupFileAddon01">
                             <label id="filenames" class="custom-file-label" for="upload">Choose file</label>
                         </div>
                     </div>
@@ -105,17 +110,17 @@
     </div>
 </div>
 
-<div class="divtest">
-
-</div>
-
-
 <div class="container m-auto p-5">
 
     <table class="table table-striped table-bordered">
         <thead>
         <tr>
-            <th style="text-align:  center" colspan="8">Calendar</th>
+            <th colspan="8" class="flex-row justify-content-end">
+                <!--<button class="w-25 btn btn-primary">+</button>-->
+                <div class="d-flex flex-row bd-highlight justify-content-end">
+                    <div class="p-2 bd-highlight"><button class="btn btn-primary">+</button></div>
+                </div>
+            </th>
         </tr>
         <tr>
             <th style="text-align:  center; background-color: rgba(71,158,255,0.16);" colspan="8">
@@ -199,8 +204,8 @@
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="js/jquery/jquery-3.3.1.min.js"></script>
 <!--<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"-->
-        <!--integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"-->
-        <!--crossorigin="anonymous"></script>-->
+<!--integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"-->
+<!--crossorigin="anonymous"></script>-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
         integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
         crossorigin="anonymous"></script>

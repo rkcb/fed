@@ -127,7 +127,7 @@
 
         const today = date === false ? new Date() : date;
         const eventContainer = new EventContainer();
-        let selectedDay = undefined;
+        let selectedDay;
 
         Object.freeze(today);
         let currentDate = copy(today); // this date will change with navigation
@@ -152,8 +152,8 @@
             selectedDay.style.backgroundColor = "lightgray";
         }
 
-        function unsetSelectedDay() {
-            if (selectedDay){
+        function ungraySelectedDay() {
+            if (typeof selectedDay !== "undefined"){
                 selectedDay.style.backgroundColor = "";
             }
         }
@@ -250,13 +250,19 @@
             return days.slice(prefix, prefix + daysInMonth);
         }
 
+        function setDefaultSelectedDay() {
+            ungraySelectedDay();
+            let days = getMonthDateElements(currentDate);
+            days[0].style.backgroundColor = "lightgray";
+            selectedDay = days[0];
+        }
         /**
          * add an event decoration
          * @param Date date
          */
         // function addEventMark(date) {
         //     let days = getMonthDateElements(date);
-        //     let day = days[days.length - 1];
+        //     let dsetDefaultSelectedDayay = days[days.length - 1];
         //     day.closest("td").style.borderBottom = "solid 3px red";
         // }
 
@@ -325,11 +331,11 @@
          * @param int offset
          */
         function updateMonth(offset = 0) {
-            unsetSelectedDay();
             let newMonth = currentDate.getMonth() + offset;
             currentDate.setMonth(newMonth);
             setMonthDates(currentDate);
             grayOutIrrelevantDays(currentDate);
+            setDefaultSelectedDay();
             // addEvent(new Date());
             decorateToday(today, currentDate);
             document.getElementById("month").innerText = monthName(currentDate);
