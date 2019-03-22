@@ -137,11 +137,12 @@
             date.setDate(event.srcElement.dateindex);
             let dateValue = "" + date.getDate() + "." + (date.getMonth() + 1) + "." + date.getFullYear();
             dateElem.value = dateValue;
-            $("#exampleModalCenter").modal("show");
+            $("#modalEventEditor").modal("show");
 
             let dateTimeElem = document.getElementById("datetime");
             dateTimeElem.value = date.toISOString();
         };
+
 
         /**
          * called after an hours or minutes change
