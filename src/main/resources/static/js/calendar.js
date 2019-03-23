@@ -11,47 +11,57 @@
      */
     function EventContainer() {
 
-        /**
-         * @param Date date
-         */
-        function getDayOneIsoDateString(date) {
-            return getFirstDayOfMonth(date).toISOString().split("T")[0];
-        }
-
-        /**
-         * @param Date date
-         */
-        function getDateString(date) {
-            return date.toISOString().split("T")[0];
-        }
-
         const allEvents = new Map();
 
-        function getEventId(event){
+        /**
+         * @param Date date
+         */
+        // function getDayOneIsoDateString(date) {
+        //     return getFirstDayOfMonth(date).toISOString().split("T")[0];
+        // }
 
+        /**
+         * @param Date date
+         */
+        // function getDateString(date) {
+        //     return date.toISOString().split("T")[0];
+        // }
+
+        /**
+         * @param event (calendar event)
+         * @returns {*}
+         */
+        function getEventId(event){
+            let href = event._links.self.href;
+            let re = /.*\/(\d+)$/;
+            return href.match(re)[0];
         }
         /**
          * Date date first month data, e.g. 2019-03-01
-         * Object event as return by the server // see the REST
+         * Object calendarEvent as return by the server // see the REST
          */
-        this.add = function (event) {
-        }
+        this.set = function (event) {
+            let id = getEventId(event);
+            allEvents.set(id, event);
+        };
 
         /**
          * delete event by the id
          * @param event
          */
         this.delete = function(event){
-            // let eventId =
-        }
+            let id = getEventId(event);
+            allEvents.delete(id);
+        };
 
         /**
-         * Contains the date as key
-         * @param date
+         * Has the container this event
+         * @param Object event (REST calendarEvent)
          * @returns {boolean}
          */
-        this.contains = function (date) {
-            return allEvents.has(getDayOneIsoDateString(date));
+
+        this.has = function (event) {
+            return allEvents.has(getEventId(event));
         };
 
         /**
@@ -106,9 +116,10 @@
             url: "/calendarevents/search/findAllByStartBetweenOrderByStartAsc",
             data: { start: start, end: end },
             success: function (data) {
-                // let events = data._embedded.calendarevents;
-                // eventContainer.ad
-
+                let events = data._embedded.calendarevents;
+                events.forEach(function(item){
+                    eventContainer.set(item);
+                });
             }
         });
     }
@@ -143,7 +154,18 @@
 
         // showDayDialog();
 
+
+
         const setSelectedDayElem = function (event) {
+
+            function clearEventTable(){
+
+            }
+
+            function addDayEvents() {
+                let dayIndex = event.srcElement.dateindex;
+            }
+
             if (selectedDayElem){
                 selectedDayElem.style.backgroundColor = "";
             }
@@ -256,7 +278,7 @@
             selectedDayElem = days[0];
         }
         /**
-         * add an event decoration
+         * set an event decoration
          * @param Date date
          */
         // function addEventMark(date) {
@@ -299,7 +321,7 @@
                 allDays[i].dateindex = undefined;
             }
 
-            // add current click listeners
+            // set current click listeners
             let monthDays = getMonthDateElements(currentDate);
             for (let i = 0; i < monthDays.length; i++) {
                 monthDays[i].addEventListener("click", setSelectedDayElem, true);
@@ -407,9 +429,9 @@
                 let dateValue = "" + date.getDate() + "." + (date.getMonth() + 1) + "." + date.getFullYear();
                 dateElem.value = dateValue;
                 $("#modalEventEditor").modal("show");
-
-                let dateTimeElem = document.getElementById("datetime");
-                dateTimeElem.value = date.toISOString();
+                //
+                // let dateTimeElem = document.getElementById("datetime");
+                // dateTimeElem.value = date.toISOString();
             });
         }
 
@@ -429,6 +451,7 @@
 
     document.getElementById("minutes").step = 5;
 
+    // $("#modalEventEditor").modal("show");
 
 
 

@@ -1669,7 +1669,7 @@
 
     // Both nodes are inside #document
 
-    if (element1 !== commonAncestorContainer && element2 !== commonAncestorContainer || start.contains(end)) {
+    if (element1 !== commonAncestorContainer && element2 !== commonAncestorContainer || start.has(end)) {
       if (isOffsetContainer(commonAncestorContainer)) {
         return commonAncestorContainer;
       }
@@ -1935,7 +1935,7 @@
       offsets.marginLeft = marginLeft;
     }
 
-    if (isIE10 && !fixedPosition ? parent.contains(scrollParent) : parent === scrollParent && scrollParent.nodeName !== 'BODY') {
+    if (isIE10 && !fixedPosition ? parent.has(scrollParent) : parent === scrollParent && scrollParent.nodeName !== 'BODY') {
       offsets = includeScroll(offsets, parent);
     }
 
@@ -2456,7 +2456,7 @@
   }
 
   /**
-   * It will add resize/scroll events and start recalculating
+   * It will set resize/scroll events and start recalculating
    * position of the popper element when they are triggered.
    * @method
    * @memberof Popper
@@ -2526,7 +2526,7 @@
   function setStyles(element, styles) {
     Object.keys(styles).forEach(function (prop) {
       var unit = '';
-      // add unit if the value is numeric and is one of the following
+      // set unit if the value is numeric and is one of the following
       if (['width', 'height', 'top', 'right', 'bottom', 'left'].indexOf(prop) !== -1 && isNumeric(styles[prop])) {
         unit = 'px';
       }
@@ -2564,7 +2564,7 @@
    */
   function applyStyle(data) {
     // any property present in `data.styles` will be applied to the popper,
-    // in this way we can make the 3rd party modifiers add custom styles to it
+    // in this way we can make the 3rd party modifiers set custom styles to it
     // Be aware, modifiers could override the properties defined in the previous
     // lines of this modifier!
     setStyles(data.instance.popper, data.styles);
@@ -2583,7 +2583,7 @@
 
   /**
    * Set the x-placement attribute before everything else because it could be used
-   * to add margins to the popper margins needs to be calculated to get the
+   * to set margins to the popper margins needs to be calculated to get the
    * correct popper offsets.
    * @method
    * @memberof Popper.modifiers
@@ -2761,7 +2761,7 @@
     } else {
       // if the arrowElement isn't a query selector we must check that the
       // provided DOM node is child of its popper node
-      if (!data.instance.popper.contains(arrowElement)) {
+      if (!data.instance.popper.has(arrowElement)) {
         console.warn('WARNING: `arrow.element` must be child of its popper element!');
         return data;
       }
@@ -2971,8 +2971,8 @@
 
         data.placement = placement + (variation ? '-' + variation : '');
 
-        // this object contains `position`, we want to preserve it along with
-        // any additional property we may add in the future
+        // this object has `position`, we want to preserve it along with
+        // any additional property we may set in the future
         data.offsets.popper = _extends({}, data.offsets.popper, getPopperOffsets(data.instance.popper, data.offsets.reference, data.placement));
 
         data = runModifiers(data.instance.modifiers, data, 'flip');
@@ -3088,7 +3088,7 @@
       return frag.trim();
     });
 
-    // Detect if the offset string contains a pair of values or a single one
+    // Detect if the offset string has a pair of values or a single one
     // they could be separated by comma or space
     var divider = fragments.indexOf(find(fragments, function (frag) {
       return frag.search(/,|\s/) !== -1;
@@ -3830,8 +3830,8 @@
 
       // modifiers have the ability to execute arbitrary code when Popper.js get inited
       // such code is executed in the same order of its modifier
-      // they could add new properties to their options configuration
-      // BE AWARE: don't add options to `options.modifiers.name` but to `modifierOptions`!
+      // they could set new properties to their options configuration
+      // BE AWARE: don't set options to `options.modifiers.name` but to `modifierOptions`!
       this.modifiers.forEach(function (modifierOptions) {
         if (modifierOptions.enabled && isFunction(modifierOptions.onLoad)) {
           modifierOptions.onLoad(_this.reference, _this.popper, _this.options, modifierOptions, _this.state);
@@ -4090,7 +4090,7 @@
           }
 
           this._popper = new Popper(referenceElement, this._menu, this._getPopperConfig());
-        } // If this is a touch-enabled device we add extra
+        } // If this is a touch-enabled device we set extra
         // empty mouseover listeners to the body's immediate children;
         // only needed because of broken event delegation on iOS
         // https://www.quirksmode.org/blog/archives/2014/02/mouse_event_bub.html
@@ -5244,7 +5244,7 @@
               _this._handlePopperPlacementChange(data);
             }
           });
-          $$$1(tip).addClass(ClassName.SHOW); // If this is a touch-enabled device we add extra
+          $$$1(tip).addClass(ClassName.SHOW); // If this is a touch-enabled device we set extra
           // empty mouseover listeners to the body's immediate children;
           // only needed because of broken event delegation on iOS
           // https://www.quirksmode.org/blog/archives/2014/02/mouse_event_bub.html

@@ -282,7 +282,7 @@ a[data-goto]:hover {
   z-index: 3; }
 
 /*
-row content (which contains day/week numbers and events) as well as "helper" (which contains
+row content (which has day/week numbers and events) as well as "helper" (which has
 temporary rendered events).
 */
 .fc-row .fc-content-skeleton {

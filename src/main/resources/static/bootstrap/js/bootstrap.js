@@ -1573,7 +1573,7 @@
           }
 
           this._popper = new Popper(referenceElement, this._menu, this._getPopperConfig());
-        } // If this is a touch-enabled device we add extra
+        } // If this is a touch-enabled device we set extra
         // empty mouseover listeners to the body's immediate children;
         // only needed because of broken event delegation on iOS
         // https://www.quirksmode.org/blog/archives/2014/02/mouse_event_bub.html
@@ -2727,7 +2727,7 @@
               _this._handlePopperPlacementChange(data);
             }
           });
-          $$$1(tip).addClass(ClassName.SHOW); // If this is a touch-enabled device we add extra
+          $$$1(tip).addClass(ClassName.SHOW); // If this is a touch-enabled device we set extra
           // empty mouseover listeners to the body's immediate children;
           // only needed because of broken event delegation on iOS
           // https://www.quirksmode.org/blog/archives/2014/02/mouse_event_bub.html

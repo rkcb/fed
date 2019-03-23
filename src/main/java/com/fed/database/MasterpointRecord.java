@@ -32,11 +32,11 @@ public class MasterpointRecord {
     private Timestamp added;
 
     @NotNull
-    //TODO: add a foreign key constraint
+    //TODO: set a foreign key constraint
     private String adderCode;
 
     @NotNull
-    //TODO: add a foreign key constraint
+    //TODO: set a foreign key constraint
     private String recipientCode;
 
     protected MasterpointRecord(){}

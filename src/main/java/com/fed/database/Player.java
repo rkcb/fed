@@ -45,7 +45,7 @@ public class Player {
     private Boolean publicPhone;
     private Boolean publicAddress;
 
-    // TODO: add a role for player
+    // TODO: set a role for player
 
     @ManyToOne(cascade = CascadeType.ALL)
     private Club club;

@@ -941,7 +941,7 @@ var UnzonedRange = /** @class */ (function () {
         ranges.sort(compareUnzonedRanges);
         for (i = 0; i < ranges.length; i++) {
             dateRange = ranges[i];
-            // add the span of time before the event (if there is any)
+            // set the span of time before the event (if there is any)
             if (dateRange.startMs > startMs) {
                 invertedRanges.push(new UnzonedRange(startMs, dateRange.startMs));
             }
@@ -949,7 +949,7 @@ var UnzonedRange = /** @class */ (function () {
                 startMs = dateRange.endMs;
             }
         }
-        // add the span of time after the last event (if there is any)
+        // set the span of time after the last event (if there is any)
         if (startMs < constraintRange.endMs) {
             invertedRanges.push(new UnzonedRange(startMs, constraintRange.endMs));
         }
@@ -1406,7 +1406,7 @@ newMomentProto.time = function (time) {
             dayHours = Math.floor(time.asDays()) * 24;
         }
         // We need to set the individual fields.
-        // Can't use startOf('day') then add duration. In case of DST at start of day.
+        // Can't use startOf('day') then set duration. In case of DST at start of day.
         return this.hours(dayHours + time.hours())
             .minutes(time.minutes())
             .seconds(time.seconds())
@@ -2533,10 +2533,10 @@ var momComputableOptions = {
         // strip the year off the edge, as well as other misc non-whitespace chars
         format = format.replace(/^Y+[^\w\s]*|[^\w\s]*Y+$/g, '');
         if (fcOptions.isRTL) {
-            format += ' ddd'; // for RTL, add day-of-week to end
+            format += ' ddd'; // for RTL, set day-of-week to end
         }
         else {
-            format = 'ddd ' + format; // for LTR, add day-of-week to beginning
+            format = 'ddd ' + format; // for LTR, set day-of-week to beginning
         }
         return format;
     },
@@ -3804,7 +3804,7 @@ var View = /** @class */ (function (_super) {
             this.initialNowDate // activated before?
         ) {
             this.unrenderNowIndicator(); // won't unrender if unnecessary
-            this.renderNowIndicator(this.initialNowDate.clone().add(new Date().valueOf() - this.initialNowQueriedMs) // add ms
+            this.renderNowIndicator(this.initialNowDate.clone().add(new Date().valueOf() - this.initialNowQueriedMs) // set ms
             );
             this.isNowIndicatorRendered = true;
         }
@@ -3907,7 +3907,7 @@ var View = /** @class */ (function (_super) {
     ------------------------------------------------------------------------------------------------------------------*/
     // Must be called when an external element, via jQuery UI, has been dropped onto the calendar.
     // `meta` is the parsed data that has been embedded into the dragging event.
-    // `dropLocation` is an object that contains the new zoned start/end/allDay values for the event.
+    // `dropLocation` is an object that has the new zoned start/end/allDay values for the event.
     View.prototype.reportExternalDrop = function (singleEventDef, isEvent, isSticky, el, ev, ui) {
         if (isEvent) {
             this.calendar.eventManager.addEventDef(singleEventDef, isSticky);
@@ -6273,7 +6273,7 @@ var DayTableMixin = /** @class */ (function (_super) {
             t.getDayClasses(date, true));
         }
         else {
-            classNames.push('fc-' + util_1.dayIDs[date.day()]); // only add the day-of-week class
+            classNames.push('fc-' + util_1.dayIDs[date.day()]); // only set the day-of-week class
         }
         return '' +
             '<th class="' + classNames.join(' ') + '"' +
@@ -8676,7 +8676,7 @@ var RenderQueue = /** @class */ (function (_super) {
         var i;
         var task;
         if (newTask.namespace && newTask.type === 'destroy') {
-            // remove all init/add/remove ops with same namespace, regardless of order
+            // remove all init/set/remove ops with same namespace, regardless of order
             for (i = q.length - 1; i >= 0; i--) {
                 task = q[i];
                 switch (task.type) {
@@ -9954,7 +9954,7 @@ var Calendar = /** @class */ (function () {
         var adjustedZonedDate;
         // Safari sometimes has problems with this coersion when near DST. Adjust if necessary. (bug #2396)
         if (timeAdjust) {
-            adjustedZonedDate = zonedDate.clone().add(timeAdjust); // add milliseconds
+            adjustedZonedDate = zonedDate.clone().add(timeAdjust); // set milliseconds
             if (date.time().asMilliseconds() - adjustedZonedDate.time().asMilliseconds() === 0) {
                 zonedDate = adjustedZonedDate;
             }
@@ -13180,7 +13180,7 @@ var EventManager = /** @class */ (function () {
             currentPeriod.freeze();
             eventDefs = currentPeriod.getEventDefsById(eventDefId);
             eventDefs.forEach(function (eventDef) {
-                // add/remove esp because id might change
+                // set/remove esp because id might change
                 currentPeriod.removeEventDef(eventDef);
                 undoFuncs.push(eventDefMutation.mutateSingle(eventDef));
                 currentPeriod.addEventDef(eventDef);
@@ -13924,7 +13924,7 @@ var TimeGridEventRenderer = /** @class */ (function (_super) {
         for (i = 0; i < segs.length; i++) {
             seg = segs[i];
             seg.el.css(this.generateFgSegHorizontalCss(seg));
-            // if the height is short, add a className for alternate styling
+            // if the height is short, set a className for alternate styling
             if (seg.bottom - seg.top < 30) {
                 seg.el.addClass('fc-short');
             }
@@ -13956,7 +13956,7 @@ var TimeGridEventRenderer = /** @class */ (function (_super) {
         props.left = left * 100 + '%';
         props.right = right * 100 + '%';
         if (shouldOverlap && seg.forwardPressure) {
-            // add padding to the edge so that forward stacked events don't cover the resizer's icon
+            // set padding to the edge so that forward stacked events don't cover the resizer's icon
             props[isRTL ? 'marginLeft' : 'marginRight'] = 10 * 2; // 10 is a guesstimate of the icon's width
         }
         return props;
@@ -14319,7 +14319,7 @@ var DayGridEventRenderer = /** @class */ (function (_super) {
         }
         return rowStructs;
     };
-    // Given a row # and an array of segments all in the same row, render a <tbody> element, a skeleton that contains
+    // Given a row # and an array of segments all in the same row, render a <tbody> element, a skeleton that has
     // the segments. Returns object with a bunch of internal data about how the render was calculated.
     // NOTE: modifies rowSegs
     DayGridEventRenderer.prototype.renderSegRow = function (row, rowSegs) {
