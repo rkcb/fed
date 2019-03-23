@@ -23,9 +23,9 @@
         /**
          * @param Date date
          */
-        // function getDateString(date) {
-        //     return date.toISOString().split("T")[0];
-        // }
+        function getDateString(date) {
+            return date.toISOString().split("T")[0];
+        }
 
         /**
          * @param event (calendar event)
@@ -36,6 +36,27 @@
             let re = /.*\/(\d+)$/;
             return href.match(re)[0];
         }
+
+        /**
+         * @param Date date
+         */
+        function getEventsByDate(date) {
+
+            let iso = getDateString(date);
+            let events = [];
+            let keys = allEvents.keys();
+
+            for(let key of keys){
+                let ev = allEvents.get(key);
+                let start = ev.start.split("T")[0];
+                if (start === iso){
+                    events.push(ev);
+                }
+            }
+
+            return events;
+        }
+
         /**
          * Date date first month data, e.g. 2019-03-01
          * Object calendarEvent as return by the server // see the REST
