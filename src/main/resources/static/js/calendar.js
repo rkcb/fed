@@ -52,7 +52,7 @@
          */
         this.contains = function (date) {
             return allEvents.has(getDayOneIsoDateString(date));
-        }
+        };
 
         /**
          * number of keys
@@ -111,9 +111,6 @@
 
             }
         });
-
-
-
     }
 
     /**
@@ -127,34 +124,36 @@
 
         const today = date === false ? new Date() : date;
         const eventContainer = new EventContainer();
-        let selectedDay;
+        let selectedDayElem;
 
         Object.freeze(today);
         let currentDate = copy(today); // this date will change with navigation
 
-        const showDayDialog = function (event) {
-            let dateElem = document.getElementById("date");
-            let date = copy(currentDate);
-            date.setDate(event.srcElement.dateindex);
-            let dateValue = "" + date.getDate() + "." + (date.getMonth() + 1) + "." + date.getFullYear();
-            dateElem.value = dateValue;
-            $("#modalEventEditor").modal("show");
+        // const showDayDialog = function (event) {
+        //     let dateElem = document.getElementById("date");
+        //     let date = copy(currentDate);
+        //     date.setDate(event.srcElement.dateindex);
+        //     let dateValue = "" + date.getDate() + "." + (date.getMonth() + 1) + "." + date.getFullYear();
+        //     dateElem.value = dateValue;
+        //     $("#modalEventEditor").modal("show");
+        //
+        //     let dateTimeElem = document.getElementById("datetime");
+        //     dateTimeElem.value = date.toISOString();
+        // };
 
-            let dateTimeElem = document.getElementById("datetime");
-            dateTimeElem.value = date.toISOString();
+        // showDayDialog();
+
+        const setSelectedDayElem = function (event) {
+            if (selectedDayElem){
+                selectedDayElem.style.backgroundColor = "";
+            }
+            selectedDayElem = event.srcElement;
+            selectedDayElem.style.backgroundColor = "lightgray";
         };
 
-        const setSelectedDay = function (event) {
-            if (selectedDay){
-                selectedDay.style.backgroundColor = "";
-            }
-            selectedDay = event.srcElement;
-            selectedDay.style.backgroundColor = "lightgray";
-        }
-
         function ungraySelectedDay() {
-            if (typeof selectedDay !== "undefined"){
-                selectedDay.style.backgroundColor = "";
+            if (typeof selectedDayElem !== "undefined"){
+                selectedDayElem.style.backgroundColor = "";
             }
         }
 
@@ -254,7 +253,7 @@
             ungraySelectedDay();
             let days = getMonthDateElements(currentDate);
             days[0].style.backgroundColor = "lightgray";
-            selectedDay = days[0];
+            selectedDayElem = days[0];
         }
         /**
          * add an event decoration
@@ -290,15 +289,12 @@
             return names[date.getMonth()];
         }
 
-        /**
-         * update day click listeners
-         */
-        function addClickListeners() {
+        function addEventListeners() {
 
             // remove old click listeners
             let allDays = document.getElementsByClassName("day");
             for (let i = 0; i < allDays.length; i++) {
-                allDays[i].removeEventListener("click", setSelectedDay, true);
+                allDays[i].removeEventListener("click", setSelectedDayElem, true);
                 allDays[i].style.cursor = "";
                 allDays[i].dateindex = undefined;
             }
@@ -306,7 +302,7 @@
             // add current click listeners
             let monthDays = getMonthDateElements(currentDate);
             for (let i = 0; i < monthDays.length; i++) {
-                monthDays[i].addEventListener("click", setSelectedDay, true);
+                monthDays[i].addEventListener("click", setSelectedDayElem, true);
                 monthDays[i].style.cursor = "pointer";
                 // this value is used to set the date correctly in the modal dialog
                 monthDays[i].dateindex = i + 1;
@@ -320,6 +316,7 @@
                 hoursElem.addEventListener("change", updateDatetimeValue, true);
                 minutesElem.addEventListener("change", updateDatetimeValue, true);
             }
+
 
             addChangeListeners();
 
@@ -340,7 +337,7 @@
             decorateToday(today, currentDate);
             document.getElementById("month").innerText = monthName(currentDate);
             document.getElementById("year").innerText = currentDate.getFullYear();
-            addClickListeners();
+            addEventListeners();
             fetchMonthEvents(currentDate, eventContainer);
 
             /**
@@ -368,8 +365,6 @@
 
             $("#createbutton").on("click", function (event) {
 
-                event.preventDefault();
-
                 let data = {};
 
                 let inputs = $("#tournamentdata *[name]");
@@ -394,14 +389,28 @@
             });
 
             $("#updatebutton").on("click", function (event) {
-                event.preventDefault();
+                console.log("update");
             });
 
             $("#deletebutton").on("click", function (event) {
-                event.preventDefault();
             });
 
+            $("#updatebutton").on("click", function (event) {
+                console.log("update");
+            });
 
+            // open the dialog for editing
+            document.getElementById("addEvent").addEventListener("click", function () {
+                let dateElem = document.getElementById("date");
+                let date = copy(currentDate);
+                date.setDate(selectedDayElem.dateindex);
+                let dateValue = "" + date.getDate() + "." + (date.getMonth() + 1) + "." + date.getFullYear();
+                dateElem.value = dateValue;
+                $("#modalEventEditor").modal("show");
+
+                let dateTimeElem = document.getElementById("datetime");
+                dateTimeElem.value = date.toISOString();
+            });
         }
 
         document.getElementById("month-prev").addEventListener("click", function () {
@@ -419,6 +428,8 @@
     Object.freeze(calendar);
 
     document.getElementById("minutes").step = 5;
+
+
 
 
 })();
