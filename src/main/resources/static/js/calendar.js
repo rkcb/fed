@@ -40,7 +40,7 @@
         /**
          * @param Date date
          */
-        function getEventsByDate(date) {
+        this.getEventsByDate = function(date) {
 
             let iso = getDateString(date);
             let events = [];
@@ -54,16 +54,33 @@
                 }
             }
 
+            events.sort((a,b) => a.start.localeCompare(b.start) );
+
             return events;
-        }
+        };
+
+        /**
+         * Test does container have an event in this month
+         * @param predicate (predicate from calendar event to boolean
+         */
+        this.exists = function(predicate) {
+            let events = allEvents.values();
+            for(let ev of events){
+                if (predicate(ev)) {
+                    return true;
+                }
+            }
+
+            return false;
+        };
 
         /**
          * Date date first month data, e.g. 2019-03-01
          * Object calendarEvent as return by the server // see the REST
          */
-        this.set = function (event) {
+        this.add = function (event) {
             let id = getEventId(event);
-            allEvents.set(id, event);
+            return allEvents.set(id, event);
         };
 
         /**
@@ -72,7 +89,7 @@
          */
         this.delete = function(event){
             let id = getEventId(event);
-            allEvents.delete(id);
+            return allEvents.delete(id);
         };
 
         /**
@@ -132,17 +149,28 @@
         end = pre2 + " 23:59:59";
 
 
-        // this loads all specified events without paging
-        $.getJSON({
-            url: "/calendarevents/search/findAllByStartBetweenOrderByStartAsc",
-            data: { start: start, end: end },
-            success: function (data) {
-                let events = data._embedded.calendarevents;
-                events.forEach(function(item){
-                    eventContainer.set(item);
-                });
-            }
-        });
+        function datePredicate(event){
+            let d = new Date(event.start);
+            return date.getFullYear() === d.getFullYear() && date.getMonth() === d.getMonth();
+        }
+
+
+
+        if (eventContainer.exists(datePredicate)){
+
+        } else {
+            // this loads all specified events without paging
+            $.getJSON({
+                url: "/calendarevents/search/findAllByStartBetweenOrderByStartAsc",
+                data: {start: start, end: end},
+                success: function (data) {
+                    let events = data._embedded.calendarevents;
+                    events.forEach(function (item) {
+                        eventContainer.add(item);
+                    });
+                }
+            });
+        }
     }
 
     /**
@@ -176,22 +204,45 @@
         // showDayDialog();
 
 
+        /**
+         * Update the selected date elem and the table
+         * @param event (ES event)
+         */
+        const updateSelectedDayData = function (event) {
 
-        const setSelectedDayElem = function (event) {
-
+            /**
+             * clear table data
+             */
             function clearEventTable(){
-
+                $(".eventRow").each(function () {
+                    $(this).children("td[title]").html("");
+                    $(this).children("td[start]").html("");
+                });
             }
 
             function addDayEvents() {
                 let dayIndex = event.srcElement.dateindex;
+                let date = copy(currentDate);
+                date.setDate(dayIndex);
+                let events = eventContainer.getEventsByDate(date);
+                $(".eventRow").each(function (index) {
+                    if (index < events.length) {
+                        $(this).children("td[title]").html(events[index].title);
+                        $(this).children("td[start]").html(events[index].start);
+                    }
+                });
             }
+
+            // update old and new selected day element
 
             if (selectedDayElem){
                 selectedDayElem.style.backgroundColor = "";
             }
             selectedDayElem = event.srcElement;
             selectedDayElem.style.backgroundColor = "lightgray";
+
+            clearEventTable();
+            addDayEvents();
         };
 
         function ungraySelectedDay() {
@@ -337,7 +388,7 @@
             // remove old click listeners
             let allDays = document.getElementsByClassName("day");
             for (let i = 0; i < allDays.length; i++) {
-                allDays[i].removeEventListener("click", setSelectedDayElem, true);
+                allDays[i].removeEventListener("click", updateSelectedDayData, true);
                 allDays[i].style.cursor = "";
                 allDays[i].dateindex = undefined;
             }
@@ -345,7 +396,7 @@
             // set current click listeners
             let monthDays = getMonthDateElements(currentDate);
             for (let i = 0; i < monthDays.length; i++) {
-                monthDays[i].addEventListener("click", setSelectedDayElem, true);
+                monthDays[i].addEventListener("click", updateSelectedDayData, true);
                 monthDays[i].style.cursor = "pointer";
                 // this value is used to set the date correctly in the modal dialog
                 monthDays[i].dateindex = i + 1;
@@ -382,7 +433,7 @@
             document.getElementById("year").innerText = currentDate.getFullYear();
             addEventListeners();
             fetchMonthEvents(currentDate, eventContainer);
-
+            console.log("events in container: " + eventContainer.size());
             /**
              * create a collection name for uploaded file(s)
              */
@@ -450,9 +501,9 @@
                 let dateValue = "" + date.getDate() + "." + (date.getMonth() + 1) + "." + date.getFullYear();
                 dateElem.value = dateValue;
                 $("#modalEventEditor").modal("show");
-                //
-                // let dateTimeElem = document.getElementById("datetime");
-                // dateTimeElem.value = date.toISOString();
+
+                let dateTimeElem = document.getElementById("datetime");
+                dateTimeElem.value = date.toISOString();
             });
         }
 
@@ -471,8 +522,6 @@
     Object.freeze(calendar);
 
     document.getElementById("minutes").step = 5;
-
-    // $("#modalEventEditor").modal("show");
 
 
 
