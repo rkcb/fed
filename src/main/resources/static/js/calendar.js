@@ -1,5 +1,3 @@
-
-
 (function () {
     "use strict"
 
@@ -31,7 +29,7 @@
          * @param event (calendar event)
          * @returns {*}
          */
-        function getEventId(event){
+        function getEventId(event) {
             let href = event._links.self.href;
             let re = /.*\/(\d+)$/;
             return href.match(re)[0];
@@ -40,32 +38,31 @@
         /**
          * @param Date date
          */
-        this.getEventsByDate = function(date) {
-
+        this.getEventsByDate = function (date) {
             let iso = getDateString(date);
             let events = [];
             let keys = allEvents.keys();
 
-            for(let key of keys){
+            for (let key of keys) {
                 let ev = allEvents.get(key);
                 let start = ev.start.split("T")[0];
-                if (start === iso){
+                if (start === iso) {
                     events.push(ev);
                 }
             }
 
-            events.sort((a,b) => a.start.localeCompare(b.start) );
+            events.sort((a, b) => a.start.localeCompare(b.start));
 
             return events;
         };
 
         /**
-         * Test does container have an event in this month
+         * Test does the container have an event that satisfies the predicate
          * @param predicate (predicate from calendar event to boolean
          */
-        this.exists = function(predicate) {
+        this.exists = function (predicate) {
             let events = allEvents.values();
-            for(let ev of events){
+            for (let ev of events) {
                 if (predicate(ev)) {
                     return true;
                 }
@@ -73,6 +70,16 @@
 
             return false;
         };
+
+        /**
+         * filter the events that satisfy the given predicate
+         * @param predicate
+         * @returns {any[]}
+         */
+        this.filter = function (predicate) {
+            let events = Array.from(allEvents.values());
+            return events.filter(predicate);
+        }
 
         /**
          * Date date first month data, e.g. 2019-03-01
@@ -87,7 +94,7 @@
          * delete event by the id
          * @param event
          */
-        this.delete = function(event){
+        this.delete = function (event) {
             let id = getEventId(event);
             return allEvents.delete(id);
         };
@@ -148,18 +155,21 @@
         start = pre + " 00:00:00";
         end = pre2 + " 23:59:59";
 
-
-        function datePredicate(event){
-            let d = new Date(event.start);
-            return date.getFullYear() === d.getFullYear() && date.getMonth() === d.getMonth();
+        /**
+         * Test does the event container contain the events from the current month
+         */
+        function containerHasMonth(){
+            return eventContainer.exists( event => {
+                let dstr = "" + date.getFullYear() + "-" + date.getMonth();
+                let d2 = new Date(event.start);
+                let dstr2 = "" + d2.getFullYear() + "-" + d2.getMonth();
+                return dstr === dstr2;
+            });
         }
 
-
-
-        if (eventContainer.exists(datePredicate)){
-
-        } else {
-            // this loads all specified events without paging
+        // fetch events from the server only if needed -- note that
+        // the plan is to keep the container always up-to-date
+        if( !containerHasMonth() ){
             $.getJSON({
                 url: "/calendarevents/search/findAllByStartBetweenOrderByStartAsc",
                 data: {start: start, end: end},
@@ -168,6 +178,7 @@
                     events.forEach(function (item) {
                         eventContainer.add(item);
                     });
+
                 }
             });
         }
@@ -184,25 +195,11 @@
 
         const today = date === false ? new Date() : date;
         const eventContainer = new EventContainer();
+
         let selectedDayElem;
 
         Object.freeze(today);
         let currentDate = copy(today); // this date will change with navigation
-
-        // const showDayDialog = function (event) {
-        //     let dateElem = document.getElementById("date");
-        //     let date = copy(currentDate);
-        //     date.setDate(event.srcElement.dateindex);
-        //     let dateValue = "" + date.getDate() + "." + (date.getMonth() + 1) + "." + date.getFullYear();
-        //     dateElem.value = dateValue;
-        //     $("#modalEventEditor").modal("show");
-        //
-        //     let dateTimeElem = document.getElementById("datetime");
-        //     dateTimeElem.value = date.toISOString();
-        // };
-
-        // showDayDialog();
-
 
         /**
          * Update the selected date elem and the table
@@ -213,7 +210,7 @@
             /**
              * clear table data
              */
-            function clearEventTable(){
+            function clearEventTable() {
                 $(".eventRow").each(function () {
                     $(this).children("td[title]").html("");
                     $(this).children("td[start]").html("");
@@ -235,7 +232,7 @@
 
             // update old and new selected day element
 
-            if (selectedDayElem){
+            if (selectedDayElem) {
                 selectedDayElem.style.backgroundColor = "";
             }
             selectedDayElem = event.srcElement;
@@ -246,7 +243,7 @@
         };
 
         function ungraySelectedDay() {
-            if (typeof selectedDayElem !== "undefined"){
+            if (typeof selectedDayElem !== "undefined") {
                 selectedDayElem.style.backgroundColor = "";
             }
         }
@@ -349,6 +346,7 @@
             days[0].style.backgroundColor = "lightgray";
             selectedDayElem = days[0];
         }
+
         /**
          * set an event decoration
          * @param Date date
@@ -411,9 +409,7 @@
                 minutesElem.addEventListener("change", updateDatetimeValue, true);
             }
 
-
             addChangeListeners();
-
 
         }
 
@@ -433,7 +429,7 @@
             document.getElementById("year").innerText = currentDate.getFullYear();
             addEventListeners();
             fetchMonthEvents(currentDate, eventContainer);
-            console.log("events in container: " + eventContainer.size());
+
             /**
              * create a collection name for uploaded file(s)
              */
@@ -522,7 +518,6 @@
     Object.freeze(calendar);
 
     document.getElementById("minutes").step = 5;
-
 
 
 })();
