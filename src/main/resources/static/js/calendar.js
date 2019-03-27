@@ -29,6 +29,7 @@
         }
 
         /**
+         * get all events in the given date
          * @param Date date
          */
         this.getEventsByDate = function (date) {
@@ -51,7 +52,7 @@
 
         /**
          * Test does the container have an event that satisfies the predicate
-         * @param predicate (predicate from calendar event to boolean
+         * @param {function}  (function: <calendar event> => boolean )
          */
         this.exists = function (predicate) {
             let events = allEvents.values();
@@ -266,12 +267,14 @@
                 $(".eventRow").each(function (index) {
                     if (index < events.length) {
                         $(this).children("td[title]").html(events[index].title);
-                        $(this).children("td[start]").html(events[index].start);
+                        let d = new Date(events[index].start);
+                        let formattedDate = d.getDate() + "." + d.getMonth() + "." + d.getFullYear() + ", " + d.getHours() + ":" + d.getMinutes();
+                        $(this).children("td[start]").html(formattedDate);
                     }
                 });
             }
 
-            // update old and new selected day element
+            // update the old and new selected day element
 
             if (selectedDayElem) {
                 selectedDayElem.style.backgroundColor = "";
