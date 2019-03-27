@@ -1,5 +1,5 @@
 (function () {
-    "use strict"
+    "use strict";
 
     //////////////////////////////// --- EventContainer begins --- /////////////////////////////////
 
@@ -10,13 +10,6 @@
     function EventContainer() {
 
         const allEvents = new Map();
-
-        /**
-         * @param Date date
-         */
-        // function getDayOneIsoDateString(date) {
-        //     return getFirstDayOfMonth(date).toISOString().split("T")[0];
-        // }
 
         /**
          * @param Date date
@@ -79,7 +72,7 @@
         this.filter = function (predicate) {
             let events = Array.from(allEvents.values());
             return events.filter(predicate);
-        }
+        };
 
         /**
          * Date date first month data, e.g. 2019-03-01
@@ -140,6 +133,52 @@
     }
 
     /**
+     * number of the previous month days
+     * @param date
+     * @returns {number}
+     */
+    function daysBeforeFirst(date) {
+        let date2 = copy(date);
+        date2.setDate(1);
+        // number of days before the day one
+        return (6 + date2.getDay()) % 7;
+    }
+
+    /**
+     * the number of days in a month
+     * @param date
+     * @returns {number}
+     */
+    function getNumberOfDaysInMonth(date) {
+        let date2 = copy(date);
+        date2.setMonth(date2.getMonth() + 1);
+        date2.setDate(0);
+        return date2.getDate();
+    }
+
+    /**
+     * get the month days only
+     * @param Date date
+     * @returns {Element[]}
+     */
+    function getMonthDateElements(date) {
+        let days = Array.from(document.getElementsByClassName("day"));
+        let prefix = daysBeforeFirst(date);
+        let daysInMonth = getNumberOfDaysInMonth(date);
+        return days.slice(prefix, prefix + daysInMonth);
+    }
+
+    /**
+     * set an event decoration (red underline)
+     * @param Date date
+     */
+    function addRedEventMark(date) {
+        let days = getMonthDateElements(date);
+        let day = days[date.getDate()-1];
+        day.style.borderBottom = "solid 3px red";
+    }
+
+    /**
      * Fetch all calendar events of the date
      * @param Date date
      * @param EventContainer eventContainer
@@ -177,16 +216,16 @@
                     let events = data._embedded.calendarevents;
                     events.forEach(function (item) {
                         eventContainer.add(item);
+                        addRedEventMark(new Date(item.start));
                     });
-
                 }
             });
         }
     }
 
     /**
-     * creates a calendar logic and initializes the start date and modal
-     * dialog datetime input
+     * creates a calendar logic and initializes the start date and the modal
+     * dialog datetime input to be sended
      *
      * @param Date date, by default current local date
      * @constructor
@@ -194,12 +233,14 @@
     function Calendar(date = false) {
 
         const today = date === false ? new Date() : date;
+        // container (cache) for fetched calendar events
         const eventContainer = new EventContainer();
 
         let selectedDayElem;
 
         Object.freeze(today);
-        let currentDate = copy(today); // this date will change with navigation
+        // this date reflects the clicked day
+        let currentDate = copy(today);
 
         /**
          * Update the selected date elem and the table
@@ -208,7 +249,7 @@
         const updateSelectedDayData = function (event) {
 
             /**
-             * clear table data
+             * clear selected day data
              */
             function clearEventTable() {
                 $(".eventRow").each(function () {
@@ -267,8 +308,8 @@
 
         /**
          * return a Date which points to the day 1
-         * @param Date date
-         * @returns Date
+         * @param {Date} date
+         * @returns {Date}
          */
         function getFirstCalendarDate(date) {
             let date2 = copy(date);
@@ -304,42 +345,6 @@
             }
         }
 
-        /**
-         * number of the previous month days
-         * @param date
-         * @returns {number}
-         */
-        function daysBeforeFirst(date) {
-            let date2 = copy(date);
-            date2.setDate(1);
-            // number of days before the day one
-            return (6 + date2.getDay()) % 7;
-        }
-
-        /**
-         * the number of days in a month
-         * @param date
-         * @returns {number}
-         */
-        function getNumberOfDaysInMonth(date) {
-            let date2 = copy(date);
-            date2.setMonth(date2.getMonth() + 1);
-            date2.setDate(0);
-            return date2.getDate();
-        }
-
-        /**
-         * get the month days only
-         * @param Date date
-         * @returns {Element[]}
-         */
-        function getMonthDateElements(date) {
-            let days = Array.from(document.getElementsByClassName("day"));
-            let prefix = daysBeforeFirst(date);
-            let daysInMonth = getNumberOfDaysInMonth(date);
-            return days.slice(prefix, prefix + daysInMonth);
-        }
-
         function setDefaultSelectedDay() {
             ungraySelectedDay();
             let days = getMonthDateElements(currentDate);
@@ -347,15 +352,7 @@
             selectedDayElem = days[0];
         }
 
-        /**
-         * set an event decoration
-         * @param Date date
-         */
-        // function addEventMark(date) {
-        //     let days = getMonthDateElements(date);
-        //     let dsetDefaultSelectedDayay = days[days.length - 1];
-        //     day.closest("td").style.borderBottom = "solid 3px red";
-        // }
+
 
         /**
          * @param Date currentDate chosen date by the user
@@ -453,7 +450,7 @@
 
         function createDialogButtonListeners() {
 
-            $("#createbutton").on("click", function (event) {
+            $("#createbutton").on("click", function () {
 
                 let data = {};
 
@@ -478,15 +475,14 @@
 
             });
 
-            $("#updatebutton").on("click", function (event) {
+            $("#updatebutton").on("click", function () {
                 console.log("update");
             });
 
-            $("#deletebutton").on("click", function (event) {
+            $("#deletebutton").on("click", function () {
             });
 
-            $("#updatebutton").on("click", function (event) {
-                console.log("update");
+            $("#updatebutton").on("click", function () {
             });
 
             // open the dialog for editing
