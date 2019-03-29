@@ -1,6 +1,14 @@
 (function () {
     "use strict";
 
+    function DateTools() {
+        this.yearAndMonthEqual = function (date1, date2) {
+            let d1 = date1 instanceof Date ? date1 : new Date(date1);
+            let d2 = date2 instanceof Date ? date2 : new Date(date2);
+            return d1.getFullYear() === d2.getFullYear() && d1.getMonth() === d2.getMonth();
+        };
+    }
+
     //////////////////////////////// --- EventContainer begins --- /////////////////////////////////
 
     /**
@@ -28,6 +36,16 @@
             return href.match(re)[0];
         }
 
+        /**
+         * @param {Date} date
+         */
+        this.hasEventOnDate = function (date) {
+            let iso1 = date.toISOString().split("T")[0];
+            this.exists(ev => {
+                let iso2 = ev.start.split("T")[0];
+                return iso1 === iso2;
+            });
+        };
         /**
          * get all events in the given date
          * @param Date date
@@ -169,15 +187,6 @@
         return days.slice(prefix, prefix + daysInMonth);
     }
 
-    /**
-     * set an event decoration (red underline)
-     * @param Date date
-     */
-    function addRedEventMark(date) {
-        let days = getMonthDateElements(date);
-        let day = days[date.getDate()-1];
-        day.style.borderBottom = "solid 3px red";
-    }
 
     /**
      * Fetch all calendar events of the date
@@ -196,20 +205,20 @@
         end = pre2 + " 23:59:59";
 
         /**
-         * Test does the event container contain the events from the current month
+         * @param {Date} date
+         * @returns {boolean}
          */
-        function containerHasMonth(){
-            return eventContainer.exists( event => {
-                let dstr = "" + date.getFullYear() + "-" + date.getMonth();
-                let d2 = new Date(event.start);
-                let dstr2 = "" + d2.getFullYear() + "-" + d2.getMonth();
-                return dstr === dstr2;
+        function containerHasMonth(date) {
+            let dateTools = new DateTools();
+            return eventContainer.exists(event => {
+                return dateTools.yearAndMonthEqual(event.start, date);
             });
         }
 
         // fetch events from the server only if needed -- note that
         // the plan is to keep the container always up-to-date
-        if( !containerHasMonth() ){
+
+        if (!containerHasMonth(date)) {
             $.getJSON({
                 url: "/calendarevents/search/findAllByStartBetweenOrderByStartAsc",
                 data: {start: start, end: end},
@@ -242,6 +251,7 @@
         Object.freeze(today);
         // this date reflects the clicked day
         let currentDate = copy(today);
+
 
         /**
          * Update the selected date elem and the table
@@ -356,7 +366,6 @@
         }
 
 
-
         /**
          * @param Date currentDate chosen date by the user
          */
@@ -413,6 +422,7 @@
 
         }
 
+
         /**
          * update the calendar logic to reflect the selected month
          * @param int offset
@@ -429,6 +439,30 @@
             document.getElementById("year").innerText = currentDate.getFullYear();
             addEventListeners();
             fetchMonthEvents(currentDate, eventContainer);
+            addRedEventMark(currentDate);
+
+            /**
+             * set an event decoration (red underline)
+             * @param Date date
+             */
+            function addRedEventMark(date) {
+                let days = getMonthDateElements(date);
+                let dateTools = new DateTools();
+                let monthEvents = eventContainer.filter(ev => {
+                    return dateTools.yearAndMonthEqual(ev.start, date);
+                });
+
+                monthEvents.forEach(function (ev) {
+
+                })
+
+                let day = days[date.getDate() - 1];
+                day.style.borderBottom = "solid 3px red";
+
+
+
+            }
+
 
             /**
              * create a collection name for uploaded file(s)
