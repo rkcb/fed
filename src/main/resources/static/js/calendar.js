@@ -65,7 +65,7 @@
          * @returns {number}
          */
         this.daysBeforeFirst = function(date) {
-            let date2 = copy(date);
+            let date2 = dateTools.copy(date);
             date2.setDate(1);
             // number of days before the day one
             return (6 + date2.getDay()) % 7;
@@ -77,7 +77,7 @@
          * @returns {number}
          */
         this.getNumberOfDaysInMonth = function(date) {
-            let date2 = copy(date);
+            let date2 = dateTools.copy(date);
             date2.setMonth(date2.getMonth() + 1);
             date2.setDate(0);
             return date2.getDate();
@@ -238,7 +238,7 @@
     }
 
     function getLastDayOfMonth(date) {
-        let end = copy(date);
+        let end = dateTools.copy(date);
         end.setMonth(date.getMonth() + 1);
         end.setDate(0);
         return end;
@@ -250,7 +250,7 @@
      * @returns {number}
      */
     function daysBeforeFirst(date) {
-        let date2 = copy(date);
+        let date2 = dateTools.copy(date);
         date2.setDate(1);
         // number of days before the day one
         return (6 + date2.getDay()) % 7;
@@ -262,7 +262,7 @@
      * @returns {number}
      */
     function getNumberOfDaysInMonth(date) {
-        let date2 = copy(date);
+        let date2 = dateTools.copy(date);
         date2.setMonth(date2.getMonth() + 1);
         date2.setDate(0);
         return date2.getDate();
@@ -371,7 +371,7 @@
 
         Object.freeze(today);
         // this date reflects the clicked day
-        let currentDate = copy(today);
+        let currentDate = dateTools.copy(today);
 
 
         /**
@@ -392,7 +392,7 @@
 
             function addDayEvents() {
                 let dayIndex = event.srcElement.dateindex;
-                let date = copy(currentDate);
+                let date = dateTools.copy(currentDate);
                 date.setDate(dayIndex);
                 let events = eventContainer.getEventsByDate(date);
                 $(".eventRow").each(function (index) {
@@ -446,7 +446,7 @@
          * @returns {Date}
          */
         function getFirstCalendarDate(date) {
-            let date2 = copy(date);
+            let date2 = dateTools.copy(date);
             date2.setDate(1);
             date2.setHours(-24 * ((date2.getDay() + 6) % 7));
             return date2;
@@ -630,7 +630,7 @@
             // open the dialog for editing
             document.getElementById("addEvent").addEventListener("click", function () {
                 let dateElem = document.getElementById("date");
-                let date = copy(currentDate);
+                let date = dateTools.copy(currentDate);
                 date.setDate(selectedDayElem.dateindex);
                 let dateValue = "" + date.getDate() + "." + (date.getMonth() + 1) + "." + date.getFullYear();
                 dateElem.value = dateValue;
