@@ -36,7 +36,7 @@
          * @return {string}
          */
         this.getMonthEndString = function (date) {
-            let end = getLastDayOfMonth(date).toISOString();
+            let end = dateTools.getLastDayOfMonth(date).toISOString();
             let pre = end.split("T")[0];
             return pre + " 23:59:59";
         };
@@ -57,6 +57,11 @@
             return new Date(date.getFullYear(), date.getMonth(), 1);
         };
 
+        /**
+         * get last day of the month
+         * @param {Date} date
+         * @return {Date}
+         */
         this.getLastDayOfMonth = function(date) {
             let end = dateTools.copy(date);
             end.setMonth(date.getMonth() + 1);
@@ -230,13 +235,6 @@
     }
 
     ////////////////////////////  --- EventContainer ends ---  /////////////////////////////////////
-
-    function getLastDayOfMonth(date) {
-        let end = dateTools.copy(date);
-        end.setMonth(date.getMonth() + 1);
-        end.setDate(0);
-        return end;
-    }
 
     /**
      * number of the previous month days
