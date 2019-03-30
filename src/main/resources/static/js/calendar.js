@@ -10,8 +10,34 @@
             return d1.getFullYear() === d2.getFullYear() && d1.getMonth() === d2.getMonth();
         };
 
+        /**
+         * @param {Date} date
+         * @return {string}
+         */
         this.getDateString = function (date) {
             return date.toISOString().split("T")[0];
+        };
+
+        /**
+         * get an ISO date string for the start of the month
+         * @param {Date} date
+         * @return {string}
+         */
+        this.getMonthStartString = function(date){
+            let start = getFirstDayOfMonth(date).toISOString();
+            let pre = start.split("T")[0];
+            return pre + " 00:00:00";
+        };
+
+        /**
+         * get an ISO date string for the end of the month
+         * @param {Date} date
+         * @return {string}
+         */
+        this.getMonthEndString = function (date){
+            let end = getLastDayOfMonth(date).toISOString();
+            let pre = end.split("T")[0];
+            return pre + " 23:59:59";
         };
     }
 
@@ -37,7 +63,7 @@
         function getEventId(event) {
             let href = event._links.self.href;
             let re = /.*\/(\d+)$/;
-            return href.match(re)[0];
+            return href.match(re)[1];
         }
 
         /**
@@ -134,6 +160,14 @@
             return allEvents.size;
         };
 
+        /**
+         * apply an operation for each item of the container
+         * @param operation, callback of the form function(value, key, map)
+         */
+        this.forEach = function (operation) {
+            allEvents.forEach(operation);
+        };
+
     }
 
     ////////////////////////////  --- EventContainer ends ---  /////////////////////////////////////
@@ -200,15 +234,6 @@
      */
     function fetchMonthEvents(date, eventContainer) {
 
-        let start = getFirstDayOfMonth(date).toISOString();
-        let end = getLastDayOfMonth(date).toISOString();
-
-        let pre = start.split("T")[0];
-        let pre2 = end.split("T")[0];
-
-        start = pre + " 00:00:00";
-        end = pre2 + " 23:59:59";
-
         /**
          * @param {Date} date
          * @returns {boolean}
@@ -225,11 +250,15 @@
         if (!containerHasMonth(date)) {
             $.getJSON({
                 url: "/calendarevents/search/findAllByStartBetweenOrderByStartAsc",
-                data: {start: start, end: end},
+                data: { start: dateTools.getMonthStartString(date),
+                        end: dateTools.getMonthEndString(date) },
                 success: function (data) {
                     let events = data._embedded.calendarevents;
                     events.forEach(function (item) {
                         eventContainer.add(item);
+                    });
+                    eventContainer.forEach(function(v,k,m){
+                        console.log("for each, key = " + k);
                     });
                 }
             });
@@ -442,7 +471,6 @@
             document.getElementById("year").innerText = currentDate.getFullYear();
             addEventListeners();
             fetchMonthEvents(currentDate, eventContainer);
-
             /**
              * set an event decoration (red underline)
              * @param Date date
