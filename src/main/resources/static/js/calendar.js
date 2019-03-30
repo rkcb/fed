@@ -50,11 +50,18 @@
 
     /**
      * Container for calendar events
+     * @param events, calendar events as in the REST response
      * @constructor
      */
-    function EventContainer() {
+    function EventContainer(events = []) {
 
         const allEvents = new Map();
+
+        if (events.length > 0){
+            events.forEach(function (event) {
+                allEvents.set(getEventId(event), event);
+            });
+        }
 
         /**
          * @param event (calendar event)
@@ -65,6 +72,10 @@
             let re = /.*\/(\d+)$/;
             return href.match(re)[1];
         }
+
+        this.getAllAsArray = function () {
+            return Array.from(allEvents.values());
+        };
 
         /**
          * @param {Date} date
@@ -120,8 +131,12 @@
          * @returns {any[]}
          */
         this.filter = function (predicate) {
-            let events = Array.from(allEvents.values());
-            return events.filter(predicate);
+            // let events = Array.from(allEvents.values());
+            // alert("first count: " + events.length);
+            // events = events.filter(predicate);
+            // alert("filter, events count " + events.length);
+            // return new EventContainer(events);
+
         };
 
         /**
@@ -232,7 +247,7 @@
      * @param Date date
      * @param EventContainer eventContainer
      */
-    function fetchMonthEvents(date, eventContainer) {
+    function fetchMonthEventsAndDecorateDays(date, eventContainer) {
 
         /**
          * @param {Date} date
@@ -257,12 +272,11 @@
                     events.forEach(function (item) {
                         eventContainer.add(item);
                     });
-                    eventContainer.forEach(function(v,k,m){
-                        console.log("for each, key = " + k);
-                    });
                 }
             });
         }
+
+
     }
 
     /**
@@ -470,21 +484,22 @@
             document.getElementById("month").innerText = monthName(currentDate);
             document.getElementById("year").innerText = currentDate.getFullYear();
             addEventListeners();
-            fetchMonthEvents(currentDate, eventContainer);
+            fetchMonthEventsAndDecorateDays(currentDate, eventContainer);
+
             /**
              * set an event decoration (red underline)
              * @param Date date
              */
             function addRedEventMark(date) {
                 let days = getMonthDateElements(date);
-                let dateTools = new DateTools();
+
                 let monthEvents = eventContainer.filter(ev => {
                     return dateTools.yearAndMonthEqual(ev.start, date);
                 });
 
                 monthEvents.forEach(function (ev) {
 
-                })
+                });
 
                 let day = days[date.getDate() - 1];
                 day.style.borderBottom = "solid 3px red";
