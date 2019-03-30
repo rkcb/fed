@@ -23,7 +23,7 @@
          * @param {Date} date
          * @return {string}
          */
-        this.getMonthStartString = function(date){
+        this.getMonthStartString = function (date) {
             let start = getFirstDayOfMonth(date).toISOString();
             let pre = start.split("T")[0];
             return pre + " 00:00:00";
@@ -34,7 +34,7 @@
          * @param {Date} date
          * @return {string}
          */
-        this.getMonthEndString = function (date){
+        this.getMonthEndString = function (date) {
             let end = getLastDayOfMonth(date).toISOString();
             let pre = end.split("T")[0];
             return pre + " 23:59:59";
@@ -57,7 +57,7 @@
 
         const allEvents = new Map();
 
-        if (events.length > 0){
+        if (events.length > 0) {
             events.forEach(function (event) {
                 allEvents.set(getEventId(event), event);
             });
@@ -128,15 +128,11 @@
         /**
          * filter the events that satisfy the given predicate
          * @param predicate
-         * @returns {any[]}
+         * @returns {EventContainer}
          */
         this.filter = function (predicate) {
-            // let events = Array.from(allEvents.values());
-            // alert("first count: " + events.length);
-            // events = events.filter(predicate);
-            // alert("filter, events count " + events.length);
-            // return new EventContainer(events);
-
+            let events = Array.from(allEvents.values());
+            return new EventContainer(events.filter(predicate));
         };
 
         /**
@@ -248,7 +244,6 @@
      * @param EventContainer eventContainer
      */
     function fetchMonthEventsAndDecorateDays(date, eventContainer) {
-
         /**
          * @param {Date} date
          * @returns {boolean}
@@ -259,23 +254,61 @@
             });
         }
 
-        // fetch events from the server only if needed -- note that
+        function removeCurrentEventDecorations() {
+            let days = getMonthDateElements(date);
+            for (let day of days) {
+                day.style.borderBottom = "";
+            }
+        }
+
+        /**
+         * decorate all month event days
+         * @param Date date
+         */
+        function addRedEventMark(date) {
+            let days = getMonthDateElements(date);
+
+            let monthEvents = eventContainer.filter(ev => {
+                return dateTools.yearAndMonthEqual(ev.start, date);
+            });
+
+            function getStartDateIndex(event) {
+                let date = new Date(event.start);
+                return date.getDate();
+            }
+
+            // traverse event dates and mark days
+            monthEvents.forEach(function (event) {
+                console.log("RRR red with date: " + date);
+                let day = days[getStartDateIndex(event)-1];
+                day.style.borderBottom = "solid 3px red";
+            });
+        }
+
+        removeCurrentEventDecorations();
+
+        // fetch events from the server only if needed
+        // NOTE:
         // the plan is to keep the container always up-to-date
 
         if (!containerHasMonth(date)) {
             $.getJSON({
                 url: "/calendarevents/search/findAllByStartBetweenOrderByStartAsc",
-                data: { start: dateTools.getMonthStartString(date),
-                        end: dateTools.getMonthEndString(date) },
+                data: {
+                    start: dateTools.getMonthStartString(date),
+                    end: dateTools.getMonthEndString(date)
+                },
                 success: function (data) {
                     let events = data._embedded.calendarevents;
                     events.forEach(function (item) {
                         eventContainer.add(item);
                     });
+                    addRedEventMark(date);
                 }
             });
+        } else {
+            addRedEventMark(date);
         }
-
 
     }
 
@@ -484,27 +517,15 @@
             document.getElementById("month").innerText = monthName(currentDate);
             document.getElementById("year").innerText = currentDate.getFullYear();
             addEventListeners();
+            removeAllEventDayDecorations();
             fetchMonthEventsAndDecorateDays(currentDate, eventContainer);
 
-            /**
-             * set an event decoration (red underline)
-             * @param Date date
-             */
-            function addRedEventMark(date) {
-                let days = getMonthDateElements(date);
-
-                let monthEvents = eventContainer.filter(ev => {
-                    return dateTools.yearAndMonthEqual(ev.start, date);
-                });
-
-                monthEvents.forEach(function (ev) {
-
-                });
-
-                let day = days[date.getDate() - 1];
-                day.style.borderBottom = "solid 3px red";
+            function removeAllEventDayDecorations() {
+                let days = document.getElementsByClassName("day");
+                for (let i = 0; i < days.length; i++) {
+                    days[i].style.borderBottom = "";
+                }
             }
-
 
             /**
              * create a collection name for uploaded file(s)
