@@ -237,18 +237,6 @@
     ////////////////////////////  --- EventContainer ends ---  /////////////////////////////////////
 
     /**
-     * number of the previous month days
-     * @param date
-     * @returns {number}
-     */
-    function daysBeforeFirst(date) {
-        let date2 = dateTools.copy(date);
-        date2.setDate(1);
-        // number of days before the day one
-        return (6 + date2.getDay()) % 7;
-    }
-
-    /**
      * the number of days in a month
      * @param date
      * @returns {number}
@@ -267,7 +255,7 @@
      */
     function getMonthDateElements(date) {
         let days = Array.from(document.getElementsByClassName("day"));
-        let prefix = daysBeforeFirst(date);
+        let prefix = dateTools.daysBeforeFirst(date);
         let daysInMonth = getNumberOfDaysInMonth(date);
         return days.slice(prefix, prefix + daysInMonth);
     }
