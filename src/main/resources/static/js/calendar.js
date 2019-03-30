@@ -1,13 +1,24 @@
 (function () {
     "use strict";
 
+    //////////////////////////////// --- DateTools begins --- /////////////////////////////////
+
     function DateTools() {
         this.yearAndMonthEqual = function (date1, date2) {
             let d1 = date1 instanceof Date ? date1 : new Date(date1);
             let d2 = date2 instanceof Date ? date2 : new Date(date2);
             return d1.getFullYear() === d2.getFullYear() && d1.getMonth() === d2.getMonth();
         };
+
+        this.getDateString = function (date) {
+            return date.toISOString().split("T")[0];
+        };
     }
+
+    //////////////////////////////// --- DateTools ends --- /////////////////////////////////
+
+    const dateTools = new DateTools();
+    Object.freeze(dateTools);
 
     //////////////////////////////// --- EventContainer begins --- /////////////////////////////////
 
@@ -18,13 +29,6 @@
     function EventContainer() {
 
         const allEvents = new Map();
-
-        /**
-         * @param Date date
-         */
-        function getDateString(date) {
-            return date.toISOString().split("T")[0];
-        }
 
         /**
          * @param event (calendar event)
@@ -46,12 +50,13 @@
                 return iso1 === iso2;
             });
         };
+
         /**
          * get all events in the given date
          * @param Date date
          */
         this.getEventsByDate = function (date) {
-            let iso = getDateString(date);
+            let iso = dateTools.getDateString(date);
             let events = [];
             let keys = allEvents.keys();
 
@@ -209,7 +214,6 @@
          * @returns {boolean}
          */
         function containerHasMonth(date) {
-            let dateTools = new DateTools();
             return eventContainer.exists(event => {
                 return dateTools.yearAndMonthEqual(event.start, date);
             });
@@ -226,7 +230,6 @@
                     let events = data._embedded.calendarevents;
                     events.forEach(function (item) {
                         eventContainer.add(item);
-                        addRedEventMark(new Date(item.start));
                     });
                 }
             });
@@ -439,7 +442,6 @@
             document.getElementById("year").innerText = currentDate.getFullYear();
             addEventListeners();
             fetchMonthEvents(currentDate, eventContainer);
-            addRedEventMark(currentDate);
 
             /**
              * set an event decoration (red underline)
@@ -458,9 +460,6 @@
 
                 let day = days[date.getDate() - 1];
                 day.style.borderBottom = "solid 3px red";
-
-
-
             }
 
 
