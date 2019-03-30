@@ -25,7 +25,7 @@
          * @return {string}
          */
         this.getMonthStartString = function (date) {
-            let start = getFirstDayOfMonth(date).toISOString();
+            let start = dateTools.getFirstDayOfMonth(date).toISOString();
             let pre = start.split("T")[0];
             return pre + " 00:00:00";
         };
@@ -41,6 +41,11 @@
             return pre + " 23:59:59";
         };
 
+        /**
+         * copy given date
+         * @param date
+         * @return {Date}
+         */
         this.copy = function(date) {
             return new Date(date.getTime());
         };
@@ -225,17 +230,6 @@
     }
 
     ////////////////////////////  --- EventContainer ends ---  /////////////////////////////////////
-
-    function copy(date) {
-        return new Date(date.getTime());
-    }
-
-    /**
-     * @param Date date
-     */
-    function getFirstDayOfMonth(date) {
-        return new Date(date.getFullYear(), date.getMonth(), 1);
-    }
 
     function getLastDayOfMonth(date) {
         let end = dateTools.copy(date);
