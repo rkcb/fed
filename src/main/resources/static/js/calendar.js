@@ -279,7 +279,6 @@
 
             // traverse event dates and mark days
             monthEvents.forEach(function (event) {
-                console.log("RRR red with date: " + date);
                 let day = days[getStartDateIndex(event)-1];
                 day.style.borderBottom = "solid 3px red";
             });
