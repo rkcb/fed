@@ -1,4 +1,18 @@
+// var beginDatepicker = $("#testid").flatpickr({
+//     weekNumbers: true,
+//     clickOpens: true,
+//     time_24hr: true,
+//     dateFormat: "Y-m-dTH:i",
+//     altInput: true,
+//     altFormat: "d.m.Y, H:i",
+//     enableTime: true,
+//     locale: "fi",
+// });
+
+
+
 (function () {
+
     "use strict";
 
     //////////////////////////////// --- DateTools begins --- /////////////////////////////////
@@ -624,6 +638,19 @@
     }
 
     let calendar = new Calendar();
+
+    $("#date").flatpickr({
+        clickOpens: true,
+        time_24hr: true,
+        dateFormat: "Y-m-dTH:i",
+        altInput: true,
+        altFormat: "d.m.Y, H:i",
+        enableTime: true,
+        "locale": {
+            "firstDayOfWeek": 1 // start week on Monday
+        }
+    });
+
     Object.freeze(calendar);
 
     document.getElementById("minutes").step = 5;

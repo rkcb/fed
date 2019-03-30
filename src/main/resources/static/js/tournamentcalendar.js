@@ -29,7 +29,16 @@ $(document).ready(function() {
         altInput: true,
         altFormat: "d.m.Y, H:i",
         enableTime: true,
-        locale: "fi",
+        "disable": [
+            function(date) {
+                // return true to disable
+                return (date.getDay() === 5 || date.getDay() === 6);
+
+            }
+        ],
+        "locale": {
+            "firstDayOfWeek": 1 // start week on Monday
+        }
     });
 
     $('#closebutton').click(function () {
