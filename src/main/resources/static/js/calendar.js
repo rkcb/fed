@@ -4,6 +4,7 @@
     //////////////////////////////// --- DateTools begins --- /////////////////////////////////
 
     function DateTools() {
+
         this.yearAndMonthEqual = function (date1, date2) {
             let d1 = date1 instanceof Date ? date1 : new Date(date1);
             let d2 = date2 instanceof Date ? date2 : new Date(date2);
@@ -38,6 +39,48 @@
             let end = getLastDayOfMonth(date).toISOString();
             let pre = end.split("T")[0];
             return pre + " 23:59:59";
+        };
+
+        this.copy = function(date) {
+            return new Date(date.getTime());
+        };
+
+        /**
+         * @param Date date
+         */
+        this.getFirstDayOfMonth = function(date) {
+            return new Date(date.getFullYear(), date.getMonth(), 1);
+        };
+
+        this.getLastDayOfMonth = function(date) {
+            let end = dateTools.copy(date);
+            end.setMonth(date.getMonth() + 1);
+            end.setDate(0);
+            return end;
+        };
+
+        /**
+         * number of the previous month days
+         * @param date
+         * @returns {number}
+         */
+        this.daysBeforeFirst = function(date) {
+            let date2 = copy(date);
+            date2.setDate(1);
+            // number of days before the day one
+            return (6 + date2.getDay()) % 7;
+        };
+
+        /**
+         * the number of days in a month
+         * @param date
+         * @returns {number}
+         */
+        this.getNumberOfDaysInMonth = function(date) {
+            let date2 = copy(date);
+            date2.setMonth(date2.getMonth() + 1);
+            date2.setDate(0);
+            return date2.getDate();
         };
     }
 
