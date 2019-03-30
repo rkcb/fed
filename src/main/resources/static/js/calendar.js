@@ -237,18 +237,6 @@
     ////////////////////////////  --- EventContainer ends ---  /////////////////////////////////////
 
     /**
-     * the number of days in a month
-     * @param date
-     * @returns {number}
-     */
-    function getNumberOfDaysInMonth(date) {
-        let date2 = dateTools.copy(date);
-        date2.setMonth(date2.getMonth() + 1);
-        date2.setDate(0);
-        return date2.getDate();
-    }
-
-    /**
      * get the month days only
      * @param Date date
      * @returns {Element[]}
@@ -256,7 +244,7 @@
     function getMonthDateElements(date) {
         let days = Array.from(document.getElementsByClassName("day"));
         let prefix = dateTools.daysBeforeFirst(date);
-        let daysInMonth = getNumberOfDaysInMonth(date);
+        let daysInMonth = dateTools.getNumberOfDaysInMonth(date);
         return days.slice(prefix, prefix + daysInMonth);
     }
 
