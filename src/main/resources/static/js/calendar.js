@@ -1,15 +1,3 @@
-// var beginDatepicker = $("#testid").flatpickr({
-//     weekNumbers: true,
-//     clickOpens: true,
-//     time_24hr: true,
-//     dateFormat: "Y-m-dTH:i",
-//     altInput: true,
-//     altFormat: "d.m.Y, H:i",
-//     enableTime: true,
-//     locale: "fi",
-// });
-
-
 
 (function () {
 
@@ -539,7 +527,6 @@
             setMonthDates(currentDate);
             grayOutIrrelevantDays(currentDate);
             setDefaultSelectedDay();
-            // addEvent(new Date());
             decorateToday(today, currentDate);
             document.getElementById("month").innerText = monthName(currentDate);
             document.getElementById("year").innerText = currentDate.getFullYear();
@@ -614,15 +601,32 @@
 
             // open the dialog for editing
             document.getElementById("addEvent").addEventListener("click", function () {
-                let dateElem = document.getElementById("date");
+                // let dateElem = document.getElementById("date");
                 let date = dateTools.copy(currentDate);
                 date.setDate(selectedDayElem.dateindex);
-                let dateValue = "" + date.getDate() + "." + (date.getMonth() + 1) + "." + date.getFullYear();
-                dateElem.value = dateValue;
+                // let dateValue = "" + date.getDate() + "." + (date.getMonth() + 1) + "." + date.getFullYear();
+                let iso = `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}T00:00:00`;
+                // dateElem.value = dateValue;
                 $("#modalEventEditor").modal("show");
+
 
                 let dateTimeElem = document.getElementById("datetime");
                 dateTimeElem.value = date.toISOString();
+                $("#date").flatpickr({
+                    clickOpens: true,
+                    time_24hr: true,
+                    dateFormat: "Y-m-dT00:00:00",
+                    altInput: true,
+                    altFormat: "d.m.Y",
+                    enableTime: false,
+                    locale: {
+                        "firstDayOfWeek": 1 // start week on Monday
+                    },
+                    onValueUpdate: function (selectedDates, dateStr) {
+                        document.getElementById("datetime").value = dateStr;
+                    },
+                    defaultDate: iso,
+                });
             });
         }
 
@@ -639,17 +643,7 @@
 
     let calendar = new Calendar();
 
-    $("#date").flatpickr({
-        clickOpens: true,
-        time_24hr: true,
-        dateFormat: "Y-m-dTH:i",
-        altInput: true,
-        altFormat: "d.m.Y, H:i",
-        enableTime: true,
-        "locale": {
-            "firstDayOfWeek": 1 // start week on Monday
-        }
-    });
+
 
     Object.freeze(calendar);
 
