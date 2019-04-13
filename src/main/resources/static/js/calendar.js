@@ -1,10 +1,58 @@
-
 (function () {
 
     "use strict";
 
-    //////////////////////////////// --- DateTools begins --- /////////////////////////////////
+    function Misc() {
+        this.getLastInt = function (href) {
+            let re = /.*\/(\d+)$/;
+            return href.match(re)[1];
+        };
+    }
 
+    function REST() {
+
+        this.calendarEventsURL = "/calendarevents";
+        this.tournamentsURL = "/tournaments";
+
+        /**
+         * @param data as an object
+         * @param success callback
+         * @param error callback
+         * data1@param url
+         * @param contentType
+         */
+        this.post = function (data, success, error, url, contentType = "application/json") {
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: JSON.stringify(data),
+                success: success,
+                dataType: "json",
+                contentType: contentType,
+            });
+        };
+
+        // curl -i -X PUT -H "Content-Type:text/uri-list"
+        // -d "http://localhost:8080/tournaments/1"
+        // http://localhost:8080/calendarevents/8/tournament
+
+        this.addRelation = function (ownerUrl, payload, success, error) {
+            $.ajax({
+                type: "PUT",
+                url: ownerUrl,
+                data: payload,
+                success: success,
+                contentType: "text/uri-list",
+                dataType: "text",
+                error: error,
+            });
+        };
+
+
+    }
+
+
+    //////////////////////////////// --- DateTools begins --- /////////////////////////////////R
     function DateTools() {
 
         this.yearAndMonthEqual = function (date1, date2) {
@@ -48,14 +96,14 @@
          * @param date
          * @return {Date}
          */
-        this.copy = function(date) {
+        this.copy = function (date) {
             return new Date(date.getTime());
         };
 
         /**
          * @param Date date
          */
-        this.getFirstDayOfMonth = function(date) {
+        this.getFirstDayOfMonth = function (date) {
             return new Date(date.getFullYear(), date.getMonth(), 1);
         };
 
@@ -64,7 +112,7 @@
          * @param {Date} date
          * @return {Date}
          */
-        this.getLastDayOfMonth = function(date) {
+        this.getLastDayOfMonth = function (date) {
             let end = dateTools.copy(date);
             end.setMonth(date.getMonth() + 1);
             end.setDate(0);
@@ -76,7 +124,7 @@
          * @param date
          * @returns {number}
          */
-        this.daysBeforeFirst = function(date) {
+        this.daysBeforeFirst = function (date) {
             let date2 = dateTools.copy(date);
             date2.setDate(1);
             // number of days before the day one
@@ -88,7 +136,7 @@
          * @param date
          * @returns {number}
          */
-        this.getNumberOfDaysInMonth = function(date) {
+        this.getNumberOfDaysInMonth = function (date) {
             let date2 = dateTools.copy(date);
             date2.setMonth(date2.getMonth() + 1);
             date2.setDate(0);
@@ -103,6 +151,12 @@
 
     const dateTools = new DateTools();
     Object.freeze(dateTools);
+
+    const rest = new REST();
+    Object.freeze(rest);
+
+    const misc = new Misc();
+    Object.freeze(misc);
 
     //////////////////////////////// --- EventContainer begins --- /////////////////////////////////
 
@@ -295,7 +349,7 @@
 
             // traverse event dates and mark days
             monthEvents.forEach(function (event) {
-                let day = days[getStartDateIndex(event)-1];
+                let day = days[getStartDateIndex(event) - 1];
                 day.style.borderBottom = "solid 3px red";
             });
         }
@@ -566,25 +620,119 @@
 
             $("#createbutton").on("click", function () {
 
-                let data = {};
+                let formdata = {};
 
                 let inputs = $("#tournamentdata *[name]");
 
                 $(inputs).each(function (index, element) {
                     let name = $(element).prop("name");
-                    data[name] = $(element).val();
+                    formdata[name] = $(element).val();
                 });
 
-                $.ajax({
-                    type: "POST",
-                    url: "/calendarevents",
-                    data: JSON.stringify(data),
-                    success: function (data, textStatus) {
-                        console.log("success: " + textStatus);
-                    },
-                    dataType: "json",
-                    contentType: "application/json",
-                });
+                /*
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/calendarevents",
+                                    data: JSON.stringify(formdata),
+                                    success: function (data) {
+
+                                        let eventUrl = data._links.calendarevent.href;
+                                        let tournamentUrl = data._links.tournament.href;
+
+                                        $.ajax({
+
+                                        });
+
+                                    },
+                                    dataType: "json",
+                                    contentType: "application/json",
+                                });
+                */
+
+
+                /**
+                 * create tournament and set the relation if success
+                 * @param data
+                 */
+                function calendarEventCreated(calendarEventData) {
+
+                    let calendarEventHref = calendarEventData._links.self.href;
+                    let calendarEventTourHref = calendarEventData._links.tournament.href;
+
+                    /**
+                     * {
+  "title" : "",
+  "description" : null,
+  "location" : null,
+  "organizer" : null,
+  "masterpoints" : false,
+  "price" : null,
+  "start" : "2019-03-21T13:00:00.000+0000",
+  "_links" : {
+    "self" : {
+      "href" : "http://localhost:8080/calendarevents/3"
+    },
+    "calendarEvent" : {
+      "href" : "http://localhost:8080/calendarevents/3"
+    },
+    "tournament" : {
+      "href" : "http://localhost:8080/calendarevents/3/tournament"
+    }
+  }
+}
+                      */
+
+
+                    /**
+                     * bind a calendar event and tournament
+                     * @param data
+                     */
+                    function tournamentCreated(tournamentData){
+                        let tournamentHref = tournamentData._links.self.href;
+                        let tournamentCalendarEventHref = tournamentData._links.calendarEvent.href;
+
+
+                        function ok(){
+                            // alert("bind ok 2");
+                        }
+                        function failed() {
+                            alert("bind failed");
+                        }
+
+                        // two sided:
+                        rest.addRelation(tournamentCalendarEventHref, calendarEventHref, ok, failed);
+                        rest.addRelation(calendarEventTourHref, tournamentHref, ok, failed);
+                    }
+
+                    /**
+                     * handle failed binding
+                     */
+                    function tournamentCreationFailed(){
+                        console.log("tournament and calendar event relation creation failed");
+                    }
+
+                    // 2. create a tournament
+                    rest.post({}, tournamentCreated, tournamentCreationFailed, rest.tournamentsURL);
+
+                    // data._links.{self, calendarEvent, tournament}.href
+                    // let owner = data._links.calendarEvent.href;
+                    // let mapped = data._links.tournament.href;
+                    // let tourId =
+                    // rest.addRelation(owner, mapped)
+
+                }
+
+                function calendarEventCreationFailed() {
+                    console.log("calendar event creation failed");
+                }
+
+                // 1. create a calendar event
+                // 2. create a tournament
+                // 3. add the entities to 1-1 relation
+                // TODO: handle errors if any step fails
+
+                // create a calendar event
+                rest.post(formdata, calendarEventCreated, calendarEventCreationFailed, rest.calendarEventsURL);
 
 
             });
@@ -605,7 +753,7 @@
                 let date = dateTools.copy(currentDate);
                 date.setDate(selectedDayElem.dateindex);
                 // let dateValue = "" + date.getDate() + "." + (date.getMonth() + 1) + "." + date.getFullYear();
-                let iso = `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}T00:00:00`;
+                let iso = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}T00:00:00`;
                 // dateElem.value = dateValue;
                 $("#modalEventEditor").modal("show");
 
@@ -642,7 +790,6 @@
     }
 
     let calendar = new Calendar();
-
 
 
     Object.freeze(calendar);

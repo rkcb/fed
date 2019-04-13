@@ -10,6 +10,29 @@ work otherwise.
 curl -i -X POST -H "Content-Type:application/json" -d '{"title": "", 
 "start": "2019-03-21T13:00:00"}' http://localhost:8080/calendarevents
 
+## Data response format
+### data._links.{self, calendarEvent, tournament}.href
+{
+  "title" : "",
+  "description" : null,
+  "location" : null,
+  "organizer" : null,
+  "masterpoints" : false,
+  "price" : null,
+  "start" : "2019-03-21T13:00:00.000+0000",
+  "_links" : {
+    "self" : {
+      "href" : "http://localhost:8080/calendarevents/3"
+    },
+    "calendarEvent" : {
+      "href" : "http://localhost:8080/calendarevents/3"
+    },
+    "tournament" : {
+      "href" : "http://localhost:8080/calendarevents/3/tournament"
+    }
+  }
+}
+
 # Query CalendarEvent by ISO DateTime
 
 curl localhost:8080/calendarevents/search/
@@ -44,4 +67,5 @@ http://localhost:8080/players/1/club
 1. Create a calendar event and a tournament. The order does not matter.
 2. Set these to the 1-1 relationship by the following (update the ids as needed)
 
-curl -i -X PUT -H "Content-Type:text/uri-list" -d "http://localhost:8080/tournaments/1" http://localhost:8080/calendarevents/8/tournament
+curl -i -X PUT -H "Content-Type:text/uri-list" -d "http://localhost:8080/tournaments/1" 
+http://localhost:8080/calendarevents/1/tournament
