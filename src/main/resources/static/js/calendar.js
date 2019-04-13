@@ -629,27 +629,6 @@
                     formdata[name] = $(element).val();
                 });
 
-                /*
-                                $.ajax({
-                                    type: "POST",
-                                    url: "/calendarevents",
-                                    data: JSON.stringify(formdata),
-                                    success: function (data) {
-
-                                        let eventUrl = data._links.calendarevent.href;
-                                        let tournamentUrl = data._links.tournament.href;
-
-                                        $.ajax({
-
-                                        });
-
-                                    },
-                                    dataType: "json",
-                                    contentType: "application/json",
-                                });
-                */
-
-
                 /**
                  * create tournament and set the relation if success
                  * @param data
@@ -658,30 +637,6 @@
 
                     let calendarEventHref = calendarEventData._links.self.href;
                     let calendarEventTourHref = calendarEventData._links.tournament.href;
-
-                    /**
-                     * {
-  "title" : "",
-  "description" : null,
-  "location" : null,
-  "organizer" : null,
-  "masterpoints" : false,
-  "price" : null,
-  "start" : "2019-03-21T13:00:00.000+0000",
-  "_links" : {
-    "self" : {
-      "href" : "http://localhost:8080/calendarevents/3"
-    },
-    "calendarEvent" : {
-      "href" : "http://localhost:8080/calendarevents/3"
-    },
-    "tournament" : {
-      "href" : "http://localhost:8080/calendarevents/3/tournament"
-    }
-  }
-}
-                      */
-
 
                     /**
                      * bind a calendar event and tournament
@@ -693,14 +648,14 @@
 
 
                         function ok(){
-                            // alert("bind ok 2");
+                            document.getElementById("tournamentalert").style.display = "block";
                         }
                         function failed() {
                             alert("bind failed");
                         }
 
                         // two sided:
-                        rest.addRelation(tournamentCalendarEventHref, calendarEventHref, ok, failed);
+                        rest.addRelation(tournamentCalendarEventHref, calendarEventHref, () => {}, failed);
                         rest.addRelation(calendarEventTourHref, tournamentHref, ok, failed);
                     }
 
@@ -708,7 +663,7 @@
                      * handle failed binding
                      */
                     function tournamentCreationFailed(){
-                        console.log("tournament and calendar event relation creation failed");
+                        alert("tournament and calendar event relation creation failed");
                     }
 
                     // 2. create a tournament
@@ -749,12 +704,12 @@
 
             // open the dialog for editing
             document.getElementById("addEvent").addEventListener("click", function () {
-                // let dateElem = document.getElementById("date");
                 let date = dateTools.copy(currentDate);
                 date.setDate(selectedDayElem.dateindex);
-                // let dateValue = "" + date.getDate() + "." + (date.getMonth() + 1) + "." + date.getFullYear();
                 let iso = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}T00:00:00`;
-                // dateElem.value = dateValue;
+
+                // hide alert by default
+                $("#tournamentalert").css("display", "none");
                 $("#modalEventEditor").modal("show");
 
 
