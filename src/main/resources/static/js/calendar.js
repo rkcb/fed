@@ -3,12 +3,20 @@
     "use strict";
 
     function Misc() {
+
         this.getLastInt = function (href) {
             let re = /.*\/(\d+)$/;
             return href.match(re)[1];
         };
     }
 
+    // function Decoration(){
+    // }
+
+    /**
+     * REST contains all backend functionality
+     * @constructor
+     */
     function REST() {
 
         this.calendarEventsURL = "/calendarevents";
@@ -646,11 +654,15 @@
                         let tournamentHref = tournamentData._links.self.href;
                         let tournamentCalendarEventHref = tournamentData._links.calendarEvent.href;
 
-                        // add calendar event to the container and show notification
+                        // add calendar event to the container
+                        // show notification
+                        // mark the day for new event
                         function ok(){
                             document.getElementById("tournamentalert").style.display = "block";
                             eventContainer.add(calendarEventData);
-
+                            let eventDate = new Date(calendarEventData.start);
+                            let dayElem = getMonthDateElements(eventDate)[eventDate.getDate()-1];
+                            dayElem.style.borderBottom = "solid 3px red";
                         }
                         function failed() {
                             alert("bind failed");
