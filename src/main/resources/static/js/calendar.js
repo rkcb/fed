@@ -51,7 +51,6 @@
 
     }
 
-
     //////////////////////////////// --- DateTools begins --- /////////////////////////////////R
     function DateTools() {
 
@@ -294,6 +293,7 @@
     }
 
     ////////////////////////////  --- EventContainer ends ---  /////////////////////////////////////
+
 
     /**
      * get the month days only
@@ -631,7 +631,7 @@
 
                 /**
                  * create tournament and set the relation if success
-                 * @param data
+                 * @param calendarEventData server REST response
                  */
                 function calendarEventCreated(calendarEventData) {
 
@@ -646,9 +646,11 @@
                         let tournamentHref = tournamentData._links.self.href;
                         let tournamentCalendarEventHref = tournamentData._links.calendarEvent.href;
 
-
+                        // add calendar event to the container and show notification
                         function ok(){
                             document.getElementById("tournamentalert").style.display = "block";
+                            eventContainer.add(calendarEventData);
+
                         }
                         function failed() {
                             alert("bind failed");

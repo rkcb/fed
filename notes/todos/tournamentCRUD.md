@@ -3,15 +3,15 @@
 
 ## Tournament Creation
 
-- Todo: updating eventContainer after server success
+- Todo: updating eventContainer after server success (15min?)
     * add handler to ajax: that is enough and easy
     * note: this can only be done once the 4th step is completed
-- Todo: notify user about event creation
+- Done: notify user about event creation
     * add to the previous handler
     * do last when operation succeeded or failed
 - Todo: handle server error
     * as previous but add an "error handler"
-- Todo: take care that also Tournament will be created
+- Done: take care that also Tournament will be created
     * first create an event and then a tournament. Finally bind the events 
       to a 1-1 relation
 
