@@ -60,6 +60,7 @@
     }
 
     //////////////////////////////// --- DateTools begins --- /////////////////////////////////R
+
     function DateTools() {
 
         this.yearAndMonthEqual = function (date1, date2) {
@@ -165,6 +166,8 @@
     const misc = new Misc();
     Object.freeze(misc);
 
+    const eventEditor = new EventEditor();
+
     //////////////////////////////// --- EventContainer begins --- /////////////////////////////////
 
     /**
@@ -191,6 +194,12 @@
             let re = /.*\/(\d+)$/;
             return href.match(re)[1];
         }
+
+        this.getEventId = function(event) {
+            let href = event._links.self.href;
+            let re = /.*\/(\d+)$/;
+            return href.match(re)[1];
+        };
 
         this.getAllAsArray = function () {
             return Array.from(allEvents.values());
@@ -301,6 +310,35 @@
     }
 
     ////////////////////////////  --- EventContainer ends ---  /////////////////////////////////////
+
+    ////////////////////////////  --- Modal Dialog begins ---  /////////////////////////////////////
+    
+    function EventEditor() {
+
+        this.fill = function (eventData) {
+            $('#tournamentdata *[name]').each(function () {
+                let name = $(this).prop("name");
+                $(this).prop("value", eventData[name]);
+            });
+        };
+
+        this.clear = function () {
+            $('#tournamentdata *[name]').each(function () {
+                $(this).prop("value", "");
+            });
+        };
+        
+        this.show = function () {
+            $("#modalEventEditor").modal("show");
+        };
+
+        this.hide = function () {
+            $("#modalEventEditor").modal("hide");
+        };
+
+    }
+    
+    ////////////////////////////  --- Modal Dialog ends ---  /////////////////////////////////////
 
 
     /**
@@ -431,11 +469,14 @@
                 date.setDate(dayIndex);
                 let events = eventContainer.getEventsByDate(date);
                 $(".eventRow").each(function (index) {
+                    $(this).prop("eventid", undefined);
                     if (index < events.length) {
-                        $(this).children("td[title]").html(events[index].title);
-                        let d = new Date(events[index].start);
+                        let event = events[index];
+                        $(this).children("td[title]").html(event.title);
+                        let d = new Date(event.start);
                         let formattedDate = d.getDate() + "." + d.getMonth() + "." + d.getFullYear() + ", " + d.getHours() + ":" + d.getMinutes();
                         $(this).children("td[start]").html(formattedDate);
+                        $(this).prop("eventid", eventContainer.getEventId(event));
                     }
                 });
             }
@@ -724,8 +765,8 @@
 
                 // hide alert by default
                 $("#tournamentalert").css("display", "none");
-                $("#modalEventEditor").modal("show");
-
+                eventEditor.clear();
+                eventEditor.show();
 
                 let dateTimeElem = document.getElementById("datetime");
                 dateTimeElem.value = date.toISOString();
@@ -747,12 +788,23 @@
             });
         }
 
+        function addEventRowClickListeners(){
+
+            $(".eventRow").on("click", function (event) {
+                let id = event.currentTarget.eventid;
+                // here 
+            });
+
+        }
+
         document.getElementById("month-prev").addEventListener("click", function () {
             updateMonth(-1);
         });
         document.getElementById("month-next").addEventListener("click", function () {
             updateMonth(1);
         });
+
+        addEventRowClickListeners();
 
         updateMonth();
         createDialogButtonListeners();
@@ -764,6 +816,8 @@
     Object.freeze(calendar);
 
     document.getElementById("minutes").step = 5;
+
+
 
 
 })();

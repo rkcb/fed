@@ -3,7 +3,7 @@
 
 ## Tournament Creation
 
-- Todo: updating eventContainer after server success (15min?)
+- Done: updating eventContainer after server success (15min?)
     * add handler to ajax: that is enough and easy
     * note: this can only be done once the 4th step is completed
 - Done: notify user about event creation
