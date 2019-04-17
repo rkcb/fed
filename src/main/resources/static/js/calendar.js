@@ -720,7 +720,7 @@
                         // show notification
                         // mark the day for new event
                         function ok(){
-                            document.getElementById("tournamentalert").style.display = "block";
+                            eventEditor.showCreationOk();
                             eventContainer.add(calendarEventData);
                             let eventDate = new Date(calendarEventData.start);
                             let dayElem = getMonthDateElements(eventDate)[eventDate.getDate()-1];
@@ -769,7 +769,6 @@
             });
 
             $("#updatebutton").on("click", function () {
-                console.log("update");
             });
 
             $("#deletebutton").on("click", function () {
@@ -818,6 +817,13 @@
 
         }
 
+        function addCheckboxListener(){
+            $("#masterPointCheck").on("click", function () {
+                let value = $(this).prop("value");
+                $(this).prop("value", !value);
+            });
+        }
+
         document.getElementById("month-prev").addEventListener("click", function () {
             updateMonth(-1);
         });
@@ -829,6 +835,7 @@
 
         updateMonth();
         createDialogButtonListeners();
+        addCheckboxListener();
     }
 
     let calendar = new Calendar();
