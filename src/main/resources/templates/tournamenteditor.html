@@ -35,7 +35,7 @@
 
                 <form id="tournamentdata" class="pl-3 pr-3">
 
-                    <div id="tournamentalert" class="alert alert-success" role="alert">
+                    <div id="tournament-creation-ok" class="alert alert-success" role="alert">
                         Tournament created
                     </div>
 
@@ -68,7 +68,8 @@
 
                     <div class="form-row align-items-center form-group">
                         <div class="col-4">
-                            <input class="form-control" placeholder="Hours" id="hours" type="number" min="1" max="24">
+                            <input class="form-control" placeholder="Hours" id="hours" type="number" min="1"
+                                   max="24">
                         </div>
                         :
                         <div class="col-4">
@@ -88,7 +89,7 @@
                     </div>
 
                     <div class="custom-control custom-checkbox mr-sm-2 form-group">
-                        <input type="checkbox" class="custom-control-input" id="masterPointCheck">
+                        <input type="checkbox" name="masterpoints" class="custom-control-input" id="masterPointCheck">
                         <label class="custom-control-label" for="masterPointCheck">Masterpoint Tournament</label>
                     </div>
 
@@ -109,7 +110,8 @@
             <div class="modal-footer">
                 <input id="createbutton" type="submit" class="btn btn-primary" value="Create">
                 <input id="updatebutton" type="submit" class="btn btn-primary" value="Update">
-                <input id="deletebutton" type="submit" class="btn btn-primary" value="Delete">
+                <input id="clearbutton" type="submit" class="btn btn-primary" value="Clear">
+                <input id="deletebutton" type="submit" class="btn btn-danger" value="Delete">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>

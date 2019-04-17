@@ -167,6 +167,7 @@
     Object.freeze(misc);
 
     const eventEditor = new EventEditor();
+    Object.freeze(eventEditor);
 
     //////////////////////////////// --- EventContainer begins --- /////////////////////////////////
 
@@ -325,7 +326,10 @@
         this.clear = function () {
             $('#tournamentdata *[name]').each(function () {
                 $(this).prop("value", "");
+                $(this).prop("checked", false);
             });
+            $("#hours").prop("value", "");
+            $("#minutes").prop("value", "");
         };
         
         this.show = function () {
@@ -335,6 +339,19 @@
         this.hide = function () {
             $("#modalEventEditor").modal("hide");
         };
+        
+        this.showCreationOk = function () {
+            document.getElementById("tournament-creation-ok").style.display = "block";
+        };
+
+        this.hideAlerts = function () {
+            $("#tournamentdata .alert").css("display", "none");
+        };
+
+        this.showCreationFailed = function () {
+        };
+
+
 
     }
     
@@ -667,6 +684,10 @@
 
         function createDialogButtonListeners() {
 
+            $("#clearbutton").on("click", function () {
+               eventEditor.clear();
+            });
+
             $("#createbutton").on("click", function () {
 
                 let formdata = {};
@@ -763,11 +784,11 @@
                 date.setDate(selectedDayElem.dateindex);
                 let iso = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}T00:00:00`;
 
-                // hide alert by default
-                $("#tournamentalert").css("display", "none");
+                eventEditor.hideAlerts();
                 eventEditor.clear();
                 eventEditor.show();
 
+                // add a date picker
                 let dateTimeElem = document.getElementById("datetime");
                 dateTimeElem.value = date.toISOString();
                 $("#date").flatpickr({
