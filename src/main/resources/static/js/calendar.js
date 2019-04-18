@@ -10,8 +10,8 @@
         };
     }
 
-    // function Decoration(){
-    // }
+
+    /////////////////////////////// --- REST begins --- /////////////////////////////////////////
 
     /**
      * REST contains all backend functionality
@@ -58,6 +58,8 @@
 
 
     }
+
+    /////////////////////////////// --- REST ends --- /////////////////////////////////////////
 
     //////////////////////////////// --- DateTools begins --- /////////////////////////////////R
 
@@ -154,20 +156,6 @@
 
     //////////////////////////////// --- DateTools ends --- /////////////////////////////////
 
-    //////////////////////////////// --- Construct DateTools --- /////////////////////////////////
-
-
-    const dateTools = new DateTools();
-    Object.freeze(dateTools);
-
-    const rest = new REST();
-    Object.freeze(rest);
-
-    const misc = new Misc();
-    Object.freeze(misc);
-
-    const eventEditor = new EventEditor();
-    Object.freeze(eventEditor);
 
     //////////////////////////////// --- EventContainer begins --- /////////////////////////////////
 
@@ -237,6 +225,13 @@
             events.sort((a, b) => a.start.localeCompare(b.start));
 
             return events;
+        };
+
+        /**
+         * @param {String} eventId
+         */
+        this.get = function (eventId) {
+            return allEvents.get(eventId);
         };
 
         /**
@@ -321,6 +316,9 @@
                 let name = $(this).prop("name");
                 $(this).prop("value", eventData[name]);
             });
+            let start = new Date(eventData.start);
+            $("#hours").prop("value", start.getHours());
+            $("#minutes").prop("value", start.getMinutes());
         };
 
         this.clear = function () {
@@ -349,13 +347,52 @@
         };
 
         this.showCreationFailed = function () {
+            // TODO: add the notification
+            document.getElementById("tournament-creation-failed").style.display = "block";
         };
+
+        this.setDate = function (isoDateString) {
+            $("#date").flatpickr({
+                clickOpens: true,
+                time_24hr: true,
+                dateFormat: "Y-m-dT00:00:00",
+                altInput: true,
+                altFormat: "d.m.Y",
+                enableTime: false,
+                locale: {
+                    "firstDayOfWeek": 1 // start week on Monday
+                },
+                onValueUpdate: function (selectedDates, dateStr) {
+                    document.getElementById("datetime").value = dateStr;
+                },
+                defaultDate: isoDateString,
+            });
+        };
+
 
 
 
     }
     
     ////////////////////////////  --- Modal Dialog ends ---  /////////////////////////////////////
+
+    //////////////////////////////// --- Construction begins --- /////////////////////////////////
+
+
+
+    const dateTools = new DateTools();
+    Object.freeze(dateTools);
+
+    const rest = new REST();
+    Object.freeze(rest);
+
+    const misc = new Misc();
+    Object.freeze(misc);
+
+    const eventEditor = new EventEditor();
+    Object.freeze(eventEditor);
+
+    //////////////////////////////// --- Construction ends --- /////////////////////////////////
 
 
     /**
@@ -491,7 +528,7 @@
                         let event = events[index];
                         $(this).children("td[title]").html(event.title);
                         let d = new Date(event.start);
-                        let formattedDate = d.getDate() + "." + d.getMonth() + "." + d.getFullYear() + ", " + d.getHours() + ":" + d.getMinutes();
+                        let formattedDate = event.start;
                         $(this).children("td[start]").html(formattedDate);
                         $(this).prop("eventid", eventContainer.getEventId(event));
                     }
@@ -529,6 +566,10 @@
 
             date.setHours(hours);
             date.setMinutes(minutes);
+            date.setSeconds(0);
+            date.setMilliseconds(0);
+
+
 
             elem.value = date.toISOString();
         }
@@ -557,6 +598,7 @@
                 now.setHours(24); // increases current date by 24h
             }
         }
+
 
         function grayOutIrrelevantDays(date) {
 
@@ -793,7 +835,7 @@
                 $("#date").flatpickr({
                     clickOpens: true,
                     time_24hr: true,
-                    dateFormat: "Y-m-dT00:00:00",
+                    dateFormat: "Y-m-dT00:00:00+00:00",
                     altInput: true,
                     altFormat: "d.m.Y",
                     enableTime: false,
@@ -811,8 +853,8 @@
         function addEventRowClickListeners(){
 
             $(".eventRow").on("click", function (event) {
-                let id = event.currentTarget.eventid;
-                // here 
+                let eventId = event.currentTarget.eventid;
+                eventEditor.fill(eventContainer.get(eventId));
             });
 
         }
