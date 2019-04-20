@@ -788,7 +788,7 @@
                 }
 
                 function calendarEventCreationFailed() {
-                    console.log("calendar event creation failed");
+                    alert("calendar event creation failed");
                 }
 
                 // 1. create a calendar event
