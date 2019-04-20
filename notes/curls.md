@@ -7,7 +7,7 @@ work otherwise.
 
 # Add a Calendar event from command line
 
-curl -i -X POST -H "Content-Type:application/json" -d '{"title": "", 
+curl -i -X POST -H "Content-Type:application/json" -d '{"title": "timetest", 
 "start": "2019-03-21T13:00:00"}' http://localhost:8080/calendarevents
 
 ## Data response format

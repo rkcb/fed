@@ -557,7 +557,7 @@
          * called after an hours or minutes change
          */
         function updateDatetimeValue() {
-
+/*
             let elem = document.getElementById("datetime");
             let date = new Date(elem.value);
 
@@ -569,9 +569,9 @@
             date.setSeconds(0);
             date.setMilliseconds(0);
 
-
-
             elem.value = date.toISOString();
+
+ */
         }
 
         /**
@@ -674,7 +674,7 @@
                 minutesElem.addEventListener("change", updateDatetimeValue, true);
             }
 
-            addChangeListeners();
+            // addChangeListeners();
 
         }
 
@@ -811,12 +811,10 @@
             });
 
             $("#updatebutton").on("click", function () {
+                alert("datetime value = " + $("#datetime").prop("value"));
             });
 
             $("#deletebutton").on("click", function () {
-            });
-
-            $("#updatebutton").on("click", function () {
             });
 
             // open the dialog for editing
@@ -835,7 +833,7 @@
                 $("#date").flatpickr({
                     clickOpens: true,
                     time_24hr: true,
-                    dateFormat: "Y-m-dT00:00:00+00:00",
+                    dateFormat: "Y-m-d",
                     altInput: true,
                     altFormat: "d.m.Y",
                     enableTime: false,
@@ -844,6 +842,7 @@
                     },
                     onValueUpdate: function (selectedDates, dateStr) {
                         document.getElementById("datetime").value = dateStr;
+                        alert("dateStr = " + dateStr);
                     },
                     defaultDate: iso,
                 });
@@ -882,12 +881,6 @@
 
     let calendar = new Calendar();
 
-
     Object.freeze(calendar);
-
-    document.getElementById("minutes").step = 5;
-
-
-
 
 })();
