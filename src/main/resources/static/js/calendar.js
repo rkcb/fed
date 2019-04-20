@@ -557,21 +557,16 @@
          * called after an hours or minutes change
          */
         function updateDatetimeValue() {
-/*
-            let elem = document.getElementById("datetime");
-            let date = new Date(elem.value);
 
-            let hours = document.getElementById("hours").value;
-            let minutes = document.getElementById("minutes").value;
+            let dateTimeElem = document.getElementById("datetime");
 
-            date.setHours(hours);
-            date.setMinutes(minutes);
-            date.setSeconds(0);
-            date.setMilliseconds(0);
+            let dateValue = document.getElementById("date").value;
+            let timeValue = document.getElementById("time").value;
 
-            elem.value = date.toISOString();
+            if (dateValue && timeValue){
+                dateTimeElem.value = "" + dateValue + "T" + timeValue;
+            }
 
- */
         }
 
         /**
@@ -667,14 +662,11 @@
 
             // update datetime input value when hours or minutes change
             function addChangeListeners() {
-                let hoursElem = document.getElementById("hours");
-                let minutesElem = document.getElementById("minutes");
-
-                hoursElem.addEventListener("change", updateDatetimeValue, true);
-                minutesElem.addEventListener("change", updateDatetimeValue, true);
+                let timeElem = document.getElementById("time");
+                timeElem.addEventListener("change", updateDatetimeValue, true);
             }
 
-            // addChangeListeners();
+            addChangeListeners();
 
         }
 
