@@ -79,6 +79,19 @@
             return date.toISOString().split("T")[0];
         };
 
+        this.getTimeString = function (date) {
+            return date.toISOString().split("T")[1];
+        };
+
+        this.dateTimeRepresentation = function (isoString) {
+
+            let [date2, time] = isoString.split("T");
+            let [year, month, date] = date2.split("-");
+            time = time.substr(0, 5);
+
+            return `${date}.${month}.${year}` + ", " + time;
+        };
+
         /**
          * get an ISO date string for the start of the month
          * @param {Date} date
@@ -316,9 +329,8 @@
                 let name = $(this).prop("name");
                 $(this).prop("value", eventData[name]);
             });
-            let start = new Date(eventData.start);
-            $("#hours").prop("value", start.getHours());
-            $("#minutes").prop("value", start.getMinutes());
+            let [date, time] = eventData.start.split;
+            document.getElementById("datetime").value = "" + date + "T" + time;
         };
 
         this.clear = function () {
@@ -517,6 +529,9 @@
                 });
             }
 
+            /**
+             * update selected day calendar events
+             */
             function addDayEvents() {
                 let dayIndex = event.srcElement.dateindex;
                 let date = dateTools.copy(currentDate);
@@ -527,8 +542,7 @@
                     if (index < events.length) {
                         let event = events[index];
                         $(this).children("td[title]").html(event.title);
-                        let d = new Date(event.start);
-                        let formattedDate = event.start;
+                        let formattedDate = dateTools.dateTimeRepresentation(event.start);
                         $(this).children("td[start]").html(formattedDate);
                         $(this).prop("eventid", eventContainer.getEventId(event));
                     }
