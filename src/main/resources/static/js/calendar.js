@@ -10,7 +10,6 @@
         };
     }
 
-
     /////////////////////////////// --- REST begins --- /////////////////////////////////////////
 
     /**
@@ -63,6 +62,11 @@
 
     //////////////////////////////// --- DateTools begins --- /////////////////////////////////R
 
+    /**
+     * contains various date related tools
+     *
+     * @constructor
+     */
     function DateTools() {
 
         this.yearAndMonthEqual = function (date1, date2) {
@@ -79,13 +83,18 @@
             return date.toISOString().split("T")[0];
         };
 
-        this.getTimeString = function (date) {
-            return date.toISOString().split("T")[1];
+        /**
+         * get only hours and minutes from ISO date string
+         * @param {String} date
+         * @return {string}
+         */
+        this.getTimeString = function (iso) {
+            return iso.split("T")[1].substr(0,5);
         };
 
-        this.dateTimeRepresentation = function (isoString) {
+        this.getDateTimeRepresentation = function (isoDateString) {
 
-            let [date2, time] = isoString.split("T");
+            let [date2, time] = isoDateString.split("T");
             let [year, month, date] = date2.split("-");
             time = time.substr(0, 5);
 
@@ -329,8 +338,11 @@
                 let name = $(this).prop("name");
                 $(this).prop("value", eventData[name]);
             });
-            let [date, time] = eventData.start.split;
-            document.getElementById("datetime").value = "" + date + "T" + time;
+            this.setDate(eventData.start);
+            this.setTime(eventData.start);
+
+            // let [date, time] = eventData.start.split;
+            // document.getElementById("datetime").value = "" + date + "T" + time;
         };
 
         this.clear = function () {
@@ -338,11 +350,10 @@
                 $(this).prop("value", "");
                 $(this).prop("checked", false);
             });
-            $("#hours").prop("value", "");
-            $("#minutes").prop("value", "");
         };
         
         this.show = function () {
+            this.hideAlerts();
             $("#modalEventEditor").modal("show");
         };
 
@@ -379,6 +390,10 @@
                 },
                 defaultDate: isoDateString,
             });
+        };
+        
+        this.setTime = function (isoDateString) {
+            $("#time").prop("value", dateTools.getTimeString(isoDateString));
         };
 
 
@@ -537,14 +552,16 @@
                 let date = dateTools.copy(currentDate);
                 date.setDate(dayIndex);
                 let events = eventContainer.getEventsByDate(date);
+                // TODO: if there are events more than five this fails => add paging
                 $(".eventRow").each(function (index) {
                     $(this).prop("eventid", undefined);
                     if (index < events.length) {
                         let event = events[index];
                         $(this).children("td[title]").html(event.title);
-                        let formattedDate = dateTools.dateTimeRepresentation(event.start);
+                        let formattedDate = dateTools.getDateTimeRepresentation(event.start);
                         $(this).children("td[start]").html(formattedDate);
                         $(this).prop("eventid", eventContainer.getEventId(event));
+                        $(this).css("cursor", "pointer");
                     }
                 });
             }
@@ -568,7 +585,7 @@
         }
 
         /**
-         * called after an hours or minutes change
+         * called after the time element value changes
          */
         function updateDatetimeValue() {
 
@@ -855,12 +872,11 @@
             });
         }
 
+        /**
+         * handle event table row clicks
+         */
         function addEventRowClickListeners(){
 
-            $(".eventRow").on("click", function (event) {
-                let eventId = event.currentTarget.eventid;
-                eventEditor.fill(eventContainer.get(eventId));
-            });
 
         }
 
@@ -883,6 +899,18 @@
         updateMonth();
         createDialogButtonListeners();
         addCheckboxListener();
+
+        let elems = document.getElementsByClassName("eventRow");
+        for (let elem of elems){
+            elem.addEventListener("click", function (event) {
+                let eventId = event.currentTarget.eventid;
+                let dayEvent = eventContainer.get(eventId);
+                eventEditor.fill(dayEvent);
+                eventEditor.show();
+
+            });
+        }
+
     }
 
     let calendar = new Calendar();
