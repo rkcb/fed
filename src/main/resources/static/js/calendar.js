@@ -89,7 +89,7 @@
          * @return {string}
          */
         this.getTimeString = function (iso) {
-            return iso.split("T")[1].substr(0,5);
+            return iso.split("T")[1].substr(0, 5);
         };
 
         this.getDateTimeRepresentation = function (isoDateString) {
@@ -206,7 +206,7 @@
             return href.match(re)[1];
         }
 
-        this.getEventId = function(event) {
+        this.getEventId = function (event) {
             let href = event._links.self.href;
             let re = /.*\/(\d+)$/;
             return href.match(re)[1];
@@ -330,19 +330,19 @@
     ////////////////////////////  --- EventContainer ends ---  /////////////////////////////////////
 
     ////////////////////////////  --- Modal Dialog begins ---  /////////////////////////////////////
-    
+
     function EventEditor() {
 
-        this.fill = function (eventData) {
+        this.fill = function (eventData, eventId) {
             $('#tournamentdata *[name]').each(function () {
                 let name = $(this).prop("name");
                 $(this).prop("value", eventData[name]);
             });
+
             this.setDate(eventData.start);
             this.setTime(eventData.start);
 
-            // let [date, time] = eventData.start.split;
-            // document.getElementById("datetime").value = "" + date + "T" + time;
+            $("#eventid").prop("value", eventId);
         };
 
         this.clear = function () {
@@ -350,8 +350,9 @@
                 $(this).prop("value", "");
                 $(this).prop("checked", false);
             });
+            $("#eventid").prop("value", "");
         };
-        
+
         this.show = function () {
             this.hideAlerts();
             $("#modalEventEditor").modal("show");
@@ -360,7 +361,7 @@
         this.hide = function () {
             $("#modalEventEditor").modal("hide");
         };
-        
+
         this.showCreationOk = function () {
             document.getElementById("tournament-creation-ok").style.display = "block";
         };
@@ -391,20 +392,17 @@
                 defaultDate: isoDateString,
             });
         };
-        
+
         this.setTime = function (isoDateString) {
             $("#time").prop("value", dateTools.getTimeString(isoDateString));
         };
 
 
-
-
     }
-    
+
     ////////////////////////////  --- Modal Dialog ends ---  /////////////////////////////////////
 
     //////////////////////////////// --- Construction begins --- /////////////////////////////////
-
 
 
     const dateTools = new DateTools();
@@ -535,12 +533,13 @@
         const updateSelectedDayData = function (event) {
 
             /**
-             * clear selected day data
+             * clear selected day data and eventid
              */
             function clearEventTable() {
                 $(".eventRow").each(function () {
                     $(this).children("td[title]").html("");
                     $(this).children("td[start]").html("");
+                    $(this).prop("eventid", "");
                 });
             }
 
@@ -594,7 +593,7 @@
             let dateValue = document.getElementById("date").value;
             let timeValue = document.getElementById("time").value;
 
-            if (dateValue && timeValue){
+            if (dateValue && timeValue) {
                 dateTimeElem.value = "" + dateValue + "T" + timeValue;
             }
 
@@ -750,7 +749,7 @@
         function createDialogButtonListeners() {
 
             $("#clearbutton").on("click", function () {
-               eventEditor.clear();
+                eventEditor.clear();
             });
 
             $("#createbutton").on("click", function () {
@@ -777,33 +776,39 @@
                      * bind a calendar event and tournament
                      * @param data
                      */
-                    function tournamentCreated(tournamentData){
+                    function tournamentCreated(tournamentData) {
                         let tournamentHref = tournamentData._links.self.href;
                         let tournamentCalendarEventHref = tournamentData._links.calendarEvent.href;
 
                         // add calendar event to the container
                         // show notification
                         // mark the day for new event
-                        function ok(){
+                        // add event id to the modal dialog
+                        function ok() {
                             eventEditor.showCreationOk();
                             eventContainer.add(calendarEventData);
                             let eventDate = new Date(calendarEventData.start);
-                            let dayElem = getMonthDateElements(eventDate)[eventDate.getDate()-1];
+                            let dayElem = getMonthDateElements(eventDate)[eventDate.getDate() - 1];
                             dayElem.style.borderBottom = "solid 3px red";
+                            let helper = new EventContainer();
+                            $("#eventid").prop("value", helper.getEventId(calendarEventData));
+
                         }
+
                         function failed() {
                             alert("bind failed");
                         }
 
                         // two sided:
-                        rest.addRelation(tournamentCalendarEventHref, calendarEventHref, () => {}, failed);
+                        rest.addRelation(tournamentCalendarEventHref, calendarEventHref, () => {
+                        }, failed);
                         rest.addRelation(calendarEventTourHref, tournamentHref, ok, failed);
                     }
 
                     /**
                      * handle failed binding
                      */
-                    function tournamentCreationFailed(){
+                    function tournamentCreationFailed() {
                         alert("tournament and calendar event relation creation failed");
                     }
 
@@ -837,7 +842,17 @@
                 alert("datetime value = " + $("#datetime").prop("value"));
             });
 
-            $("#deletebutton").on("click", function () {
+            $("#deletebutton").on("click", function (event) {
+                // TODO   1. remove event from eventContainer
+                // TODO   2. remove decorations
+                // TODO   3. remove CalendarEvent and Tournament bindings
+                // TODO   4. remove previous entities
+                //        5. remove PBN files?
+                //        6. if PBN files are removed also possible master points should be removed
+                //        7. if 5-6 are done create a log message who removed PBN files
+                //        8. probably it is best to leave PBN and MP handling to own view
+                console.log(event);
+
             });
 
             // open the dialog for editing
@@ -865,7 +880,6 @@
                     },
                     onValueUpdate: function (selectedDates, dateStr) {
                         document.getElementById("datetime").value = dateStr;
-                        alert("dateStr = " + dateStr);
                     },
                     defaultDate: iso,
                 });
@@ -875,12 +889,23 @@
         /**
          * handle event table row clicks
          */
-        function addEventRowClickListeners(){
+        function addEventRowClickListeners() {
 
+            let elems = document.getElementsByClassName("eventRow");
+            for (let elem of elems) {
+                elem.addEventListener("click", function (event) {
+                    let eventId = event.currentTarget.eventid;
+                    if (eventId) { // this is updated every time user clicks a new day
+                        let dayEvent = eventContainer.get(eventId);
+                        eventEditor.fill(dayEvent, eventId);
+                        eventEditor.show();
+                    }
+                });
+            }
 
         }
 
-        function addCheckboxListener(){
+        function addCheckboxListener() {
             $("#masterPointCheck").on("click", function () {
                 let value = $(this).prop("value");
                 $(this).prop("value", !value);
@@ -899,18 +924,6 @@
         updateMonth();
         createDialogButtonListeners();
         addCheckboxListener();
-
-        let elems = document.getElementsByClassName("eventRow");
-        for (let elem of elems){
-            elem.addEventListener("click", function (event) {
-                let eventId = event.currentTarget.eventid;
-                let dayEvent = eventContainer.get(eventId);
-                eventEditor.fill(dayEvent);
-                eventEditor.show();
-
-            });
-        }
-
     }
 
     let calendar = new Calendar();
