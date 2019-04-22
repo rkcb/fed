@@ -540,6 +540,7 @@
                     $(this).children("td[title]").html("");
                     $(this).children("td[start]").html("");
                     $(this).prop("eventid", "");
+                    $(this).css("cursor", "");
                 });
             }
 
