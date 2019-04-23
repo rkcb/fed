@@ -292,11 +292,10 @@
 
         /**
          * delete event by the id
-         * @param event
+         * @param eventId
          */
-        this.delete = function (event) {
-            let id = getEventId(event);
-            return allEvents.delete(id);
+        this.delete = function (eventId) {
+            return allEvents.delete(eventId);
         };
 
         /**
@@ -397,10 +396,43 @@
             $("#time").prop("value", dateTools.getTimeString(isoDateString));
         };
 
+        /**
+         * @param {String} id
+         */
+        this.setId = function(id){
+            $("#eventid").prop("value", id);
+        };
+
+        this.unsetId = function(){
+            $("#eventid").prop("value", "");
+        };
+
+        this.getId = function () {
+            return $("#eventid").prop("value");
+        };
+
 
     }
 
     ////////////////////////////  --- Modal Dialog ends ---  /////////////////////////////////////
+
+    ////////////////////////////  --- Decoration begins ---  /////////////////////////////////////
+
+    function Decoration() {
+
+        this.markEventDay = function(dayElement){
+            dayElement.style.borderBottom = "solid 3px red";
+        };
+
+        this.unmarkEventDay = function (dayElement) {
+            dayElement.style.borderBottom = "";
+        };
+
+    }
+
+    ////////////////////////////  --- Decaration ends ---  /////////////////////////////////////
+
+
 
     //////////////////////////////// --- Construction begins --- /////////////////////////////////
 
@@ -416,6 +448,8 @@
 
     const eventEditor = new EventEditor();
     Object.freeze(eventEditor);
+
+    const decoration = new Decoration();
 
     //////////////////////////////// --- Construction ends --- /////////////////////////////////
 
@@ -571,7 +605,7 @@
             if (selectedDayElem) {
                 selectedDayElem.style.backgroundColor = "";
             }
-            selectedDayElem = event.srcElement;
+            selectedDayElem = event.currentTarget;
             selectedDayElem.style.backgroundColor = "lightgray";
 
             clearEventTable();
@@ -852,7 +886,9 @@
                 //        6. if PBN files are removed also possible master points should be removed
                 //        7. if 5-6 are done create a log message who removed PBN files
                 //        8. probably it is best to leave PBN and MP handling to own view
-                console.log(event);
+
+                eventContainer.delete(eventEditor.getId());
+
 
             });
 
