@@ -10,6 +10,9 @@ public class TournamentEditorController {
     public String tournamenteditor(){
         return "tournamenteditor";
     }
+
+
+
 }
 
 /*

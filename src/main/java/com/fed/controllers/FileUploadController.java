@@ -29,6 +29,10 @@ public class FileUploadController {
     }
 /*
 
+
+
+
+
     @GetMapping("/files/{filename:.+}")
     @ResponseBody
     public ResponseEntity<Resource> serveFile(@PathVariable String filename) {

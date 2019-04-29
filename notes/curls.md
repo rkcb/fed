@@ -5,12 +5,17 @@ When submitting a URI with query parameters adding quotes (") are necessary.
 For examples curl http://getAllByStartBetween?start .. & end ... does not 
 work otherwise.
 
+# Repositories
+
+curl localhost:8080/profile
+
 # Add a Calendar event from command line
 
 curl -i -X POST -H "Content-Type:application/json" -d '{"title": "timetest", 
 "start": "2019-03-21T13:00:00"}' http://localhost:8080/calendarevents
 
 ## Data response format
+
 ### data._links.{self, calendarEvent, tournament}.href
 {
   "title" : "",
@@ -32,6 +37,7 @@ curl -i -X POST -H "Content-Type:application/json" -d '{"title": "timetest",
     }
   }
 }
+
 
 # Query CalendarEvent by ISO DateTime
 
@@ -69,3 +75,9 @@ http://localhost:8080/players/1/club
 
 curl -i -X PUT -H "Content-Type:text/uri-list" -d "http://localhost:8080/tournaments/1" 
 http://localhost:8080/calendarevents/1/tournament
+
+# Remove relation from the owning side
+
+curl -i -X DELETE http://localhost:8080/calendarevents/1/tournament
+
+

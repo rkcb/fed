@@ -20,6 +20,7 @@
 
         this.calendarEventsURL = "/calendarevents";
         this.tournamentsURL = "/tournaments";
+        let restSelf = this;
 
         /**
          * @param data as an object
@@ -36,7 +37,38 @@
                 success: success,
                 dataType: "json",
                 contentType: contentType,
+                error: error,
             });
+        };
+
+        this.getPostObj = (url, data, success, error) => {
+            return {
+                type: "POST",
+                url: url,
+                data: data,
+                success: success,
+                error: error,
+                dataType: "json",
+                contentType: "application/json",
+            };
+        };
+
+        this.get = function (url, success, error) {
+            $.ajax({
+                type: "GET",
+                url: url,
+                success: success,
+                error: error
+            });
+        };
+
+        this.getGetObj = (url, success, error) => {
+            return {
+                type: "GET",
+                url: url,
+                success: success,
+                error: error
+            };
         };
 
         // curl -i -X PUT -H "Content-Type:text/uri-list"
@@ -53,6 +85,77 @@
                 dataType: "text",
                 error: error,
             });
+        };
+
+        this.getRelationObj = (url, payload, success, error) => {
+            return {
+                type: "PUT",
+                url: url,
+                data: payload,
+                success: success,
+                error: error,
+                contentType: "text/uri-list",
+                dataType: "text",
+            };
+        };
+
+        /**
+         * @param {String} eventId
+         */
+        this.delete = function (entityurl, success) {
+            $.ajax({
+                type: "DELETE",
+                url: entityurl, // url to entity to be removed
+                success: success,
+                error: () => {
+                    alert(" delete failed :( ");
+                }
+            });
+        };
+
+        this.getDeleteObj = (url, success, error) => {
+            return {
+                type: "DELETE",
+                url: url,
+                success: success,
+                error: error,
+            };
+        };
+
+        /**
+         * run given requests sequentially by chaining the Ajax objects
+         * @param {Array} ajaxObjects
+         * @constructor
+         */
+        this.run = (ajaxObjects, sharedDataObject, i = 0) => {
+
+            // sharedDataObject is available for all ajax objects
+
+            let selfRun = restSelf.run;
+
+            if (ajaxObjects.length > 0) {
+                i++;
+                let obj = ajaxObjects[0];
+                let objSuccess = obj.success;
+                let objError = obj.error;
+                obj.success = (data) => {
+                    if (objSuccess) {
+                        objSuccess(data);
+                    }
+                    selfRun(ajaxObjects.slice(1), sharedDataObject, i);
+                };
+                obj.error = (data) => {
+                    if (objError) {
+                        objError(data);
+                    }
+                    alert("error");
+                };
+                if (!obj.url){
+                    alert("i = " + i + " undefined url: " + obj.url);
+                } else {
+                    $.ajax(obj);
+                }
+            }
         };
 
 
@@ -76,11 +179,20 @@
         };
 
         /**
+         * @param {String | Date} date
+         */
+        this.toISOString = function (date) {
+            let iso = date instanceof Date ? date.toISOString() : date;
+            return typeof iso === "string" ? iso : undefined;
+        };
+
+        /**
          * @param {Date} date
          * @return {string}
          */
         this.getDateString = function (date) {
-            return date.toISOString().split("T")[0];
+            let iso = dateTools.toISOString(date);
+            return iso.split("T")[0];
         };
 
         /**
@@ -217,10 +329,11 @@
         };
 
         /**
-         * @param {Date} date
+         * @param {String} date
          */
         this.hasEventOnDate = function (date) {
-            let iso1 = date.toISOString().split("T")[0];
+
+            let iso1 = dateTools.toISOString(date).split("T")[0];
             this.exists(ev => {
                 let iso2 = ev.start.split("T")[0];
                 return iso1 === iso2;
@@ -229,7 +342,8 @@
 
         /**
          * get all events in the given date
-         * @param Date date
+         * @param {Date} date
+         * @return {Array}
          */
         this.getEventsByDate = function (date) {
             let iso = dateTools.getDateString(date);
@@ -254,6 +368,11 @@
          */
         this.get = function (eventId) {
             return allEvents.get(eventId);
+        };
+
+        this.getUrl = function (eventId) {
+            let event = this.get(eventId);
+            return event ? event._links.self.href : undefined;
         };
 
         /**
@@ -399,11 +518,11 @@
         /**
          * @param {String} id
          */
-        this.setId = function(id){
+        this.setId = function (id) {
             $("#eventid").prop("value", id);
         };
 
-        this.unsetId = function(){
+        this.unsetId = function () {
             $("#eventid").prop("value", "");
         };
 
@@ -420,7 +539,7 @@
 
     function Decoration() {
 
-        this.markEventDay = function(dayElement){
+        this.markEventDay = function (dayElement) {
             dayElement.style.borderBottom = "solid 3px red";
         };
 
@@ -431,7 +550,6 @@
     }
 
     ////////////////////////////  --- Decaration ends ---  /////////////////////////////////////
-
 
 
     //////////////////////////////// --- Construction begins --- /////////////////////////////////
@@ -877,9 +995,9 @@
                 alert("datetime value = " + $("#datetime").prop("value"));
             });
 
-            $("#deletebutton").on("click", function (event) {
+            $("#deletebutton").on("click", function () {
                 // TODO   1. remove event from eventContainer
-                // TODO   2. remove decorations
+                // TODO   2. remove decorations only if there is only one event in the day
                 // TODO   3. remove CalendarEvent and Tournament bindings
                 // TODO   4. remove previous entities
                 //        5. remove PBN files?
@@ -887,8 +1005,38 @@
                 //        7. if 5-6 are done create a log message who removed PBN files
                 //        8. probably it is best to leave PBN and MP handling to own view
 
-                eventContainer.delete(eventEditor.getId());
+                // delete currently both calendarEvent and tournament
+                // TODO: add master point removal if needed and when possible
 
+                const id = eventEditor.getId();
+
+                const event = eventContainer.get(id);
+                const eventSelfUrl = event._links.self.href;
+                const eventTourUrl = event._links.tournament.href;
+
+
+
+                rest.get(event._links.tournament.href, (tourData) => {
+
+                    const tourSelfUrl = tourData._links.self.href;
+                    const tourEventUrl = tourData._links.calendarEvent.href;
+
+                    rest.delete(eventTourUrl, () => {
+                        rest.delete(tourEventUrl, () => {
+                            rest.delete(eventSelfUrl, () => {
+                                rest.delete(tourSelfUrl, () => {
+                                    let id = eventEditor.getId();
+                                    let event = eventContainer.get(id);
+                                    let count = eventContainer.getEventsByDate(event.start).length;
+                                    if (count < 2){
+                                        eventContainer.delete(id);
+                                        decoration.unmarkEventDay(selectedDayElem);
+                                    }
+                                });
+                            });
+                        });
+                    });
+                });
 
             });
 
