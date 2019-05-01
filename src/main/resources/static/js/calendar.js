@@ -99,6 +99,12 @@
             };
         };
 
+        this.update = (url, data, success, error) => {
+            let ajaxObj = this.getPostObj(url, JSON.stringify(data), success, error);
+            ajaxObj.type = "PATCH";
+            $.ajax(ajaxObj);
+        };
+
         /**
          * @param {String} eventId
          */
@@ -530,7 +536,16 @@
             return $("#eventid").prop("value");
         };
 
+        this.getFormData = () => {
+            let formData = {};
+            let inputs = $("#tournamentdata *[name]");
+            $(inputs).each(function (index, element) {
+                let name = $(element).prop("name");
+                formData[name] = $(element).val();
+            });
 
+            return formData;
+        };
     }
 
     ////////////////////////////  --- Modal Dialog ends ---  /////////////////////////////////////
@@ -551,7 +566,7 @@
 
     /**
      * Handles filling and clearing the selected day
-     * details
+     * details table
      *
      * @constructor
      */
@@ -559,7 +574,7 @@
 
         let dayElem;
         let eventContainer;
-        let currentDate;
+        let eventDate;
 
         this.setEventContainer = (container) => {
             if (!eventContainer) {
@@ -568,9 +583,7 @@
         };
 
         this.setCurrentDate = (date) => {
-            if (!currentDate) {
-                currentDate = date;
-            }
+            eventDate = date;
         };
 
         this.clear = () => {
@@ -595,9 +608,9 @@
          */
         this.fillDetails = (selectedDayElem, currentDay2) => {
             dayElem = selectedDayElem;
-            currentDate = currentDay2;
+            this.setCurrentDate(currentDay2);
             let dayIndex = dayElem.dateindex;
-            let date = dateTools.copy(currentDate);
+            let date = dateTools.copy(eventDate);
             date.setDate(dayIndex);
             let events = eventContainer.getEventsByDate(date);
             // TODO: if there are events more than five this fails => add paging
@@ -759,7 +772,6 @@
          * @param event (ES event)
          */
         const updateSelectedDayData = function (event) {
-
             // update the old and new selected day element
 
             if (selectedDayElem) {
@@ -769,6 +781,7 @@
             selectedDayElem.style.backgroundColor = "lightgray";
 
             eventTable.clear();
+
             eventTable.fillDetails(selectedDayElem, currentDate);
         };
 
@@ -958,6 +971,8 @@
                     formdata[name] = $(element).val();
                 });
 
+                formdata = eventEditor.getFormData();
+
                 /**
                  * create tournament and set the relation if success
                  * @param calendarEventData server REST response
@@ -1035,7 +1050,12 @@
             });
 
             $("#updatebutton").on("click", function () {
-                alert("datetime value = " + $("#datetime").prop("value"));
+                let formData = eventEditor.getFormData();
+                let calendarEvent = eventContainer.get(eventEditor.getId());
+                if (calendarEvent){
+                    // TODO: check that update only works on the selected event
+                    rest.update(formData);
+                }
             });
 
             $("#deletebutton").on("click", function () {

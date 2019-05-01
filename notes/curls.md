@@ -47,6 +47,11 @@ curl localhost:8080/calendarevents/search/
 
 curl localhost:8080/calendarevents/findAllByStartBetween?
 
+# Update existing event
+
+curl -i -X PATCH -H "Content-Type:application/json" -d '{"title": "newTitle"}' 
+http://localhost:8080/calendarevents/5
+
 # Create a new player 
 
 curl -i -X POST -H "Content-Type:application/json" -d '{"username": "escobar", "email": "esco@iki.fi", "code": 
