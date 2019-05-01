@@ -487,6 +487,7 @@
         };
 
         this.showCreationOk = function () {
+            this.hideAlerts();
             document.getElementById("tournament-creation-ok").style.display = "block";
         };
 
@@ -496,7 +497,28 @@
 
         this.showCreationFailed = function () {
             // TODO: add the notification
+            this.hideAlerts();
             document.getElementById("tournament-creation-failed").style.display = "block";
+        };
+
+        this.showUpdateOk = () => {
+            this.hideAlerts();
+            document.getElementById("tournament-update-ok").style.display = "block";
+        };
+
+        this.showUpdateFailed = () => {
+            this.hideAlerts();
+            document.getElementById("tournament-update-failed").style.display = "none";
+        };
+
+        this.showDeleteOk = () => {
+            this.hideAlerts();
+            document.getElementById("tournament-delete-ok").style.display = "block";
+        };
+
+        this.showDeleteFailed = () => {
+            this.hideAlerts();
+            document.getElementById("tournament-delete-failed").style.display = "none";
         };
 
         this.setDate = function (isoDateString) {
@@ -583,7 +605,9 @@
         };
 
         this.setCurrentDate = (date) => {
-            eventDate = date;
+            if (date) {
+                eventDate = date;
+            }
         };
 
         this.clear = () => {
@@ -597,8 +621,10 @@
 
         this.reload = () => {
             this.clear();
-            if (dayElem) {
-                this.fillDetails(dayElem);
+            if (dayElem && eventDate) {
+                this.fillDetails(dayElem, eventDate);
+            } else {
+                console.log("dayElem id: " + dayElem.eventid + " eventDate: " + eventDate);
             }
         };
 
@@ -781,7 +807,6 @@
             selectedDayElem.style.backgroundColor = "lightgray";
 
             eventTable.clear();
-
             eventTable.fillDetails(selectedDayElem, currentDate);
         };
 
@@ -1045,16 +1070,25 @@
 
                 // create a calendar event
                 rest.post(formdata, calendarEventCreated, calendarEventCreationFailed, rest.calendarEventsURL);
-
-
             });
 
             $("#updatebutton").on("click", function () {
-                let formData = eventEditor.getFormData();
-                let calendarEvent = eventContainer.get(eventEditor.getId());
-                if (calendarEvent){
-                    // TODO: check that update only works on the selected event
-                    rest.update(formData);
+                const id = eventEditor.getId();
+                if (id) {
+
+                    let formData = eventEditor.getFormData();
+                    let event = eventContainer.get(id);
+
+                    if (event) {
+                        rest.update(event._links.self.href, formData,
+                            (newEventData) => {
+                                eventContainer.delete(id);
+                                eventContainer.add(newEventData);
+                                eventEditor.showUpdateOk();
+                                eventTable.reload();
+                            },
+                            eventEditor.showUpdateFailed);
+                    }
                 }
             });
 
@@ -1073,6 +1107,11 @@
 
                 const id = eventEditor.getId();
 
+                if (!id){
+                    return;
+                }
+
+
                 const event = eventContainer.get(id);
                 const eventSelfUrl = event._links.self.href;
                 const eventTourUrl = event._links.tournament.href;
@@ -1087,15 +1126,18 @@
                         rest.delete(tourEventUrl, () => {
                             rest.delete(eventSelfUrl, () => {
                                 rest.delete(tourSelfUrl, () => {
-                                    alert("delete ok?");
                                     let id = eventEditor.getId();
                                     let event = eventContainer.get(id);
                                     let count = eventContainer.getEventsByDate(event.start).length;
+
+                                    eventEditor.showDeleteOk();
+
+                                    eventTable.clear();
                                     if (count < 2) {
                                         eventContainer.delete(id);
                                         decoration.unmarkEventDay(selectedDayElem);
-                                        eventTable.reload();
-                                        //    TODO: update event table, too
+                                    } else {
+                                        eventTable.fillDetails(selectedDayElem, event.start);
                                     }
                                 });
                             });
