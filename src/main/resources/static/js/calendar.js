@@ -150,7 +150,7 @@
                     }
                     alert("error");
                 };
-                if (!obj.url){
+                if (!obj.url) {
                     alert("i = " + i + " undefined url: " + obj.url);
                 } else {
                     $.ajax(obj);
@@ -549,6 +549,74 @@
 
     }
 
+    /**
+     * Handles filling and clearing the selected day
+     * details
+     *
+     * @constructor
+     */
+    function EventTable() {
+
+        let dayElem;
+        let eventContainer;
+        let currentDate;
+
+        this.setEventContainer = (container) => {
+            if (!eventContainer) {
+                eventContainer = container;
+            }
+        };
+
+        this.setCurrentDate = (date) => {
+            if (!currentDate) {
+                currentDate = date;
+            }
+        };
+
+        this.clear = () => {
+            $(".eventRow").each(function () {
+                $(this).children("td[title]").html("");
+                $(this).children("td[start]").html("");
+                $(this).prop("eventid", "");
+                $(this).css("cursor", "");
+            });
+        };
+
+        this.reload = () => {
+            this.clear();
+            if (dayElem) {
+                this.fillDetails(dayElem);
+            }
+        };
+
+        /**
+         * fill the details for events of the day
+         * @param event ES click event
+         */
+        this.fillDetails = (selectedDayElem, currentDay2) => {
+            dayElem = selectedDayElem;
+            currentDate = currentDay2;
+            let dayIndex = dayElem.dateindex;
+            let date = dateTools.copy(currentDate);
+            date.setDate(dayIndex);
+            let events = eventContainer.getEventsByDate(date);
+            // TODO: if there are events more than five this fails => add paging
+            $(".eventRow").each(function (index) {
+                $(this).prop("eventid", undefined);
+                if (index < events.length) {
+                    let event = events[index];
+                    $(this).children("td[title]").html(event.title);
+                    let formattedDate = dateTools.getDateTimeRepresentation(event.start);
+                    $(this).children("td[start]").html(formattedDate);
+                    $(this).prop("eventid", eventContainer.getEventId(event));
+                    $(this).css("cursor", "pointer");
+                }
+            });
+        };
+
+
+    }
+
     ////////////////////////////  --- Decaration ends ---  /////////////////////////////////////
 
 
@@ -567,7 +635,11 @@
     const eventEditor = new EventEditor();
     Object.freeze(eventEditor);
 
+    const eventTable = new EventTable();
+    Object.freeze(eventTable);
+
     const decoration = new Decoration();
+    Object.freeze(decoration);
 
     //////////////////////////////// --- Construction ends --- /////////////////////////////////
 
@@ -673,6 +745,10 @@
 
         let selectedDayElem;
 
+        eventTable.setEventContainer(eventContainer);
+
+
+
         Object.freeze(today);
         // this date reflects the clicked day
         let currentDate = dateTools.copy(today);
@@ -684,40 +760,6 @@
          */
         const updateSelectedDayData = function (event) {
 
-            /**
-             * clear selected day data and eventid
-             */
-            function clearEventTable() {
-                $(".eventRow").each(function () {
-                    $(this).children("td[title]").html("");
-                    $(this).children("td[start]").html("");
-                    $(this).prop("eventid", "");
-                    $(this).css("cursor", "");
-                });
-            }
-
-            /**
-             * update selected day calendar events
-             */
-            function addDayEvents() {
-                let dayIndex = event.srcElement.dateindex;
-                let date = dateTools.copy(currentDate);
-                date.setDate(dayIndex);
-                let events = eventContainer.getEventsByDate(date);
-                // TODO: if there are events more than five this fails => add paging
-                $(".eventRow").each(function (index) {
-                    $(this).prop("eventid", undefined);
-                    if (index < events.length) {
-                        let event = events[index];
-                        $(this).children("td[title]").html(event.title);
-                        let formattedDate = dateTools.getDateTimeRepresentation(event.start);
-                        $(this).children("td[start]").html(formattedDate);
-                        $(this).prop("eventid", eventContainer.getEventId(event));
-                        $(this).css("cursor", "pointer");
-                    }
-                });
-            }
-
             // update the old and new selected day element
 
             if (selectedDayElem) {
@@ -726,8 +768,8 @@
             selectedDayElem = event.currentTarget;
             selectedDayElem.style.backgroundColor = "lightgray";
 
-            clearEventTable();
-            addDayEvents();
+            eventTable.clear();
+            eventTable.fillDetails(selectedDayElem, currentDate);
         };
 
         function ungraySelectedDay() {
@@ -945,7 +987,8 @@
                             dayElem.style.borderBottom = "solid 3px red";
                             let helper = new EventContainer();
                             $("#eventid").prop("value", helper.getEventId(calendarEventData));
-
+                            eventTable.clear();
+                            eventTable.fillDetails(selectedDayElem, currentDate);
                         }
 
                         function failed() {
@@ -1015,7 +1058,6 @@
                 const eventTourUrl = event._links.tournament.href;
 
 
-
                 rest.get(event._links.tournament.href, (tourData) => {
 
                     const tourSelfUrl = tourData._links.self.href;
@@ -1025,12 +1067,15 @@
                         rest.delete(tourEventUrl, () => {
                             rest.delete(eventSelfUrl, () => {
                                 rest.delete(tourSelfUrl, () => {
+                                    alert("delete ok?");
                                     let id = eventEditor.getId();
                                     let event = eventContainer.get(id);
                                     let count = eventContainer.getEventsByDate(event.start).length;
-                                    if (count < 2){
+                                    if (count < 2) {
                                         eventContainer.delete(id);
                                         decoration.unmarkEventDay(selectedDayElem);
+                                        eventTable.reload();
+                                        //    TODO: update event table, too
                                     }
                                 });
                             });
