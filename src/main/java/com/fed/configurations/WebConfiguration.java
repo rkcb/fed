@@ -15,6 +15,4 @@ public class WebConfiguration implements WebMvcConfigurer {
         registry.addConverter(new IsoStringToLocalDateTime());
     }
 
-
-
 }
