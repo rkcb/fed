@@ -5,15 +5,16 @@
     xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
     http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
-
+    <include file="database/changesets/security.xml"/>
     <changeSet author="liquibase-docs" id="security-init">
-        <sqlFile dbms="mysql"
-                 encoding="utf8"
-                 endDelimiter="\nGO"
-                 path="sql/security.sql"
-                 relativeToChangelogFile="true"
-                 splitStatements="true"
-                 stripComments="true"/>
+<!--        <sqlFile dbms="mariadb"-->
+<!--                 encoding="utf8"-->
+<!--                 path="sql/security.sql"-->
+<!--                 relativeToChangelogFile="true"-->
+<!--                 splitStatements="false"-->
+<!--                 stripComments="true"/>-->
+
     </changeSet>
+
 
 </databaseChangeLog>
