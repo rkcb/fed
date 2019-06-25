@@ -2,8 +2,6 @@ package com.fed.configurations;
 
 import com.fed.converters.IsoStringToLocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
@@ -24,13 +22,15 @@ public class WebConfiguration extends WebSecurityConfigurerAdapter {
         registry.addConverter(new IsoStringToLocalDateTime());
     }
 
+    @Autowired
+    private DataSource dataSource;
     private JdbcUserDetailsManager jdbcUserDetailsManager;
 
-    @Bean
-    @ConfigurationProperties("application.properties.datasource")
-    public DataSource dataSource() {
-        return DataSourceBuilder.create().build();
-    }
+//    @Bean
+//    @ConfigurationProperties("application.properties.datasource")
+//    public DataSource dataSource() {
+//        return DataSourceBuilder.create().build();
+//    }
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -54,7 +54,7 @@ public class WebConfiguration extends WebSecurityConfigurerAdapter {
         jdbcUserDetailsManager =
                 auth
                         .jdbcAuthentication()
-                        .dataSource(this.dataSource())
+                        .dataSource(dataSource)
                         .passwordEncoder(passwordEncoder())
                         .getUserDetailsService();
     }
