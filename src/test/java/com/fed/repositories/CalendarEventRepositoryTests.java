@@ -1,5 +1,6 @@
 package com.fed.repositories;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,6 +40,7 @@ public class CalendarEventRepositoryTests {
     @Test
     public void shouldCreateEntity() throws Exception {
 
+        Assert.assertTrue(true);
 //        mockMvc.perform(post("/calendarevents").content(
 //                "{\"firstName\": \"Frodo\", \"lastName\":\"Baggins\"}")).andExpect(
 //                status().isCreated()).andExpect(
