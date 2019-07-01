@@ -8,7 +8,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.provisioning.JdbcUserDetailsManager;
 
 import javax.sql.DataSource;
 
@@ -19,42 +18,52 @@ public class WebConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     private DataSource dataSource;
 
-    private JdbcUserDetailsManager jdbcUserDetailsManager;
-
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Autowired
-    public JdbcUserDetailsManager getJdbcUserDetailsManager(){
-        return jdbcUserDetailsManager;
+    public void configureGlobal(AuthenticationManagerBuilder authBuilder) throws Exception {
+
+        authBuilder
+                    .jdbcAuthentication()
+                    .dataSource(dataSource)
+                    .passwordEncoder(passwordEncoder());
+
+
+
+//        auth
+//                .jdbcAuthentication()
+//                .dataSource(dataSource)
+//                .passwordEncoder(passwordEncoder());
+//                .withUser(User.withDefaultPasswordEncoder().username("escobar").password(
+//                        "EscosGoodPassword123!").roles("USER"));
     }
-
-//    @Bean
-//    public JdbcUserDetailsManager jdbcUserDetailsManager(DataSource dataSource) {
-//        return jdbcUserDetailsManager;
-//    }
-
-
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .authorizeRequests()
-                .antMatchers("/").permitAll();
+                .cors().disable()
+                .csrf().disable();
     }
 
 
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        jdbcUserDetailsManager =
-                auth
-                        .jdbcAuthentication()
-                        .dataSource(dataSource)
-                        .passwordEncoder(passwordEncoder())
-                        .getUserDetailsService();
-    }
+//    protected void configure(HttpSecurity http) throws Exception {
+//        http
+//                .authorizeRequests()
+//                .anyRequest().authenticated()
+//                .and()
+//                .formLogin()
+//                .and()
+//                .httpBasic();
+//    }
+
+
+
+
+
+
 
 
 }
