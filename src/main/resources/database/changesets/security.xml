@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet author="rkcb" id="security-1" dbms="mariadb">
+        <sql>
+            create table if not exists users(
+                username varchar(50) not null primary key,
+                password varchar(50) not null,
+                enabled boolean not null
+            )
+        </sql>
+    </changeSet>
+
+    <changeSet author="rkcb" id="security-2" dbms="mariadb">
+        <sql>
+            create table if not exists  authorities (
+                username varchar(50) not null,
+                authority varchar(50) not null,
+                constraint fk_authorities_users foreign key(username) references users(username)
+            )
+        </sql>
+    </changeSet>
+
+    <changeSet author="rkcb" id="security-3" dbms="mariadb">
+        <sql>
+            create unique index if not exists  ix_auth_username on authorities (username,authority)
+        </sql>
+    </changeSet>
+
+    <changeSet author="rkcb" id="security-4" dbms="mariadb">
+        <sql>
+            create table if not exists  groups (
+                id bigint not null primary key auto_increment,
+                group_name varchar(50) not null
+            );
+        </sql>
+    </changeSet>
+
+    <changeSet author="rkcb" id="security-5" dbms="mariadb">
+        <sql>
+            create table  if not exists group_authorities (
+                group_id bigint not null,
+                authority varchar(50) not null,
+                constraint fk_group_authorities_group foreign key(group_id) references groups(id)
+            );
+        </sql>
+    </changeSet>
+
+    <changeSet author="rkcb" id="security-6" dbms="mariadb">
+        <sql>
+            create table  if not exists  group_members (
+                id bigint not null auto_increment primary key,
+                username varchar(50) not null,
+                group_id bigint not null,
+                constraint fk_group_members_group foreign key(group_id) references groups(id)
+            );
+        </sql>
+    </changeSet>
+
+    <changeSet author="rkcb" id="security-7" dbms="mariadb">
+        <sql>
+            create table if not exists persistent_logins (
+                username varchar(64) not null,
+                series varchar(64) primary key,
+                token varchar(64) not null,
+                last_used timestamp not null
+            );
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>
