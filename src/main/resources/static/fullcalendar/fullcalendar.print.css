@@ -54,7 +54,7 @@
   height: auto !important;
   /* undo height that JS set in distributeHeight */
   min-height: 0 !important;
-  /* undo the min-height from each view's specific stylesheet */ }
+  /* undo the min-height of each view's specific stylesheet */ }
 
 .fc tbody .fc-row .fc-content-skeleton {
   position: static;
@@ -132,7 +132,7 @@
 .fc-time-grid .fc-event.fc-not-end:after {
   content: "..."; }
 
-/* for events that are continuations from previous days, give the top border back */
+/* for events that are continuations of previous days, give the top border back */
 .fc-time-grid .fc-event.fc-not-start {
   border-top-width: 1px !important; }
 
