@@ -1,6 +1,8 @@
 package com.fed.configurations;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -8,6 +10,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
 
 import javax.sql.DataSource;
 
@@ -15,12 +18,21 @@ import javax.sql.DataSource;
 @EnableWebSecurity
 public class WebConfiguration extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private DataSource dataSource;
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    @ConfigurationProperties("spring.datasource")
+    public DataSource dataSource() {
+        return DataSourceBuilder.create().build();
+    }
+
+    @Bean
+    public JdbcUserDetailsManager userDetailsManager(){
+        return new JdbcUserDetailsManager(dataSource());
     }
 
     @Autowired
@@ -28,7 +40,7 @@ public class WebConfiguration extends WebSecurityConfigurerAdapter {
 
         authBuilder
                     .jdbcAuthentication()
-                    .dataSource(dataSource)
+                    .dataSource(dataSource())
                     .passwordEncoder(passwordEncoder());
 
 

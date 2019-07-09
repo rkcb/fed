@@ -1,5 +1,6 @@
 package com.fed.configurations;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,11 @@ public class WebConfigurationTest {
     @Test
     public void jdbcUserDetailsManagerTest(){
 
-
+        try {
+            JdbcUserDetailsManager manager = new JdbcUserDetailsManager(datasource);
+        } catch(Exception e){
+            Assert.assertFalse(true);
+        }
     }
 
 
