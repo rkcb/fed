@@ -5,6 +5,7 @@ import org.springframework.security.core.GrantedAuthority;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.stream.Collectors;
 
 final public class Roles implements GrantedAuthority {
@@ -37,6 +38,10 @@ final public class Roles implements GrantedAuthority {
     public static Collection<GrantedAuthority> of(Value... vals){
         return Arrays.stream(vals).map(v -> Roles.get(v))
                 .collect(Collectors.toSet());
+    }
+
+    public static List<GrantedAuthority> listOf(Value... vals){
+        return Arrays.stream(vals).map(Roles::get).collect(Collectors.toList());
     }
 
 }

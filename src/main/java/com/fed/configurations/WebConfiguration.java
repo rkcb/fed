@@ -14,10 +14,10 @@ import org.springframework.security.provisioning.JdbcUserDetailsManager;
 
 import javax.sql.DataSource;
 
+
 @Configuration
 @EnableWebSecurity
 public class WebConfiguration extends WebSecurityConfigurerAdapter {
-
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -72,6 +72,23 @@ public class WebConfiguration extends WebSecurityConfigurerAdapter {
 //                .and()
 //                .httpBasic();
 //    }
+
+    /*
+    public void initializeGroups(){
+
+        JdbcUserDetailsManager manager = userDetailsManager();
+        List<String> groups = manager.findAllGroups();
+
+        if (!groups.contains("players")){
+            manager.createGroup("players", Roles.listOf(Roles.Value.PLAYER));
+        }
+
+        if (!groups.contains("admins")){
+            manager.createGroup("admins", Roles.listOf(Roles.Value.ADMIN));
+        }
+
+    }
+*/
 
 
 
