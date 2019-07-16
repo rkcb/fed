@@ -73,4 +73,19 @@
         </sql>
     </changeSet>
 
+    <changeSet author="rkcb" id="security-8" dbms="mariadb">
+        <sql >
+            create or replace temporary table default_roles (
+                name varchar(30)
+            );
+            create or replace table roles (
+                name varchar(30)
+            );
+            insert into default_roles(name) values ("admin"), ("player");
+            insert into roles(name)
+                (select name from default_roles) except (select name from roles);
+            drop table if exists default_roles;
+        </sql>
+    </changeSet>
+
 </databaseChangeLog>
