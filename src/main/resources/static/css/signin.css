@@ -45,5 +45,5 @@ div.signinform {
 }
 
 div.signinform input.form-control {
-    border-color: #B8B8B8;
+    border-color: red;/*#B8B8B8;*/
 }

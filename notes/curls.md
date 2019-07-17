@@ -90,4 +90,6 @@ http://localhost:8080/calendarevents/1/tournament
 
 curl -i -X DELETE http://localhost:8080/calendarevents/1/tournament
 
+# Create a new Users instance 
 
+curl -i -X POST -H "Content-Type:application/json" -d '{"username": "escobar", "password":"password", "password2":"password", "oldPassword":"", "enabled":true}' "localhost:8080/users/create"

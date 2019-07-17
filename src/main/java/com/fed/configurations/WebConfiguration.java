@@ -48,6 +48,7 @@ public class WebConfiguration extends WebSecurityConfigurerAdapter {
 //        auth
 //                .jdbcAuthentication()
 //                .dataSource(dataSource)
+
 //                .passwordEncoder(passwordEncoder());
 //                .withUser(User.withDefaultPasswordEncoder().username("escobar").password(
 //                        "EscosGoodPassword123!").roles("USER"));
@@ -55,11 +56,37 @@ public class WebConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
+/*
         http
-                .cors().disable()
-                .csrf().disable()
-                .headers().xssProtection().disable()
+                .authorizeRequests()
+                .anyRequest().authenticated()
+                .and()
+                .formLogin()
+                .loginPage("/signin")
+                .permitAll();
+
+*/
+
+        http
+                    .cors().disable()
+                    .csrf().disable()
+                    .headers().xssProtection().disable()
                 ;
+                /*
+                .and()
+                    .formLogin()
+                    .loginPage("/signin")
+                    .permitAll()
+                .and()
+                    .httpBasic()
+                .and()
+                    .authorizeRequests()
+                    .anyRequest()
+                .authenticated();
+
+                 */
+
     }
 
 

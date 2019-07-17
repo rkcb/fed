@@ -14,6 +14,7 @@ import javax.persistence.Id;
 @Entity
 public class Users {
 
+
     @Id
     @ReadOnlyProperty
     private String username;

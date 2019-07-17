@@ -83,10 +83,6 @@ public class UsersRestController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-
-
-
-
     @PatchMapping("/users/remove-from-admins")
     ResponseEntity<HttpStatus> removeFromGroup(@RequestBody UsersData data){
 
