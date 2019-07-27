@@ -52,6 +52,11 @@ curl localhost:8080/calendarevents/findAllByStartBetween?
 curl -i -X PATCH -H "Content-Type:application/json" -d '{"title": "newTitle"}' 
 http://localhost:8080/calendarevents/5
 
+# Create a new User -- check 
+curl -i -X POST -H "Content-Type:application/json" \ 
+-d '{"username":"over", "password":"12", "password2":"12"}' \ 
+"http://localhost:8080/create"
+
 # Create a new player 
 
 curl -i -X POST -H "Content-Type:application/json" -d '{"username": "escobar", "email": "esco@iki.fi", "code": 
@@ -85,4 +90,6 @@ http://localhost:8080/calendarevents/1/tournament
 
 curl -i -X DELETE http://localhost:8080/calendarevents/1/tournament
 
+# Create a new Users instance 
 
+curl -i -X POST -H "Content-Type:application/json" -d '{"username": "escobar", "password":"password", "password2":"password", "oldPassword":"", "enabled":true}' "localhost:8080/users/create"

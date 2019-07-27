@@ -1,38 +1,28 @@
 package com.fed.database;
 
 import lombok.Data;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.data.annotation.ReadOnlyProperty;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import java.util.ArrayList;
-import java.util.Collection;
+
+/**
+ * Entity is only for checking existence
+ */
 
 @Data
 @Entity
-public class Users extends User {
+public class Users {
 
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     @Id
-    Integer id;
+    @ReadOnlyProperty
+    private String username;
 
-    public Users(){
-        super("emptyuser", "emptypassword123!", new ArrayList<>());
-    }
+    @ReadOnlyProperty
+    private String password;
 
-    private Users(String username, String password,
-                 Collection<? extends GrantedAuthority> authorities){
-        super(username, password, authorities);
-    }
-
-    public static Users create(String username, String password, Collection<?
-            extends GrantedAuthority> authorities){
-
-        return new Users(username, password, authorities);
-    }
+    private boolean enabled;
 
 
 }
