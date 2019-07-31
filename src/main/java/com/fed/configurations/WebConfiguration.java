@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 
@@ -31,7 +32,7 @@ public class WebConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public JdbcUserDetailsManager userDetailsManager(){
+    public UserDetailsService userDetailsManager(){
         return new JdbcUserDetailsManager(dataSource());
     }
 
@@ -45,83 +46,35 @@ public class WebConfiguration extends WebSecurityConfigurerAdapter {
 
 
 
-//        auth
+
+
+
 //                .jdbcAuthentication()
 //                .dataSource(dataSource)
 
-//                .passwordEncoder(passwordEncoder());
-//                .withUser(User.withDefaultPasswordEncoder().username("escobar").password(
-//                        "EscosGoodPassword123!").roles("USER"));
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-
+    // working setup when all but login page are authenticated
 /*
         http
                 .authorizeRequests()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
-                .loginPage("/signin")
+                .loginPage("/login")
+                .permitAll()
+                .and()
+                .logout()
                 .permitAll();
-
 */
 
         http
                     .cors().disable()
                     .csrf().disable()
-                    .headers().xssProtection().disable()
-                ;
-                /*
-                .and()
-                    .formLogin()
-                    .loginPage("/signin")
-                    .permitAll()
-                .and()
-                    .httpBasic()
-                .and()
-                    .authorizeRequests()
-                    .anyRequest()
-                .authenticated();
-
-                 */
+                    .headers().xssProtection().disable();
 
     }
-
-
-//    protected void configure(HttpSecurity http) throws Exception {
-//        http
-//                .authorizeRequests()
-//                .anyRequest().authenticated()
-//                .and()
-//                .formLogin()
-//                .and()
-//                .httpBasic();
-//    }
-
-    /*
-    public void initializeGroups(){
-
-        JdbcUserDetailsManager manager = userDetailsManager();
-        List<String> groups = manager.findAllGroups();
-
-        if (!groups.contains("players")){
-            manager.createGroup("players", Roles.listOf(Roles.Value.PLAYER));
-        }
-
-        if (!groups.contains("admins")){
-            manager.createGroup("admins", Roles.listOf(Roles.Value.ADMIN));
-        }
-
-    }
-*/
-
-
-
-
-
-
-
 
 }
