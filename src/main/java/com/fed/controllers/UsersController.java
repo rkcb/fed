@@ -1,6 +1,21 @@
 package com.fed.controllers;
 
+import com.fed.data.Roles;
+import com.fed.data.UsersData;
+import com.fed.repositories.UsersRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+
+import javax.validation.Valid;
+import java.util.Collection;
 
 /**
  * TODO:
@@ -12,7 +27,13 @@ import org.springframework.stereotype.Controller;
 
 @Controller
 public class UsersController {
-/*
+
+    @GetMapping("/users")
+    public String get(){
+        return "users";
+    }
+
+
     final int passwordLenth = 1;
 
     @Autowired
@@ -24,47 +45,34 @@ public class UsersController {
     @Autowired
     private UsersRepository usersRepository;
 
-    @GetMapping("/users")
-    public void users(){
-    }
-
     @PostMapping(value = "/users/create")
-    String createUsers(@ModelAttribute UsersData data,
-                       @RequestBody UsersData usersData) {
+    String createUsers(@Valid UsersData usersData, BindingResult binding,
+                             ModelMap model) {
 
-        boolean exists = manager.userExists(data.getUsername());
-        boolean passwordNotNull = data.getPassword() != null;
-        boolean passwordsMatch = data.getPassword().equals(data.getPassword2());
-        boolean passwordLengthOk = passwordNotNull && data.getPassword().length() >= passwordLenth;
+        boolean exists = manager.userExists(usersData.getUsername());
+        boolean passwordNotNull = usersData.getPassword() != null;
+        boolean passwordsMatch = usersData.getPassword().equals(usersData.getPassword2());
+        boolean passwordLengthOk =
+                passwordNotNull && usersData.getPassword().length() >= passwordLenth;
+
+        model.addAttribute("usernameExists", exists);
+        model.addAttribute("usersData", usersData);
 
         if (exists) {
-//            return new ResponseEntity(HttpStatus.NOT_ACCEPTABLE);
+            return "users";
         }
-
-        if (!passwordNotNull) {
-//            return new ResponseEntity(HttpStatus.NOT_ACCEPTABLE);
-        }
-
-        if (!passwordsMatch) {
-//            return new ResponseEntity(HttpStatus.NOT_ACCEPTABLE);
-        }
-
-        if (!passwordLengthOk) {
-//            return new ResponseEntity(HttpStatus.NOT_ACCEPTABLE);
-        }
-
-
 
         Collection<GrantedAuthority> authorities = Roles.of(Roles.Value.PLAYER);
 
-        User user = new User(data.getUsername(), encoder.encode(data.getPassword()), authorities);
+        User user = new User(usersData.getUsername(), encoder.encode(usersData.getPassword()), authorities);
 
         manager.createUser(user);
 
         return "users";
+
 //        return new ResponseEntity(HttpStatus.CREATED);
     }
-
+/*
     @DeleteMapping("/users/delete")
     String deleteUsers(@RequestBody UsersData data) {
         manager.deleteUser(data.getUsername());
