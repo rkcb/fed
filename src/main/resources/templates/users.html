@@ -4,37 +4,61 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link rel="stylesheet" type="text/css" media="all" href="../static/bootstrap/css/bootstrap.css"
           th:href="@{~/bootstrap/css/bootstrap.css}">
-    <title>Title</title>
+    <title>Users</title>
 </head>
 <body>
 
-<form action="/users/create" th:action="@{/users/create}"th:object="${usersData}"
+<div th:insert="fragments/ui :: menu"></div>
+
+
+<form class="m-5" action="/users/create" th:action="@{/users/create}"th:object="${usersData}"
       method="post">
 
     <div class="form-group" >
-        <label for="username">Username</label>
-        <input type="email" class="form-control" id="username" placeholder=""  value="eero@test.com" name="username">
+        <label>Username</label>
+        <input type="email" th:field="*{username}" class="form-control" th:errorclass="invalid-feedback"
+               id="username-id" value="eero@test.com" name="username">
+        <div th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="invalid-feedback">
+            Username is not valid email address
+        </div>
+<!--        <div class="invalid-feedback">-->
+<!--            Username is not available-->
+<!--        </div>-->
     </div>
 
     <div class="form-group">
-        <label for="password">Password</label>
-        <input type="text" class="form-control" id="password" placeholder="" value="eero"  name="password">
+        <label for="password-id">Password</label>
+        <input type="text" class="form-control" id="password-id" placeholder="" value="eero"  name="password">
+<!--        <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="invalid-feedback">-->
+<!--            Password is not valid-->
+<!--        </div>-->
     </div>
 
     <div class="form-group">
-        <label for="password2">Password Again</label>
-        <input type="text" class="form-control" id="password2" placeholder=""  value="eero"  name="password2">
+        <label for="password2-id">Password Again</label>
+        <input type="text" class="form-control" id="password2-id" placeholder=""  value="eero"  name="password2">
+<!--        <div th:if="${#fields.hasErrors('password2')}" th:errors="*{password2}" class="invalid-feedback">-->
+<!--            Password again is not valid-->
+<!--        </div>-->
+<!--        <div th:if="${passwordsNotEqual}" class="invalid-feedback">-->
+<!--            Passwords are not equal-->
+<!--        </div>-->
     </div>
-
-    <p th:if="${usernameExists}" >Username exists</p>
 
     <input type="submit" value="Submit">
 
-
+    <div th:if="${usernameExists}">
+        <p>Username is in use</p>
+    </div>
 
 
 
 </form>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
 
 </body>
 </html>
