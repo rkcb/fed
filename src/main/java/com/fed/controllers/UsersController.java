@@ -3,14 +3,18 @@ package com.fed.controllers;
 import com.fed.data.Roles;
 import com.fed.data.UsersData;
 import com.fed.repositories.UsersRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -28,8 +32,12 @@ import java.util.Collection;
 @Controller
 public class UsersController {
 
+    private static Logger log = LoggerFactory.getLogger(UsersController.class);
+
     @GetMapping("/users")
-    public String get(){
+    public String get(Model model){
+        model.addAttribute("usersData", new UsersData());
+        log.info("###### GET /users");
         return "users";
     }
 
@@ -59,6 +67,14 @@ public class UsersController {
         model.addAttribute("usersData", usersData);
 
         if (exists) {
+            log.info("###### username exists");
+            return "users";
+        }
+
+        if (binding.hasErrors()){
+            for (FieldError fe : binding.getFieldErrors()){
+                log.info("###### error field: " + fe.getField() + " value: " + fe.getRejectedValue().toString() );
+            }
             return "users";
         }
 
