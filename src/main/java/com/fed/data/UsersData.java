@@ -1,20 +1,19 @@
 package com.fed.data;
 
 
+import com.fed.validators.EqualPasswords;
+import com.fed.validators.Username;
 import lombok.Data;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
 
 @Data
-public class UsersData {
-
-//    @Autowired
-//    @Setter(AccessLevel.NONE)
-//    @Getter(AccessLevel.NONE)
-//    private JdbcUserDetailsManager manager;
+@EqualPasswords
+public class UsersData  {
 
     @Email(message = "Invalid email address")
+    @Username
     String username;
 
     @Size(min = 2, message = "Password must be at least 2 chars")
@@ -27,16 +26,5 @@ public class UsersData {
 
     boolean enabled;
 
-//    @AssertTrue(message = "Passwords are not equal")
-//    public boolean validPasswords(){
-//        return password != null && password2 != null &&
-//                password.equals(password2);
-//    }
-//
-//    @AssertTrue(message = "Username is not available")
-//    public boolean validUsername(){
-//        return !manager.userExists(username);
-//    }
 }
-
 
