@@ -11,47 +11,42 @@
 <div th:insert="fragments/ui :: menu"></div>
 
 
-<form class="m-5" action="/users/create" th:action="@{/users/create}"th:object="${usersData}"
+<form class="m-5" action="/users/create" th:action="@{/users/create}" th:object="${usersData}"
       method="post">
 
     <div class="form-group" >
-        <label>Username</label>
-        <input type="email" th:field="*{username}" class="form-control" th:errorclass="invalid-feedback"
-               id="username-id" value="eero@test.com" name="username">
-        <div th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="invalid-feedback">
-            Username is not valid email address
+        <label>Email</label>
+        <input type="email" th:field="*{username}" class="form-control" th:errorclass="is-invalid">
+        <div class="invalid-feedback">
+            Username is not available
         </div>
-<!--        <div class="invalid-feedback">-->
-<!--            Username is not available-->
-<!--        </div>-->
     </div>
 
     <div class="form-group">
-        <label for="password-id">Password</label>
-        <input type="text" class="form-control" id="password-id" placeholder="" value="eero"  name="password">
-<!--        <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="invalid-feedback">-->
-<!--            Password is not valid-->
-<!--        </div>-->
+        <label>Password</label>
+        <input type="password" th:field="*{password}" class="form-control" th:errorclass="is-invalid"
+               th:classappend="${passwordsNotMatch}? 'is-invalid'">
+        <div th:if="${#fields.hasErrors('password')}" class="invalid-feedback">
+            Password length must be at least 2
+        </div>
+        <div th:if="${passwordsNotMatch}" class="invalid-feedback">
+            Password and Password Again do not match
+        </div>
     </div>
 
     <div class="form-group">
-        <label for="password2-id">Password Again</label>
-        <input type="text" class="form-control" id="password2-id" placeholder=""  value="eero"  name="password2">
-<!--        <div th:if="${#fields.hasErrors('password2')}" th:errors="*{password2}" class="invalid-feedback">-->
-<!--            Password again is not valid-->
-<!--        </div>-->
-<!--        <div th:if="${passwordsNotEqual}" class="invalid-feedback">-->
-<!--            Passwords are not equal-->
-<!--        </div>-->
+        <label>Password Again</label>
+        <input type="password" th:field="*{password2}" class="form-control" th:errorclass="is-invalid"
+               th:classappend="${passwordsNotMatch}? 'is-invalid'">
+        <div th:if="${#fields.hasErrors('password2')}" class="invalid-feedback">
+            Password length must be at least 2
+        </div>
+        <div th:if="${passwordsNotMatch}" class="invalid-feedback">
+            Password and Password Again do not match
+        </div>
     </div>
 
-    <input type="submit" value="Submit">
-
-    <div th:if="${usernameExists}">
-        <p>Username is in use</p>
-    </div>
-
-
+    <input class="btn btn-primary" type="submit" value="Submit">
 
 </form>
 
