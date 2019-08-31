@@ -14,7 +14,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -37,10 +36,9 @@ public class UsersController {
     @GetMapping("/users")
     public String get(Model model){
         model.addAttribute("usersData", new UsersData());
-        log.info("###### GET /users");
+//        Validator v;
         return "users";
     }
-
 
     final int passwordLenth = 1;
 
@@ -58,23 +56,15 @@ public class UsersController {
                              ModelMap model) {
 
         boolean exists = manager.userExists(usersData.getUsername());
-        boolean passwordNotNull = usersData.getPassword() != null;
-        boolean passwordsMatch = usersData.getPassword().equals(usersData.getPassword2());
-        boolean passwordLengthOk =
-                passwordNotNull && usersData.getPassword().length() >= passwordLenth;
+        boolean passwordsNotNull =
+                usersData.getPassword() != null && usersData.getPassword2() != null;
+        boolean passwordsMatch =
+                passwordsNotNull && usersData.getPassword().equals(usersData.getPassword2());
 
-        model.addAttribute("usernameExists", exists);
+        model.addAttribute("passwordsNotMatch", !passwordsMatch);
         model.addAttribute("usersData", usersData);
 
-        if (exists) {
-            log.info("###### username exists");
-            return "users";
-        }
-
         if (binding.hasErrors()){
-            for (FieldError fe : binding.getFieldErrors()){
-                log.info("###### error field: " + fe.getField() + " value: " + fe.getRejectedValue().toString() );
-            }
             return "users";
         }
 
