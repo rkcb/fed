@@ -1,6 +1,7 @@
 package com.fed.database;
 
 import com.fed.repositories.CalendarEventRepository;
+import com.fed.repositories.PlayerRepository;
 import com.fed.repositories.TournamentRepository;
 import org.junit.Assert;
 import org.junit.Before;
@@ -22,6 +23,9 @@ public class TournamentTest {
     TournamentRepository tournamentRepository;
 
     @Autowired
+    PlayerRepository playerRepository;
+
+    @Autowired
     CalendarEventRepository calendarEventRepository;
 
     @Before
@@ -39,6 +43,8 @@ public class TournamentTest {
         Tournament tournament = Tournament.create("tournament title", timestamp);
         calendarEventRepository.save(tournament.getCalendarEvent());
         tournamentRepository.save(tournament);
+
+
 
         Assert.assertTrue(tournamentRepository.count() == 1);
 

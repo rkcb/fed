@@ -23,6 +23,9 @@ public class Tournament  {
     @Valid
     private CalendarEvent calendarEvent;
 
+    @OneToOne
+    private CompetitionRegistration competitionRegistration;
+
     protected Tournament(){}
 
     protected Tournament(CalendarEvent calendarEvent){
@@ -37,11 +40,16 @@ public class Tournament  {
 
         return tournament;
     }
-//    protected List<Player> registered;
+
+// TODO:
+//    1. collect registered players as entities: to be used in tournament view
+//    2. add also PBN result files
+// NOTES:
+//    1. all usage from users go via controllers
+//    2. regular users need modification for registration only (only registration owner can modify)
+//    3. admins can CRUD tournaments via controllers and upload results
 //
-//    protected List<Player> played;
-
-
+//
 
 
 

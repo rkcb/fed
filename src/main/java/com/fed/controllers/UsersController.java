@@ -16,6 +16,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.validation.Valid;
 import java.util.Collection;
@@ -26,6 +27,16 @@ import java.util.Collection;
  *  - add the csrf token by thymeleaf
  *  - test methods
  *  - finish the view
+ */
+
+/**
+ * tasks:
+ *  - create new login user
+ *  - delete login user
+ *  - disable user
+ *  - get roles of login user
+ *  - edit roles of login user
+ *
  */
 
 @Controller
@@ -78,14 +89,15 @@ public class UsersController {
 
 //        return new ResponseEntity(HttpStatus.CREATED);
     }
-/*
-    @DeleteMapping("/users/delete")
+
+    @PostMapping("/users/delete")
     String deleteUsers(@RequestBody UsersData data) {
         manager.deleteUser(data.getUsername());
         return "users";
     }
 
-    @PatchMapping("/users/remove-from-admins")
+/*
+    @PostMapping("/users/remove-from-admins")
     ResponseEntity<HttpStatus> removeFromGroup(@RequestParam String username) {
 
         if (manager.userExists(username)) {
@@ -96,7 +108,7 @@ public class UsersController {
         }
 
     }
-
+/*
     @PatchMapping("/users/add-to-admins")
     ResponseEntity<HttpStatus> addToGroup(@RequestBody UsersData data) {
 
