@@ -12,6 +12,7 @@ import javax.validation.constraints.NotEmpty;
         uniqueConstraints=
                 {@UniqueConstraint(columnNames={"code"}), @UniqueConstraint(columnNames={
                         "username"})}
+
 )
 public class Player {
 

@@ -8,4 +8,6 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 public interface CompetitionRegistrationRepository extends JpaRepository<CompetitionRegistration,
  Integer> {
 
+
+
 }

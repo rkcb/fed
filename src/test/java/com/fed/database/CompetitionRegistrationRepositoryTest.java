@@ -13,9 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -68,28 +66,27 @@ public class CompetitionRegistrationRepositoryTest {
         tournament = tournamentRepository.findAll().get(0);
         Assert.assertNotNull(tournament.getCompetitionRegistration());
 
-        // save players
+        // add a registered player and tournament and save
 
-        List<Player> players = new ArrayList<>(1);
-
-        for (int i = 0; i < 1; i++){
-            Player player = Player.create("username " + i, "code " + i,
-                    "player" + i + "@iki.fi", "password");
-            players.add(player);
-        }
-
-//        registration.setPlayers(players);
+        registration.setPlayer1Code("1234");
+        registration.setTournament(tournament);
         registrationRepository.save(registration);
 
         registration = registrationRepository.findAll().get(0);
-
-//        registration.setPlayers(players);
-        registrationRepository.save(registration);
-//        Assert.assertTrue(registration.getPlayers().size() == 6);
+        Assert.assertTrue(registration.getPlayer1Code().equals("1234"));
     }
 
-//    @Test
-//    public void bindTournamentAndRegistration(){
-//    }
+    @Test
+    public void testUniquePlayers(){
+        CompetitionRegistration registration = new CompetitionRegistration();
+        Tournament tournament = tournamentRepository.findAll().get(0);
+        registration.setTournament(tournament);
+        registration.setPlayer1Code("1");
+        registration.setPlayer2Code("1");
+        registration = registrationRepository.save(registration);
+        Assert.assertTrue(registrationRepository.count() == 1);
+
+
+    }
 
 }
